@@ -15,9 +15,10 @@ conda activate <env_name>
 
 
 ## 3 - Environment Variables inside Conda <env_name> context
-Copy/paste the content below run in a terminal
+- Copy/paste the content below run in a terminal
 
 ~~~
+export REPOSITORY_ROOT="/Users/richardr/dev/git/unsupervised-online-regression"
 cd $CONDA_PREFIX && \
 mkdir -p ./etc/conda/activate.d && \
 mkdir -p ./etc/conda/deactivate.d && \
@@ -25,7 +26,7 @@ rm -f ./etc/conda/activate.d/env_vars.sh && \
 
 touch ./etc/conda/activate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export PYTHONPATH="${PYTHON_PATH}":"${pwd}"/src/python/modules' >> ./etc/conda/activate.d/env_vars.sh && \
+echo 'export PYTHONPATH="$PYTHON_PATH":"${REPOSITORY_ROOOT}"/src/python/modules' >> ./etc/conda/activate.d/env_vars.sh && \
 
 rm -f ./etc/conda/deactivate.d/env_vars.sh && \
 touch ./etc/conda/deactivate.d/env_vars.sh && \
