@@ -1,24 +1,20 @@
 # Conda environment
 
-## To export the working Conda environment - (For reference purposes only)
+## 1 - Create the working Conda environment on new machine
 ~~~
-conda activate <env_name>
-conda env export > conda_env.yml
-~~~
-
-## To create the working Conda environment on new machine
-~~~
+cd ./dev_env
 conda env create -n <env_name> -f conda_env.yml
 ~~~
 Note that the default environment name in the conda_env.yml file is ```reg-env```
 
 
-## Activate the environment
+## 2 -  Activate the environment
+~~~
 conda activate <env_name>
+~~~
 
 
-
-## Environment Variables inside Conda <env_name> context
+## 3 - Environment Variables inside Conda <env_name> context
 Copy/paste the content below run in a terminal
 
 ~~~
@@ -37,24 +33,32 @@ echo '#!/bin/bash' >> ./etc/conda/deactivate.d/env_vars.sh && \
 echo 'unset PYTHONPATH' >> ./etc/conda/deactivate.d/env_vars.sh
 ~~~
 
-## Reload Conda environment
+## 4 - Reload Conda environment
 ~~~
 conda deactivate
 conda activate <env_name>
 ~~~
 
 
-
-# Tmux and Vim development environment
-
-## Setup environment
-- Copy `settings.template.sh` to `settings.sh`
-- Edit the `settings.sh` file to suit your context
-- Start up the Tmux and Vim development environment by launching the `tmux_dev_env.sh` script
+## 5 - Run code
+~~~
+python ./src/python/main.py
+~~~
 
 
-# Running the pipeline
-- Make sure that `./src/python/modules/job_utils/settings_py` file is edited to suit your context.
-- There is a `job` dictionary that probably needs editing
-- The rest of the file is probably OK to leave as is.
+
+# (EXTRA REFERENCE) - To export the working Conda environment
+~~~
+conda activate <env_name>
+conda env export > conda_env.yml
+~~~
+
+
+# (EXTRA REFERENCE ) - Tmux and Vim development environment
+
+## Start Tmux dev environment
+~~~
+cd ./dev_env
+sh tmux_dev_env.sh
+~~~
 
