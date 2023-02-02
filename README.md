@@ -2,6 +2,7 @@
 
 ## To export the working Conda environment - (For reference purposes only)
 ~~~
+conda activate <env_name>
 conda env export > conda_env.yml
 ~~~
 
@@ -9,7 +10,7 @@ conda env export > conda_env.yml
 ~~~
 conda env create -n <env_name> -f conda_env.yml
 ~~~
-Note that the default environment name in the conda_env.yml file is ```my_conda_env```
+Note that the default environment name in the conda_env.yml file is ```reg-env```
 
 
 ## Activate the environment
@@ -28,10 +29,7 @@ rm -f ./etc/conda/activate.d/env_vars.sh && \
 
 touch ./etc/conda/activate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export SPARK_HOME="${CONDA_PREFIX}"/lib/python3.9/site-packages/pyspark' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export PYTHONPATH="${SPARK_HOME}"/python:"${HOME}"/dev/git/mcgill_new_dat_trans/src/python/modules' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export PATH="${PATH}":"${JAVA_HOME}"' >> ./etc/conda/activate.d/env_vars.sh && \
+echo 'export PYTHONPATH="${PYTHON_PATH}":"${pwd}"/src/python/modules' >> ./etc/conda/activate.d/env_vars.sh && \
 
 rm -f ./etc/conda/deactivate.d/env_vars.sh && \
 touch ./etc/conda/deactivate.d/env_vars.sh && \
