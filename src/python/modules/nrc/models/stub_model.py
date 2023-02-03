@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 
 
 class BaseModel(ABC):
-    def __init__(self, i_buffer_size):
-        self._name = 'stub_model'
+    def __init__(self, i_buffer_size, i_name):
+        self._name = i_name
         self._buffer = Queue(i_buffer_size)
     
     @property
@@ -26,6 +26,9 @@ class BaseModel(ABC):
 
 
 class StubModel(BaseModel):
+    def __init__(self, i_buffer_size):
+        super().__init__(i_buffer_size, 'stub_model')
+
     def process(self, x, y):
         print(f'In model : {self._name}')
         print(f'New instance : features: {x} -- target: {y}')
