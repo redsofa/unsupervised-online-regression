@@ -4,13 +4,8 @@ import json
 from nrc.factories.stream_factory import StreamFactory
 from nrc.factories.model_factory import ModelFactory
 from queue import Queue
+from nrc.settings.default_params import *
 
-
-# Modify these to default params suit your context... or just call the python script
-# with your own CLI parameters
-DEFAULT_FILE_NAME = '../../datasets/small.csv'
-DEFAULT_STREAM_PARAMETERS = '../../datasets/small.parameters'
-DEFAULT_BUFFER_SIZE = 10
 
 def get_args():
     parser = argparse.ArgumentParser(description="Unsupervised, online regression modeling.")

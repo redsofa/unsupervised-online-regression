@@ -1,0 +1,5 @@
+DEFAULT_FILE_NAME = '../../datasets/small.csv'
+DEFAULT_STREAM_PARAMETERS = '../../datasets/small.parameters'
+DEFAULT_BUFFER_SIZE = 5
+DEFAULT_MAX_SAMPLES = 8
+DEFAULT_PRETRAIN_SIZE = 2
