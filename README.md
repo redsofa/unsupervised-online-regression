@@ -18,7 +18,7 @@ conda activate <env_name>
 - Copy/paste the content below run in a terminal
 
 ~~~
-export REPOSITORY_ROOT="/Users/richardr/dev/git/unsupervised-online-regression"
+ROOT_DIR="$(pwd)" && \
 cd $CONDA_PREFIX && \
 mkdir -p ./etc/conda/activate.d && \
 mkdir -p ./etc/conda/deactivate.d && \
@@ -26,12 +26,12 @@ rm -f ./etc/conda/activate.d/env_vars.sh && \
 
 touch ./etc/conda/activate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/activate.d/env_vars.sh && \
-echo 'export PYTHONPATH="$PYTHON_PATH":"${REPOSITORY_ROOOT}"/src/python/modules' >> ./etc/conda/activate.d/env_vars.sh && \
+echo export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}/src/python/modules >> ./etc/conda/activate.d/env_vars.sh && \
 
 rm -f ./etc/conda/deactivate.d/env_vars.sh && \
 touch ./etc/conda/deactivate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/deactivate.d/env_vars.sh && \
-echo 'unset PYTHONPATH' >> ./etc/conda/deactivate.d/env_vars.sh
+echo unset PYTHONPATH >> ./etc/conda/deactivate.d/env_vars.sh
 ~~~
 
 ## 4 - Reload Conda environment
