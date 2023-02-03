@@ -31,7 +31,8 @@ echo export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}/src/python/modules >> ./etc/con
 rm -f ./etc/conda/deactivate.d/env_vars.sh && \
 touch ./etc/conda/deactivate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/deactivate.d/env_vars.sh && \
-echo unset PYTHONPATH >> ./etc/conda/deactivate.d/env_vars.sh
+echo unset PYTHONPATH >> ./etc/conda/deactivate.d/env_vars.sh && \
+cd $ROOT_DIR
 ~~~
 
 ## 4 - Reload Conda environment
