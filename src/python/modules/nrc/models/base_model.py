@@ -20,7 +20,7 @@ class BaseModel(ABC):
             self._buffer.get()
 
     @abstractmethod
-    def process(self): 
+    def process(self, x, y): 
         pass
 
     def pre_train(self, x, y):
