@@ -11,7 +11,9 @@ def get_args():
     parser.add_argument('-1', '--input_file_name', type=str, required=False, default=DEFAULT_FILE_NAME, help="Input file (csv)")
     parser.add_argument('-2', '--stream_parameters', type=str, required=False, default=DEFAULT_STREAM_PARAMETERS, help='Stream parameters')
     parser.add_argument('-3', '--buffer_size', type=str, required=False, default=DEFAULT_BUFFER_SIZE, help='Buffer size')
-    # TODO more params from settings 
+    parser.add_argument('-4', '--max_samples', type=str, required=False, default=DEFAULT_MAX_SAMPLES, help='Max Number of samples to process')
+    parser.add_argument('-5', '--pre_train_size', type=str, required=False, default=DEFAULT_PRETRAIN_SIZE, help='Size of the pre-training dataset')
+
     args = parser.parse_args()
     return args
 
