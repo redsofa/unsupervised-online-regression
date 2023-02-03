@@ -1,4 +1,7 @@
+
 # Conda environment
+Note: These commands were tested on a Mac only. They may need some modifications in order to run on other platforms.
+
 
 ## 1 - Create the working Conda environment on new machine
 ~~~
@@ -10,6 +13,7 @@ Note that the default environment name in the conda_env.yml file is ```reg-env``
 
 ## 2 -  Activate the environment
 ~~~
+cd ../
 conda activate <env_name>
 ~~~
 
