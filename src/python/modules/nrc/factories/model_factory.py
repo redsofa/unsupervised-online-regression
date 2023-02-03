@@ -5,10 +5,14 @@ class ModelFactory():
 
     @staticmethod
     def get_instance(i_model_name, i_buffer_size):
+        ret_val = None
         if i_model_name == "stub_model":
-            return ModelFactory.get_stub_model(i_buffer_size)
+            ret_val =  ModelFactory.get_stub_model(i_buffer_size)
         else:
             raise Exception('Model not available from factory')
+
+        print(f'Instantiated model : {i_model_name}')
+        return ret_val
 
     @staticmethod
     def get_stub_model(i_buffer_size):
