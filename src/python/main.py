@@ -3,10 +3,11 @@ import time
 import json
 from nrc.stream_factory import StreamFactory
 
+
 # Modify these to default params suit your context... or just call the python script
 # with your own CLI parameters
 DEFAULT_FILE_NAME = '../../datasets/small.csv'
-DEFAULT_STREAM_PARAMETERS = '../../datasets/small.converter'
+DEFAULT_STREAM_PARAMETERS = '../../datasets/small.parameters'
 
 
 def get_args():
@@ -42,7 +43,6 @@ def main():
 
     for x, y in data_stream:
         print(f'New instance : features: {x} -- target: {y}')
-
 
     end_time = time.time()
     print(f"\nTotal execution time (seconds): str({end_time} - {start_time})")
