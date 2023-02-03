@@ -54,6 +54,15 @@ python ./src/python/main.py
 ~~~
 
 
+## 6 - Run Unit Test
+~~~
+From the project root :
+
+cd ./src/bash
+sh run_unit_tests.sh
+~~~
+
+
 
 # (EXTRA REFERENCE) - To export the working Conda environment
 ~~~
