@@ -21,7 +21,7 @@ conda activate <env_name>
 ## 3 - Environment Variables inside Conda <env_name> context
 
 - IMPORTTANT !! Make sure you are in the project's root
-- Copy/paste the content below run in a terminal
+- Copy/paste the content below in a terminal and hit enter to run them
 
 ~~~
 ROOT_DIR="$(pwd)" && \
