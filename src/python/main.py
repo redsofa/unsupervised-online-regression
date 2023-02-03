@@ -1,7 +1,6 @@
 import argparse
 import time
-from nrc.factories.stream_factory import StreamFactory
-from queue import Queue
+from nrc.factories.stream import StreamFactory
 from nrc.settings.default_params import *
 from nrc.runners import ModelRunner
 from nrc.util.stream import *
