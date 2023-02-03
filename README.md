@@ -54,7 +54,7 @@ python ./src/python/main.py
 ~~~
 
 
-## 6 - Run Unit Test
+## 6 - Run Unit Tests
 ~~~
 From the project root :
 
