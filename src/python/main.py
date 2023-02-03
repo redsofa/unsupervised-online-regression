@@ -1,7 +1,7 @@
 import argparse
 import time
 from river import stream
-
+from nrc import stream_factory
 
 # Modify these to default params suit your context... or just call the python script
 # with your own CLI parameters
