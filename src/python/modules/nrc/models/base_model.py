@@ -23,5 +23,12 @@ class BaseModel(ABC):
     def process(self): 
         pass
 
+    def pre_train(self, x, y):
+        pass
+
+    def predict_and_update(self, x, y):
+        pass
+
+
 if __name__ == "__main__":
     pass
