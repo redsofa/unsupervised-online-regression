@@ -2,9 +2,9 @@ import argparse
 import time
 import json
 from nrc.factories.stream_factory import StreamFactory
-from nrc.factories.model_factory import ModelFactory
 from queue import Queue
 from nrc.settings.default_params import *
+from nrc.runners import ModelRunner
 
 
 def get_args():
@@ -33,25 +33,14 @@ def main():
     start_time = time.time()
     args = get_args()
 
-    buffer = Queue(args.buffer_size)
-    #train
-    #test
-
-    model = ModelFactory.get_toy_model()
+    model_names = ['stub_model']
 
     input_file = args.input_file_name
     stream_params = load_stream_params(args.stream_parameters)
     data_stream = StreamFactory.get_csv_stream(input_file, **stream_params)
 
-    for x, y in data_stream:
-        print(f'New instance : features: {x} -- target: {y}')
-        if not buffer.full():
-            print('buffer_not full')
-            buffer.put((x,y))
-        else:
-            print('buffer_full')
-            (buff_x, buff_y) = buffer.get()
-            print(f'Buffered Instance : features: {buff_x} -- target: {buff_y}')
+    runner = ModelRunner(data_stream, model_names, args.buffer_size)
+    runner.run_models()
 
     end_time = time.time()
     print(f"\nTotal execution time (seconds): str({end_time} - {start_time})")
