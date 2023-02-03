@@ -1,4 +1,4 @@
-from nrc.factories.model_factory import ModelFactory
+from nrc.factories.model import ModelFactory
 
 class ModelRunner:
     def __init__(self, i_input_stream, i_model_names, i_buffer_size):

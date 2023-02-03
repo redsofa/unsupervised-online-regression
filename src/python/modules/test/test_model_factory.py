@@ -1,4 +1,4 @@
-from nrc.factories.model_factory import *
+from nrc.factories.model import ModelFactory
 from nrc.runners import ModelRunner
 from nrc.models.stub_model import StubModel
 import unittest
