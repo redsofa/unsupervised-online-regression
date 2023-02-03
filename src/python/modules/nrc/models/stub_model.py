@@ -18,6 +18,10 @@ class StubModel:
         print(f'In model : {self._name}')
         print(f'New instance : features: {x} -- target: {y}')
 
+    def clear_buffer(self):
+        while not self._buffer.empty(): 
+            self._buffer.get()
+
 
 if __name__ == '__main__':
     pass

@@ -11,7 +11,9 @@ class Test_ModelFactory(unittest.TestCase):
         buffer_size = 10
         m = ModelFactory.get_instance('stub_model', buffer_size)
         self.assertTrue(type(m) is StubModel)
-    
+        m.clear_buffer()
+        self.assertTrue(m.buffer.empty())
+
     def test_get_invalid_model(self):
         buffer_size = 10
         with self.assertRaises(Exception):
