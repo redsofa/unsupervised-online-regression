@@ -1,8 +1,8 @@
 import argparse
 import time
 from nrc.factories.stream import StreamFactory
+from nrc.factories.model import ModelFactory
 from nrc.settings.default_params import *
-from nrc.runners import ModelRunner
 from nrc.util.stream import *
 
 def get_args():
@@ -17,20 +17,21 @@ def get_args():
     return args
 
 def main():
-    start_time = time.time()
     args = get_args()
 
     model_names = ['stub_model']
 
     input_file = args.input_file_name
     stream_params = load_stream_params(args.stream_parameters)
-    data_stream = StreamFactory.get_csv_stream(input_file, **stream_params)
+    buffer_size = args.buffer_size
 
-    runner = ModelRunner(data_stream, model_names, args.buffer_size)
-    runner.run_models()
-
-    end_time = time.time()
-    print(f"\nTotal execution time (seconds): str({end_time} - {start_time})")
+    # Runs models sequentially
+    for model_name in model_names:
+        data_stream = StreamFactory.get_csv_stream(input_file, **stream_params)
+        model = ModelFactory.get_instance(model_name, buffer_size)
+        model.stream = data_stream
+        model.run()
+        print(f"\nTotal execution time (seconds): str({model.run_time})")
 
 
 if __name__ == '__main__':

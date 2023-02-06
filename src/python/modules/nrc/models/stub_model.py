@@ -9,6 +9,19 @@ class StubModel(BaseModel):
         print(f'In model : {self._name}')
         print(f'New instance : features: {x} -- target: {y}')
 
+    def process(self, x, y):
+        pass
+
+    def pre_train(self, x, y):
+        pass
+
+    def predict_and_update(self, x, y):
+        pass
+
+    def run(self):
+        print('running...')
+
+
     
 if __name__ == '__main__':
     pass
