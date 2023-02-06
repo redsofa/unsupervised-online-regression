@@ -9,15 +9,15 @@ class BaseModel(ABC):
         self._buffer = Queue(i_buffer_size)
         self._start_time = None
         self._ent_time = None
-        self._stream = None
+        self._data_stream = None
 
     @property
-    def stream(self):
-        return self._stream
+    def data_stream(self):
+        return self._data_stream
 
-    @stream.setter
-    def stream(self, i_stream):
-        self._stream = i_stream
+    @data_stream.setter
+    def data_stream(self, i_data_stream):
+        self._data_stream = i_data_stream
 
     @property
     def start_time(self):
@@ -60,12 +60,13 @@ class BaseModel(ABC):
 
     def run(self):
         # Check that the stream has been set
-        if self._stream is None:
+        if self.data_stream is None:
             raise Exception(f'Cannot run the algorithm {self.name}, the input data stream has not been set')
         self._start_time  = time.time()
 
-        for x, y in self.stream:
-            self.process(x, y)
+        print(f'Running model : {self._name}')
+        for x, y in self.data_stream:
+            print(f'New instance : features: {x} -- target: {y}')
 
         self._end_time = time.time()
 

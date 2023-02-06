@@ -29,7 +29,7 @@ def main():
     for model_name in model_names:
         data_stream = StreamFactory.get_csv_stream(input_file, **stream_params)
         model = ModelFactory.get_instance(model_name, buffer_size)
-        model.stream = data_stream
+        model.data_stream = data_stream
         model.run()
         print(f"\nTotal execution time (seconds): str({model.run_time})")
 

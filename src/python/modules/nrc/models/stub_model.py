@@ -6,8 +6,7 @@ class StubModel(BaseModel):
         super().__init__(i_buffer_size, 'stub_model')
 
     def process(self, x, y):
-        print(f'In model : {self._name}')
-        print(f'New instance : features: {x} -- target: {y}')
+        pass
 
     def pre_train(self, x, y):
         pass
@@ -16,7 +15,5 @@ class StubModel(BaseModel):
         pass
 
 
-
-    
 if __name__ == '__main__':
     pass
