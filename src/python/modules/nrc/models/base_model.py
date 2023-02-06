@@ -58,9 +58,16 @@ class BaseModel(ABC):
     def predict_and_update(self, x, y):
         pass
 
-    @abstractmethod
     def run(self):
-        pass
+        # Check that the stream has been set
+        if self._stream is None:
+            raise Exception(f'Cannot run the algorithm {self.name}, the input data stream has not been set')
+        self._start_time  = time.time()
+
+        for x, y in self.stream:
+            self.process(x, y)
+
+        self._end_time = time.time()
 
 
 if __name__ == "__main__":
