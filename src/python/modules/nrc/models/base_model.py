@@ -4,13 +4,15 @@ import time
 
 
 class BaseModel(ABC):
-    def __init__(self, i_pretrain_size, i_buffer_size, i_name):
+    def __init__(self, i_pretrain_size, i_buffer_size, i_name, i_max_samples=None):
         self._name = i_name
         self._buffer = Queue(i_buffer_size)
         self._start_time = None
-        self._ent_time = None
+        self._end_time = None
         self._data_stream = None
         self._is_pre_train = True
+        self._stop_run = False
+        self._max_samples = i_max_samples
         self._pre_train_size = i_pretrain_size
         self._instance_count = 0
 
@@ -61,17 +63,41 @@ class BaseModel(ABC):
     def predict_and_update(self, x, y):
         pass
 
+    def add_instance(self, x, y):
+        if self._max_samples is not None:
+            if self._instance_count >= self._max_samples:
+                print('Maximum instance count reached. Stopping stream processing.')
+                self._stop_run = True
+                return
+
+        if self._instance_count >= self._pre_train_size:
+            self._is_pre_train = False
+
+        self._instance_count += 1
+
+
     def run(self):
         # Check that the stream has been set
         if self.data_stream is None:
-            raise Exception(f'Cannot run the algorithm {self.name}, the input data stream has not been set')
+            raise Exception(f'Cannot run the algorithm {self.name}, the input data stream has not been set.')
         self._start_time  = time.time()
 
         print(f'Running model : {self._name}')
         for x, y in self.data_stream:
-            print(f'New instance : features: {x} -- target: {y}')
+            self.add_instance(x, y)
+
+            if self._stop_run :
+                break
+
+            if self._is_pre_train:
+                self.pre_train(x, y)
+            else:
+                self.process(x, y)
 
         self._end_time = time.time()
+
+    def __str__(self):
+        return str(self.__dict__)
 
 
 if __name__ == "__main__":
