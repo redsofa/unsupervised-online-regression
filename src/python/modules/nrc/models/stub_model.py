@@ -2,8 +2,8 @@ from nrc.models.base_model import *
 
 
 class StubModel(BaseModel):
-    def __init__(self, i_buffer_size):
-        super().__init__(i_buffer_size, 'stub_model')
+    def __init__(self, i_pre_train_size, i_buffer_size):
+        super().__init__(i_pre_train_size, i_buffer_size, 'stub_model')
 
     def process(self, x, y):
         pass

@@ -4,10 +4,10 @@ from nrc.models.stub_model import StubModel
 class ModelFactory():
 
     @staticmethod
-    def get_instance(i_model_name, i_buffer_size):
+    def get_instance(i_model_name, i_pre_train_size, i_buffer_size):
         ret_val = None
         if i_model_name == "stub_model":
-            ret_val =  ModelFactory.get_stub_model(i_buffer_size)
+            ret_val =  ModelFactory.get_stub_model(i_pre_train_size, i_buffer_size)
         else:
             raise Exception('Model not available from factory')
 
@@ -15,8 +15,8 @@ class ModelFactory():
         return ret_val
 
     @staticmethod
-    def get_stub_model(i_buffer_size):
-        return StubModel(i_buffer_size)
+    def get_stub_model(i_pre_train_size, i_buffer_size):
+        return StubModel(i_pre_train_size, i_buffer_size)
 
 
 if __name__ == '__main__':

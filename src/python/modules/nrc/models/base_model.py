@@ -4,12 +4,15 @@ import time
 
 
 class BaseModel(ABC):
-    def __init__(self, i_buffer_size, i_name):
+    def __init__(self, i_pretrain_size, i_buffer_size, i_name):
         self._name = i_name
         self._buffer = Queue(i_buffer_size)
         self._start_time = None
         self._ent_time = None
         self._data_stream = None
+        self._is_pre_train = True
+        self._pre_train_size = i_pretrain_size
+        self._instance_count = 0
 
     @property
     def data_stream(self):

@@ -24,11 +24,12 @@ def main():
     input_file = args.input_file_name
     stream_params = load_stream_params(args.stream_parameters)
     buffer_size = args.buffer_size
+    pre_train_size = args.pre_train_size
 
     # Runs models sequentially
     for model_name in model_names:
         data_stream = StreamFactory.get_csv_stream(input_file, **stream_params)
-        model = ModelFactory.get_instance(model_name, buffer_size)
+        model = ModelFactory.get_instance(model_name, pre_train_size, buffer_size)
         model.data_stream = data_stream
         model.run()
         print(f"\nTotal execution time (seconds): str({model.run_time})")

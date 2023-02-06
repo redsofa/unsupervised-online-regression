@@ -9,7 +9,8 @@ from river import stream
 class Test_ModelFactory(unittest.TestCase):
     def test_get_valid_stub_model_Instance(self):
         buffer_size = 10
-        m = ModelFactory.get_instance('stub_model', buffer_size)
+        pre_train_size = 5
+        m = ModelFactory.get_instance('stub_model', pre_train_size, buffer_size)
         self.assertTrue(type(m) is StubModel)
         m.clear_buffer()
         self.assertTrue(m.buffer.empty())
@@ -23,11 +24,12 @@ class Test_ModelFactory(unittest.TestCase):
 class Test_ModelRunning(unittest.TestCase):
     def test_run_stub_model(self):
         buffer_size = 10
+        pre_train_size = 5
         test_data = io.StringIO("c1,c2,t\n1,2,0\n3,2,1")
         params = {"converters":{"c1":float, "c2":float}, "target":"t"}
 
         data_stream = StreamFactory.get_csv_stream(test_data, **params)
-        model = ModelFactory.get_instance('stub_model', buffer_size)
+        model = ModelFactory.get_instance('stub_model', pre_train_size, buffer_size)
         model.data_stream = data_stream
         model.run()
         self.assertTrue(False)
