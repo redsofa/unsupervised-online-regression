@@ -50,7 +50,8 @@ conda activate <env_name>
 
 ## 5 - Run code
 ~~~
-python ./src/python/main.py
+cd ./src/python
+python main.py
 ~~~
 
 
