@@ -1,12 +1,12 @@
-from queue import Queue
 from abc import ABC, abstractmethod
 import time
+from nrc.util.buffers import *
 
 
 class BaseModel(ABC):
     def __init__(self, i_pretrain_size, i_buffer_size, i_name, i_max_samples=None):
         self._name = i_name
-        self._buffer = Queue(i_buffer_size)
+        self._buffer = SlidingWindow(i_buffer_size)
         self._start_time = None
         self._end_time = None
         self._data_stream = None
@@ -40,16 +40,8 @@ class BaseModel(ABC):
             raise Exception("Start or End time has not been set yet.")
 
     @property
-    def buffer(self):
-        return self._buffer
-
-    @property
     def name(self):
         return self._name
-
-    def clear_buffer(self):
-        while not self._buffer.empty():
-            self._buffer.get()
 
     @abstractmethod
     def process(self, x, y):
@@ -74,7 +66,6 @@ class BaseModel(ABC):
             self._is_pre_train = False
 
         self._instance_count += 1
-
 
     def run(self):
         # Check that the stream has been set

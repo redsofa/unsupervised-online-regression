@@ -3,7 +3,6 @@ from nrc.factories.stream import StreamFactory
 from nrc.models.stub_model import StubModel
 import unittest
 import io
-from river import stream
 
 
 class Test_ModelFactory(unittest.TestCase):
@@ -12,8 +11,6 @@ class Test_ModelFactory(unittest.TestCase):
         pre_train_size = 5
         m = ModelFactory.get_instance('stub_model', pre_train_size, buffer_size)
         self.assertTrue(type(m) is StubModel)
-        m.clear_buffer()
-        self.assertTrue(m.buffer.empty())
 
     def test_get_invalid_model(self):
         buffer_size = 10
