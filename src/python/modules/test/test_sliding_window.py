@@ -33,6 +33,7 @@ class TestSlidingWidow(unittest.TestCase):
             data = w.get_data()
             self.assertEqual(n, data)
 
+        # Length of window should be 0 after we've pulled everything out from it.
         self.assertEqual(0, w.len())
 
 
