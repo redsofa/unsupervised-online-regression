@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import time
 from nrc.util.buffers import *
+from nrc.metrics.regression import *
 
 
 class BaseRegressionModel(ABC):
@@ -16,6 +17,7 @@ class BaseRegressionModel(ABC):
         self._pre_train_size = i_pretrain_size
         self._sample_count = 0
         self._threshold = None
+        self._metrics = RegressionMetrics()
 
     @property
     def sample_count(self):
