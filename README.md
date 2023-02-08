@@ -70,6 +70,16 @@ cd ./src/bash
 sh run_unit_tests.sh
 ~~~
 
+## 7 - Citation
+If you use or reference this work in a scientific publication,
+we would appreciate that you use the following citations:
+
+```
+@INPROCEEDINGS{
+... TODO
+}
+```
+
 
 
 # (EXTRA REFERENCE) - To export the working Conda environment
@@ -86,4 +96,6 @@ conda env export > conda_env.yml
 cd ./dev_env
 sh tmux_dev_env.sh
 ~~~
+
+
 
