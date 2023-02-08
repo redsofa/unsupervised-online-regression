@@ -14,7 +14,11 @@ class BaseModel(ABC):
         self._stop_run = False
         self._max_samples = i_max_samples
         self._pre_train_size = i_pretrain_size
-        self._instance_count = 0
+        self._sample_count = 0
+
+    @property
+    def sample_count(self):
+        return self._sample_count
 
     @property
     def data_stream(self):
@@ -57,15 +61,15 @@ class BaseModel(ABC):
 
     def add_instance(self, x, y):
         if self._max_samples is not None:
-            if self._instance_count >= self._max_samples:
+            if self._sample_count >= self._max_samples:
                 print('Maximum instance count reached. Stopping stream processing.')
                 self._stop_run = True
                 return
 
-        if self._instance_count >= self._pre_train_size:
+        if self._sample_count >= self._pre_train_size:
             self._is_pre_train = False
 
-        self._instance_count += 1
+        self._sample_count += 1
 
     def run(self):
         # Check that the stream has been set
