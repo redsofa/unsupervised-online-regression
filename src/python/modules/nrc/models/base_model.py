@@ -48,15 +48,15 @@ class BaseModel(ABC):
         return self._name
 
     @abstractmethod
-    def process(self, x, y):
+    def process_one(self, x, y):
         pass
 
     @abstractmethod
-    def pre_train(self, x, y):
+    def pre_train_one(self, x, y):
         pass
 
     @abstractmethod
-    def predict_and_update(self, x, y):
+    def predict_and_update_one(self, x, y):
         pass
 
     def add_instance(self, x, y):
@@ -77,7 +77,7 @@ class BaseModel(ABC):
             raise Exception(f'Cannot run the algorithm {self.name}, the input data stream has not been set.')
         self._start_time  = time.time()
 
-        print(f'Running model : {self._name}')
+        print(f'Running model : {self._name}\n')
         for x, y in self.data_stream:
             self.add_instance(x, y)
 
@@ -85,9 +85,9 @@ class BaseModel(ABC):
                 break
 
             if self._is_pre_train:
-                self.pre_train(x, y)
+                self.pre_train_one(x, y)
             else:
-                self.process(x, y)
+                self.process_one(x, y)
 
         self._end_time = time.time()
 

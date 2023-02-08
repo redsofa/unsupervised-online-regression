@@ -32,7 +32,7 @@ def main():
         model = ModelFactory.get_instance(model_name, args.pre_train_size, args.buffer_size, args.max_samples)
         model.data_stream = data_stream
         model.run()
-        print(f"\nTotal execution time (seconds): {model.run_time}")
+        print(f"\nTotal execution time (seconds): {model.run_time}\n")
         print('Model State:\n')
         print(model)
         print()
