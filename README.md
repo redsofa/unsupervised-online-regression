@@ -54,6 +54,13 @@ cd ./src/python
 python main.py
 ~~~
 
+OR
+
+~~~
+cd ./src/bash
+sh run_python_program.sh
+~~~
+
 
 ## 6 - Run Unit Tests
 ~~~
