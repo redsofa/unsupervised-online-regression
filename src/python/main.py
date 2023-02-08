@@ -25,7 +25,6 @@ def main():
     # stream_params specifies how to transform the input data stream features and which column is
     # the target variable.
     stream_params = load_stream_params(args.stream_parameters)
-
     # Runs models sequentially and use the same data stream each time.
     for model_name in model_names:
         data_stream = StreamFactory.get_csv_stream(args.input_file_name, **stream_params)
