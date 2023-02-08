@@ -81,6 +81,9 @@ we would appreciate that you use the following citations:
 ```
 
 <hr>
+<br>
+<br>
+<br>
 
 # (EXTRA REFERENCE) - To export the working Conda environment
 ~~~
@@ -89,7 +92,7 @@ conda env export > conda_env.yml
 ~~~
 
 
-# (EXTRA REFERENCE ) - Tmux and Vim development environment
+# (EXTRA REFERENCE) - Tmux and Vim development environment
 
 ## Start Tmux dev environment
 ~~~
