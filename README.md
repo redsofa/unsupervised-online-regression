@@ -80,7 +80,7 @@ we would appreciate that you use the following citations:
 }
 ```
 
-</hr>
+<hr>
 
 # (EXTRA REFERENCE) - To export the working Conda environment
 ~~~
