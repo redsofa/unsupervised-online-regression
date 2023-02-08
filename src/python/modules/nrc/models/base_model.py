@@ -15,6 +15,7 @@ class BaseModel(ABC):
         self._max_samples = i_max_samples
         self._pre_train_size = i_pretrain_size
         self._sample_count = 0
+        self._threshold = None
 
     @property
     def sample_count(self):
@@ -59,6 +60,14 @@ class BaseModel(ABC):
     def predict_and_update_one(self, x, y):
         pass
 
+    @abstractmethod
+    def _evaluate_metrics(self):
+        pass
+
+    @abstractmethod
+    def _update_buffer_yn(self):
+        pass
+
     def add_instance(self, x, y):
         if self._max_samples is not None:
             if self._sample_count >= self._max_samples:
@@ -79,15 +88,30 @@ class BaseModel(ABC):
 
         print(f'Running model : {self._name}\n')
         for x, y in self.data_stream:
+            # The add_instance() method figures out if we should stop the run because
+            # we have reached the maximum number of records we want to process from the stream.
+            # It also figures out if we are in pre-train or normal stream processing mode.
+            # Additionally, it increments the sample count.
             self.add_instance(x, y)
 
+           # Stop running the algorithm if we this flag has been set.
+           # This flag usually means that the maximum number of records to process from the stream
+           # has been reached.
             if self._stop_run :
                 break
 
+            # If we are in pre-training mode, call the pre-train_one method.
             if self._is_pre_train:
                 self.pre_train_one(x, y)
             else:
-                self.process_one(x, y)
+                # Here the model has been trained. We need to process the incoming sample.
+                # The process_one() method calls predict_and_update_one(),
+                # which (may do a fit or partial fit) depending on the size of the buffer and
+                # the evaluation metrics.
+                y_pred = self.process_one(x, y)
+                add_to_buffer = self._evaluate_metrics()
+                if add_to_buffer:
+                    self._update_buffer_yn(prediction)
 
         self._end_time = time.time()
 

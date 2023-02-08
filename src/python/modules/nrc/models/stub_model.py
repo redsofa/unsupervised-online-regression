@@ -14,6 +14,13 @@ class StubModel(BaseModel):
     def predict_and_update_one(self, x, y):
         pass
 
+    def _evaluate_metrics(self):
+        pass
+
+    def _update_buffer_yn(self):
+        pass
+
+
 
 if __name__ == '__main__':
     pass
