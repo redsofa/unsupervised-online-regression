@@ -14,8 +14,9 @@ class Test_ModelFactory(unittest.TestCase):
 
     def test_get_invalid_model(self):
         buffer_size = 10
+        pre_train_size = 5
         with self.assertRaises(Exception):
-            m = ModelFactory.get_instance('invalid_model_name', buffer_size)
+            m = ModelFactory.get_instance('invalid_model_name', pre_train_size, buffer_size)
 
 
 class Test_ModelRunning(unittest.TestCase):
