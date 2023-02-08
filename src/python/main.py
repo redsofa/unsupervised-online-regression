@@ -21,7 +21,7 @@ def get_args():
 def main():
     args = get_args()
     # Array of models to run.
-    model_names = ['stub_model']
+    model_names = ['stub_regression_model']
     # stream_params specifies how to transform the input data stream features and which column is
     # the target variable.
     stream_params = load_stream_params(args.stream_parameters)

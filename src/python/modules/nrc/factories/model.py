@@ -1,4 +1,4 @@
-from nrc.models.stub_model import StubModel
+from nrc.models.stub import StubRegressionModel
 
 
 class ModelFactory():
@@ -6,8 +6,8 @@ class ModelFactory():
     @staticmethod
     def get_instance(i_model_name, i_pre_train_size, i_buffer_size, i_max_samples=None):
         ret_val = None
-        if i_model_name == "stub_model":
-            ret_val =  ModelFactory.get_stub_model(i_pre_train_size, i_buffer_size, i_max_samples)
+        if i_model_name == "stub_regression_model":
+            ret_val =  ModelFactory.get_stub_regression_model(i_pre_train_size, i_buffer_size, i_max_samples)
         else:
             raise Exception('Model not available from factory')
 
@@ -16,8 +16,8 @@ class ModelFactory():
         return ret_val
 
     @staticmethod
-    def get_stub_model(i_pre_train_size, i_buffer_size, i_max_samples):
-        return StubModel(i_pre_train_size, i_buffer_size, i_max_samples)
+    def get_stub_regression_model(i_pre_train_size, i_buffer_size, i_max_samples):
+        return StubRegressionModel(i_pre_train_size, i_buffer_size, i_max_samples)
 
 
 if __name__ == '__main__':

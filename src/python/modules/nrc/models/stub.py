@@ -1,9 +1,9 @@
-from nrc.models.base_model import *
+from nrc.models.base import *
 
 
-class StubModel(BaseModel):
+class StubRegressionModel(BaseRegressionModel):
     def __init__(self, i_pre_train_size, i_buffer_size, i_max_samples=None):
-        super().__init__(i_pre_train_size, i_buffer_size, 'stub_model', i_max_samples)
+        super().__init__(i_pre_train_size, i_buffer_size, 'stub_regression_model', i_max_samples)
 
     def process_one(self, x, y):
         print(f'TRAINED -  processing one... New instance : features: {x} -- target: {y}')

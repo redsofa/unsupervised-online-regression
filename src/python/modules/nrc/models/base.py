@@ -3,7 +3,7 @@ import time
 from nrc.util.buffers import *
 
 
-class BaseModel(ABC):
+class BaseRegressionModel(ABC):
     def __init__(self, i_pretrain_size, i_buffer_size, i_name, i_max_samples=None):
         self._name = i_name
         self._buffer = SlidingWindow(i_buffer_size)
