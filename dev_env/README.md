@@ -1,6 +1,6 @@
 # Files
 
-- conda_env.yml - Exported Conda environment (default name is reg-env). Use this to replicate Conda environment that was used to
+- <b>conda_env.yml</b> - Exported Conda environment (default name is reg-env). Use this to replicate Conda environment that was used to
   develop this project.
 
 - settings.sh - Bash script that defines environment variables that are used in the `tmux_dev_env.sh`. Entries in the setting.sh
