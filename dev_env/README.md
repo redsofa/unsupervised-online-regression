@@ -1,4 +1,4 @@
-# Files
+# File Descriptions
 
 - <b>conda_env.yml</b> - Exported Conda environment (default name is reg-env). Use this to replicate Conda environment that was used to
   develop this project.
