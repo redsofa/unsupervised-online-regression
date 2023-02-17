@@ -1,5 +1,5 @@
 import unittest
-from nrc.util.buffers import *
+from nrc.util.window import *
 
 
 class TestSlidingWidow(unittest.TestCase):

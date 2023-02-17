@@ -1,7 +1,8 @@
 from collections import defaultdict
 from abc import ABCMeta, abstractmethod
 
-# Reference : https://www.youtube.com/watch?v=KAwOtYk7QSE
+# Observer pattern bits. Adapted from this reference : https://www.youtube.com/watch?v=KAwOtYk7QSE
+
 
 # Manages the list of observers
 # Notifies them of state changes
@@ -32,8 +33,7 @@ class IObserver(metaclass=ABCMeta):
         # Receive notification
         pass
 
-'''
-class Subject(IObservable):
+class BaseObservableImpl(IObservable):
     def __init__(self):
         #default values of the dictionary will be a list
         self._observers = defaultdict(list)
@@ -50,21 +50,25 @@ class Subject(IObservable):
         for fn in self._observers[event_type]:
             fn(event_type, *args, **kwargs)
 
+'''
+# Usage example :
+
 class Observer(IObserver):
     def __init__(self, observable):
         self._observable = observable
         self.register_event_handlers()
-    
+
     def register_event_handlers(self):
        self._observable.subscribe('on_change_this', self.on_change_this)
 
     def on_change_this(self, *args, **kwargs):
         print('in OBSERVER_1 on_change_this')
 
-subject = Subject()
+subject = BaseObservableImpl()
 observer_1 = Observer(subject)
 subject.trigger('on_change_this', 'bla', this='a', that='kk')
 '''
+
 
 if __name__ == '__main__':
     pass

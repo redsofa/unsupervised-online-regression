@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import time
-from nrc.util.buffers import *
+from nrc.util.window import *
 from nrc.metrics.regression import *
 
 
