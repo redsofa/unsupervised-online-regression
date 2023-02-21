@@ -4,29 +4,29 @@ from collections import defaultdict
 
 
 class WindowManager:
- '''
-TODO:
-    The code below is a prototype of a WindowManager.. 
+    '''
+    TODO:
+        The code below is a prototype of a WindowManager..
 
-    The WindowManager class can contains multiple sliding windows
-    Windows would / could include :
-    - pre-train sliding window
-    - test sliding window
+        The WindowManager class can contains multiple sliding windows
+        Windows would / could include :
+        - pre-train sliding window
+        - test sliding window
 
-    - post-train sliding window
+        - post-train sliding window
 
-- Metrics values
+    - Metrics values
 
-    - etc..
+        - etc..
 
-    Adding to the buffer could possibly manage which window get the data depending
-    on how far we are in the pre-training...
+        Adding to the buffer could possibly manage which window get the data depending
+        on how far we are in the pre-training...
 
-    Adding to the buffer could possibly manage when to run metrics calculations and trigger
-    retraining, buffer flushing events... etc..
-'''
+        Adding to the buffer could possibly manage when to run metrics calculations and trigger
+        retraining, buffer flushing events... etc..
+    '''
 
-   def __init__(self, i_train_size, i_test_size, i_buffer_size):
+    def __init__(self, i_train_size, i_test_size, i_buffer_size):
         # Capture the sizes of the various sliding windows
         self._train_size = i_train_size
         self._test_size = i_test_size
