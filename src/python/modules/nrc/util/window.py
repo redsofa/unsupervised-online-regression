@@ -2,10 +2,13 @@ from queue import Queue
 from nrc.util.observable import BaseObservableImpl
 from collections import defaultdict
 
-'''
-TODO:
 
-    May need WindowManager class that contains multiple sliding windows
+class WindowManager:
+ '''
+TODO:
+    The code below is a prototype of a WindowManager.. 
+
+    The WindowManager class can contains multiple sliding windows
     Windows would / could include :
     - pre-train sliding window
     - test sliding window
@@ -23,8 +26,7 @@ TODO:
     retraining, buffer flushing events... etc..
 '''
 
-class WindowManager:
-    def __init__(self, i_train_size, i_test_size, i_buffer_size):
+   def __init__(self, i_train_size, i_test_size, i_buffer_size):
         # Capture the sizes of the various sliding windows
         self._train_size = i_train_size
         self._test_size = i_test_size
@@ -49,8 +51,11 @@ class WindowManager:
         self._register_handlers()
 
 
-
         '''
+        Perhaps these are better variable names...
+
+        TODO... Update once Algo text version 1 is available.
+
         # Initial training First X samples where Y are assumed to be known
         self._init_train_sample_count = 0
         self._init_test_sample_count = 0
@@ -62,9 +67,6 @@ class WindowManager:
         self._test_sample_count = 0
         self._is_trained = False
         '''
-
-
-
 
 
     @property
