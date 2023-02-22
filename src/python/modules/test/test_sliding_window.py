@@ -2,7 +2,61 @@ import unittest
 from nrc.util.window import *
 
 
-class TestSlidingWidow(unittest.TestCase):
+class TestTrainTestWindow(unittest.TestCase):
+    def test_window_sizes(self):
+        def get_one_data_point(f1, f2, y):
+            return ({'f1':f1, 'f2': f2}, y)
+
+        train_window_size = 4
+        test_window_size = 2
+        ttw_size = train_window_size + test_window_size
+
+        ttw = TrainTestWindow(train_window_size, test_window_size)
+
+        # Add data points
+        for i in [1, 2, 3, 4, 5, 6]:
+            print(f'Adding data_point number {i}')
+            (x, y) = get_one_data_point(i, i+1, i+2)
+            ttw.add_one_sample(x = x, y = y)
+
+        print(ttw.train_samples)
+        print(ttw.test_samples)
+
+        self.assertEqual(train_window_size, ttw.train_sample_count)
+        self.assertEqual(test_window_size, ttw.test_sample_count)
+
+        # We should get an exception if we try to add more data than
+        # the TrainTestWindow is configured for
+        with self.assertRaises(Exception):
+            (x, y) = get_one_data_point(10, 11, 12)
+            ttw.add_one_sample(x = x, y = y)
+
+
+    def test_event_handlers(self):
+        train_window_size = 5
+        test_window_size = 3
+        ttw = TrainTestWindow(train_window_size, test_window_size)
+        # variable to simulate pass by reference
+        r_var = [0]
+
+        def on_add_sample(*args, **kwargs):
+            v = kwargs['mutable_var']
+            v[0] = 1
+            print(f'New sample : x : {kwargs["x"]}, y : {kwargs["y"]}')
+
+        ttw.register_on_add_sample_handler(on_add_sample)
+
+        ttw.add_one_sample(x={'f1':0.1, 'f2':1.0}, y=2.0, mutable_var=r_var)
+
+        self.assertEqual(1, r_var[0])
+        self.assertEqual(1, ttw.train_sample_count)
+        self.assertEqual(0, ttw.test_sample_count)
+        first_train_sample = ttw.train_samples[0]
+        self.assertEqual(first_train_sample['f1'], 0.1)
+        self.assertEqual(first_train_sample['y'], 2.0)
+
+
+class TestSlidingWindow(unittest.TestCase):
     def test_window_init_and_empty(self):
         # Create a sliding window of size 5
         w = SlidingWindow(5)
@@ -27,10 +81,16 @@ class TestSlidingWidow(unittest.TestCase):
             w.add_data(n)
         self.assertEqual(5, w.len())
 
+        self.assertEqual([6, 7, 8, 9, 10], w.get_as_list())
+        self.assertEqual(10, w.get_element_at(4))
+
+        with self.assertRaises(Exception):
+            w.get_element_at(43)
+
         # Pull data from the sliding window.
         # The oldest bit of data should come out first (e.g. 6, 7, 8, 9, 10)
         for n in [6, 7, 8, 9, 10]:
-            data = w.get_data()
+            data = w.pop()
             self.assertEqual(n, data)
 
         # Length of window should be 0 after we've pulled everything out from it.
