@@ -2,7 +2,7 @@ import unittest
 from nrc.util.window import *
 from nrc.metrics.regression import *
 
-
+# TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
     def test_window_sizes(self):
         # Create a RegressionMetricsWinow
@@ -21,6 +21,13 @@ class TestRegressionMetricsWindow(unittest.TestCase):
         m2.add_one_prediction(2,23)
         m2.add_one_prediction(4,2)
         rmw.add_one_metric(m2)
+
+        m3 = RegressionMetrics()
+        # Add a few y_true and y_pred values
+        m3.add_one_prediction(2,23)
+        m3.add_one_prediction(4,2)
+        rmw.add_one_metric(m3)
+
         self.assertEqual(2, rmw.len())
 
 
