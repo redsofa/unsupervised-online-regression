@@ -53,12 +53,17 @@ class TrainTestWindow(BaseObservableImpl):
             self._test_win.add_data(data)
         else:
             raise Exception('Train and test windows are full')
+        if self.is_filled :
+            self.trigger('on_is_filled', None, None)
 
     def add_one_sample(self, *args, **kwargs):
-        self._train_win.trigger('on_add_sample', *args, **kwargs)
+        self.trigger('on_add_sample', *args, **kwargs)
+
+    def register_on_filled_handler(self, function):
+        self.subscribe('on_is_filled', function)
 
     def register_on_add_sample_handler(self, function):
-        self._train_win.subscribe('on_add_sample', function)
+        self.subscribe('on_add_sample', function)
 
 
 class WindowManager:

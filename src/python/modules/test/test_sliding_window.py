@@ -4,9 +4,11 @@ from nrc.util.window import *
 
 class TestTrainTestWindow(unittest.TestCase):
     def test_window_sizes(self):
+        # Utility function to generate a River-like datapoint.
         def get_one_data_point(f1, f2, y):
             return ({'f1':f1, 'f2': f2}, y)
 
+        # Window size configuration
         train_window_size = 4
         test_window_size = 2
         ttw_size = train_window_size + test_window_size
@@ -14,13 +16,25 @@ class TestTrainTestWindow(unittest.TestCase):
         # Create a TrainTestWindow instance
         ttw = TrainTestWindow(train_window_size, test_window_size)
 
+        # Create and register event handler for when the TrainTestWindow is filled
+        def on_window_filled(*args, **kwargs):
+            print('Window Filled')
+
+        ttw.register_on_filled_handler(on_window_filled)
+
+        # Create and register an event handler for when data is added to the TrainTestWindow
+        def on_add_sample(*args, **kwargs):
+            print(f'Adding data_point number {i}')
+            print(f'New sample : x : {kwargs["x"]}, y : {kwargs["y"]}')
+
+        ttw.register_on_add_sample_handler(on_add_sample)
+
         # Add data a number of data points to the TrainTestWindow
         for i in [1, 2, 3, 4, 5, 6]:
-            print(f'Adding data_point number {i}')
             # The TrainTestWindow should not be full until we are out of this loop
             self.assertFalse(ttw.is_filled)
             (x, y) = get_one_data_point(i, i+1, i+2)
-            ttw.add_one_sample(x = x, y = y)
+            ttw.add_one_sample(x = x, y = y, i = i)
 
         # The TrainTestWindow should not be full
         self.assertTrue(ttw.is_filled)
