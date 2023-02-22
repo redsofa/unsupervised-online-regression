@@ -22,6 +22,8 @@ conda activate <env_name>
 
 - IMPORTTANT !! Make sure you are in the project's root
 - Copy/paste the content below in a terminal and hit enter to run them
+- This command only needs to be run once
+
 
 ~~~
 ROOT_DIR="$(pwd)" && \
