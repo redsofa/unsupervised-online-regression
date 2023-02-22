@@ -1,18 +1,35 @@
 from collections import deque
-from nrc.util.observable import BaseObservableImpl
-from collections import defaultdict
 
-class TrainTestWindow(BaseObservableImpl):
+'''
+The high-level API for running model could look like this :
+
+model_runner.set_train_test_window(ttw)
+model_runner.set_metrics(regression_metrics)
+model_runner.set_model(regression_model)
+model_runner.set_stream(stream)
+model_runner.set_max_samples()
+model_runner.validate_settings() # check that the ttw total size < max_samples
+model_runner.run()
+'''
+
+class RegressionMetricsWindow():
+    def __init__(self, window_size):
+        self._window_size = window_size
+        self._metrics_win = SlidingWindow(self._window_size)
+
+    def add_one_metric(self, metric):
+        self._metrics_win.add_data(metric)
+
+    def len(self):
+        return self._metrics_win.len()
+
+class TrainTestWindow():
     def __init__(self, train_size, test_size):
-        # Call the base class's default constructor.
-        # Creates the self._observers instance.
-        super().__init__()
         self._train_size = train_size
         self._test_size = test_size
         self._train_win = SlidingWindow(self._train_size)
         self._test_win = SlidingWindow(self._test_size)
-
-        self.register_on_add_sample_handler(self._on_add_sample)
+        self._on_filled_handler = None
 
     @property
     def train_sample_count(self):
@@ -43,10 +60,9 @@ class TrainTestWindow(BaseObservableImpl):
         return (self._train_win.len() == self._train_size) \
                 and (self._test_win.len() == self._test_size)
 
-    def _on_add_sample(self, *args, **kwargs):
-        x = kwargs['x']
-        y = {'y' : kwargs['y']}
-        data = x | y # merge x and y dictionaries (python 3.9+)
+    def add_one_sample(self, x, y):
+        target = {'y' : y}
+        data = x | target # merge x and y dictionaries (python 3.9+)
         if self._train_win.len() < self._train_size:
             self._train_win.add_data(data)
         elif self._test_win.len() < self._test_size:
@@ -54,23 +70,16 @@ class TrainTestWindow(BaseObservableImpl):
         else:
             raise Exception('Train and test windows are full')
         if self.is_filled :
-            self.trigger('on_is_filled', None, None)
+            if self._on_filled_handler:
+                self._on_filled_handler()
 
-    def add_one_sample(self, *args, **kwargs):
-        self.trigger('on_add_sample', *args, **kwargs)
+    def register_on_window_filled_handler(self, function):
+        self._on_filled_handler = function
 
-    def register_on_filled_handler(self, function):
-        self.subscribe('on_is_filled', function)
-
-    def register_on_add_sample_handler(self, function):
-        self.subscribe('on_add_sample', function)
 
 # Basically a queue first, in first out,
-class SlidingWindow(BaseObservableImpl):
+class SlidingWindow():
     def __init__(self, max_len):
-        # Call the base class's default constructor.
-        # Creates the self._observers instance.
-        super().__init__()
         self._max_len = max_len
         self._data = deque(maxlen = max_len)
 

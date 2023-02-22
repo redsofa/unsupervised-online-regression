@@ -1,5 +1,27 @@
 import unittest
 from nrc.util.window import *
+from nrc.metrics.regression import *
+
+
+class TestRegressionMetricsWindow(unittest.TestCase):
+    def test_window_sizes(self):
+        # Create a RegressionMetricsWinow
+        rmw = RegressionMetricsWindow(2)
+        # Create the regression metrics object
+        m = RegressionMetrics()
+        # Add a few y_true and y_pred values
+        m.add_one_prediction(2,23)
+        m.add_one_prediction(4,2)
+
+        # Add metrics to the metrics window
+        rmw.add_one_metric(m)
+
+        m2 = RegressionMetrics()
+        # Add a few y_true and y_pred values
+        m2.add_one_prediction(2,23)
+        m2.add_one_prediction(4,2)
+        rmw.add_one_metric(m2)
+        self.assertEqual(2, rmw.len())
 
 
 class TestTrainTestWindow(unittest.TestCase):
@@ -17,24 +39,17 @@ class TestTrainTestWindow(unittest.TestCase):
         ttw = TrainTestWindow(train_window_size, test_window_size)
 
         # Create and register event handler for when the TrainTestWindow is filled
-        def on_window_filled(*args, **kwargs):
+        def on_window_filled():
             print('Window Filled')
 
-        ttw.register_on_filled_handler(on_window_filled)
-
-        # Create and register an event handler for when data is added to the TrainTestWindow
-        def on_add_sample(*args, **kwargs):
-            print(f'Adding data_point number {i}')
-            print(f'New sample : x : {kwargs["x"]}, y : {kwargs["y"]}')
-
-        ttw.register_on_add_sample_handler(on_add_sample)
+        ttw.register_on_window_filled_handler(on_window_filled)
 
         # Add data a number of data points to the TrainTestWindow
         for i in [1, 2, 3, 4, 5, 6]:
             # The TrainTestWindow should not be full until we are out of this loop
             self.assertFalse(ttw.is_filled)
             (x, y) = get_one_data_point(i, i+1, i+2)
-            ttw.add_one_sample(x = x, y = y, i = i)
+            ttw.add_one_sample(x, y)
 
         # The TrainTestWindow should not be full
         self.assertTrue(ttw.is_filled)
@@ -52,30 +67,6 @@ class TestTrainTestWindow(unittest.TestCase):
         with self.assertRaises(Exception):
             (x, y) = get_one_data_point(10, 11, 12)
             ttw.add_one_sample(x = x, y = y)
-
-
-    def test_event_handlers(self):
-        train_window_size = 5
-        test_window_size = 3
-        ttw = TrainTestWindow(train_window_size, test_window_size)
-        # variable to simulate pass by reference
-        r_var = [0]
-
-        def on_add_sample(*args, **kwargs):
-            v = kwargs['mutable_var']
-            v[0] = 1
-            print(f'New sample : x : {kwargs["x"]}, y : {kwargs["y"]}')
-
-        ttw.register_on_add_sample_handler(on_add_sample)
-
-        ttw.add_one_sample(x={'f1':0.1, 'f2':1.0}, y=2.0, mutable_var=r_var)
-
-        self.assertEqual(1, r_var[0])
-        self.assertEqual(1, ttw.train_sample_count)
-        self.assertEqual(0, ttw.test_sample_count)
-        first_train_sample = ttw.train_samples[0]
-        self.assertEqual(first_train_sample['f1'], 0.1)
-        self.assertEqual(first_train_sample['y'], 2.0)
 
 
 class TestSlidingWindow(unittest.TestCase):
