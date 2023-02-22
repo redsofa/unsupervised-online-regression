@@ -11,17 +11,25 @@ class TestTrainTestWindow(unittest.TestCase):
         test_window_size = 2
         ttw_size = train_window_size + test_window_size
 
+        # Create a TrainTestWindow instance
         ttw = TrainTestWindow(train_window_size, test_window_size)
 
-        # Add data points
+        # Add data a number of data points to the TrainTestWindow
         for i in [1, 2, 3, 4, 5, 6]:
             print(f'Adding data_point number {i}')
+            # The TrainTestWindow should not be full until we are out of this loop
+            self.assertFalse(ttw.is_filled)
             (x, y) = get_one_data_point(i, i+1, i+2)
             ttw.add_one_sample(x = x, y = y)
 
+        # The TrainTestWindow should not be full
+        self.assertTrue(ttw.is_filled)
+
+        # Print the training data.. and the testing data
         print(ttw.train_samples)
         print(ttw.test_samples)
 
+        # Make sure the sizes of the windows are what we expect
         self.assertEqual(train_window_size, ttw.train_sample_count)
         self.assertEqual(test_window_size, ttw.test_sample_count)
 

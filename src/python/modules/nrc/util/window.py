@@ -38,6 +38,11 @@ class TrainTestWindow(BaseObservableImpl):
     def train_samples(self):
         return self._train_win.get_as_list()
 
+    @property
+    def is_filled(self):
+        return (self._train_win.len() == self._train_size) \
+                and (self._test_win.len() == self._test_size)
+
     def _on_add_sample(self, *args, **kwargs):
         x = kwargs['x']
         y = {'y' : kwargs['y']}
