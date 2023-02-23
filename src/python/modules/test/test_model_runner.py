@@ -29,7 +29,7 @@ def get_test_data():
     return ret_val
 
 def get_stream_params():
-    return {"converters":{"c1":float, "c2":float, 't':int}, "target":"y"}
+    return {"converters":{"c1":float, "c2":float, 'y':int}, "target":"y"}
 
 
 class TestModelRunner(unittest.TestCase):
@@ -62,9 +62,9 @@ class TestModelRunner(unittest.TestCase):
 
         # Configure the ModelRunner instance
         m_run.set_train_test_window(tt_win)
-        m_run.set_stream(data_stream)
+        m_run.set_data_stream(data_stream)
 
-        m_run.validate_settings()
+        m_run.run()
 
         # Initially fail the test to ensure code gets executed in
         # test run
