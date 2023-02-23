@@ -71,17 +71,17 @@ class TestModelRunner(unittest.TestCase):
 
         # Configure a TrainTest_Window instance
         tt_win = TrainTestWindow(train_size, test_size)
-        
+
         # Configure regression metrics window instance
         m_met = RegressionMetricsWindow(buffer_size)
 
         # Get a ScikitLearnRegressionModel instance
         model = ModelFactory.get_instance(
-                'sklearn_linear_regression_model', 
-                1, 
-                1, 
+                'sklearn_linear_regression_model',
+                1,
+                1,
                 1)
-    
+
         # Configure the ModelRunner instance
         m_run.set_train_test_window(tt_win)
         m_run.set_data_stream(data_stream)
@@ -94,7 +94,6 @@ class TestModelRunner(unittest.TestCase):
         # Initially fail the test to ensure code gets executed in
         # test run
         self.assertTrue(False)
-
 
 
 if __name__ == '__main__':
