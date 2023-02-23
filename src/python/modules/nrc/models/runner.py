@@ -48,6 +48,7 @@ class ModelRunner():
 
     def _trigger_initial_training(self):
         print('initial training triggered')
+        # TODO Transformer for test and train to np arrays
         # TODO Train model
 
         train = self._tt_win.train_samples
