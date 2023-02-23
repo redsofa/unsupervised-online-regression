@@ -14,11 +14,12 @@ class TestRiverToScikitLearnTransformer(unittest.TestCase):
         transformer = RiverToScikitLearnTransformer()
         transformer.set_one_sample(river_data[0], river_data[1])
         transformer.execute()
+
         print('Transformed x values')
         print(transformer.transformed_data['x'])
         print('Transformed y values')
         print(transformer.transformed_data['y'])
-        print(type(transformer.transformed_data['x']))
+
         self.assertTrue(isinstance(transformer.transformed_data['x'], np.ndarray))
         self.assertTrue(isinstance(transformer.transformed_data['y'], np.ndarray))
         self.assertTrue(np.allclose(np.array([[2.4, 35]]), transformer.transformed_data['x'], equal_nan=True))
