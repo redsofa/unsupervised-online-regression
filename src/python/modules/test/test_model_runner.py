@@ -55,7 +55,7 @@ class TestModelRunner(unittest.TestCase):
         train_size = round(window_size * 0.8)
         test_size = round(window_size * 0.2)
         buffer_size = round(window_size * 0.4)
-        max_samples = 3
+        max_samples = None
 
         print(f'window_size : {window_size}')
         print(f'train_size : {train_size}')
@@ -82,7 +82,6 @@ class TestModelRunner(unittest.TestCase):
                 1, 
                 1)
     
-
         # Configure the ModelRunner instance
         m_run.set_train_test_window(tt_win)
         m_run.set_data_stream(data_stream)
