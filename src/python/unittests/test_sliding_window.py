@@ -7,6 +7,8 @@ import os
 from common_test_utils import get_test_data_stream
 import numpy as np
 from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+
 
 # TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
@@ -149,8 +151,23 @@ class TestTrainTestWindow(unittest.TestCase):
         self.assertTrue(np.allclose(np.array(expected_test_y), test_data['y'], equal_nan=True))
 
         # Create regression model
+        regr = linear_model.LinearRegression()
+        regr.fit(train_data['x'], train_data['y'])
 
-        # Make test fail... were not done testing yet... 
+        preds = regr.predict(test_data['x'])
+        print('predictions :')
+        print(preds)
+        print()
+
+        # The coefficients
+        print("Coefficients: \n", regr.coef_)
+        # The mean squared error
+        print("Mean squared error: %.2f" % mean_squared_error(test_data['y'], preds))
+        # The coefficient of determination: 1 is perfect prediction
+        print("Coefficient of determination: %.2f" % r2_score(test_data['y'], preds))
+        print()
+
+        # Make test fail... were not done testing yet...
         self.assertTrue(False)
 
 class TestSlidingWindow(unittest.TestCase):
