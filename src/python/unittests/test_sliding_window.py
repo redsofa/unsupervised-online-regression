@@ -6,7 +6,7 @@ from nrc.util.transformers import ListToScikitLearnTransformer
 import os
 from common_test_utils import get_test_data_stream
 import numpy as np
-
+from sklearn import linear_model
 
 # TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
@@ -82,10 +82,12 @@ class TestTrainTestWindow(unittest.TestCase):
             ttw.add_one_sample(x = x, y = y)
 
     def test_train_regression_model(self):
-        # Configure window sizes
-        train_size = 2
-        test_size = 1
+        # Configure window size
+        window_size = 10
+        train_size = round(window_size * 0.8)
+        test_size = round(window_size * 0.2)
 
+        print(f'window_size : {window_size}')
         print(f'train_size : {train_size}')
         print(f'test_size : {test_size}')
 
@@ -112,8 +114,19 @@ class TestTrainTestWindow(unittest.TestCase):
         # Make sure train and testing data look like we would expect
         self.assertEqual(train_size, len(train_data['x']))
         self.assertEqual(train_size, len(train_data['y']))
-        self.assertTrue(np.allclose(np.array([[1.0, 2.0],[2.2, 3.5]]), train_data['x'], equal_nan=True))
-        self.assertTrue(np.allclose(np.array([23, 22]), train_data['y'], equal_nan=True))
+        expected_train_x = [
+                [1.0,2.0],
+                [2.2,3.5],
+                [3.0,3.1],
+                [2.0,3.1],
+                [2.4,3.4],
+                [2.0,3.1],
+                [6.0,3.1],
+                [2.0,3.1],
+        ]
+        expected_train_y = [23,22,21,20,22,24,26,22]
+        self.assertTrue(np.allclose(np.array(expected_train_x), train_data['x'], equal_nan=True))
+        self.assertTrue(np.allclose(np.array(expected_train_y), train_data['y'], equal_nan=True))
 
         # Transform test samples
         transformer.set_samples(ttw.test_samples)
@@ -126,10 +139,19 @@ class TestTrainTestWindow(unittest.TestCase):
         # Make sure test data looks like what we would expect
         self.assertEqual(test_size, len(test_data['x']))
         self.assertEqual(test_size, len(test_data['y']))
-        self.assertTrue(np.allclose(np.array([[3.0, 3.1]]), test_data['x'], equal_nan=True))
-        self.assertTrue(np.allclose(np.array([21]), test_data['y'], equal_nan=True))
 
+        expected_test_x = [
+                [4.2, 3.1],
+                [2.0, 3.5]
+        ]
+        expected_test_y = [22, 27]
+        self.assertTrue(np.allclose(np.array(expected_test_x), test_data['x'], equal_nan=True))
+        self.assertTrue(np.allclose(np.array(expected_test_y), test_data['y'], equal_nan=True))
 
+        # Create regression model
+
+        # Make test fail... were not done testing yet... 
+        self.assertTrue(False)
 
 class TestSlidingWindow(unittest.TestCase):
     def test_window_init_and_empty(self):
