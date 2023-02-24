@@ -1,6 +1,10 @@
+import sys
 import unittest
 from nrc.util.window import *
 from nrc.metrics.regression import *
+import os
+from common_utils import get_test_data_stream
+
 
 # TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
@@ -75,6 +79,27 @@ class TestTrainTestWindow(unittest.TestCase):
             (x, y) = get_one_data_point(10, 11, 12)
             ttw.add_one_sample(x = x, y = y)
 
+
+    def test_train_regression_model(self):
+        # Configure window sizes
+        window_size = 10
+        train_size = round(window_size * 0.8)
+        test_size = round(window_size * 0.2)
+
+        print(f'window_size : {window_size}')
+        print(f'train_size : {train_size}')
+        print(f'test_size : {test_size}')
+
+
+        # Configure a CSV stream instance of testing data
+        data_stream = get_test_data_stream()
+
+        # Configure a TrainTest_Window instance
+        tt_win = TrainTestWindow(train_size, test_size)
+
+
+
+        self.assertTrue(False)
 
 class TestSlidingWindow(unittest.TestCase):
     def test_window_init_and_empty(self):
