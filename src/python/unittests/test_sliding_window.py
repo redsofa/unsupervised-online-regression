@@ -150,15 +150,18 @@ class TestTrainTestWindow(unittest.TestCase):
         self.assertTrue(np.allclose(np.array(expected_test_x), test_data['x'], equal_nan=True))
         self.assertTrue(np.allclose(np.array(expected_test_y), test_data['y'], equal_nan=True))
 
-        # Create regression model
+        # Create and fit regression model
         regr = linear_model.LinearRegression()
         regr.fit(train_data['x'], train_data['y'])
 
+        # Make predictions
         preds = regr.predict(test_data['x'])
         print('predictions :')
         print(preds)
         print()
 
+
+        # Get some metrics from sckit
         # The coefficients
         print("Coefficients: \n", regr.coef_)
         # The mean squared error
@@ -167,8 +170,9 @@ class TestTrainTestWindow(unittest.TestCase):
         print("Coefficient of determination: %.2f" % r2_score(test_data['y'], preds))
         print()
 
-        # Make test fail... were not done testing yet...
-        self.assertTrue(False)
+        self.assertAlmostEqual(18.26, mean_squared_error(test_data['y'], preds), places=2)
+        self.assertAlmostEqual(-1.92, r2_score(test_data['y'], preds), places=2)
+
 
 class TestSlidingWindow(unittest.TestCase):
     def test_window_init_and_empty(self):
