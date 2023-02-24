@@ -43,14 +43,14 @@ class ListToScikitLearnTransformer(AbstractListTransformer):
             y.append(e['y'])
 
         self._transformed_data['x'] = np.array(x)
-        self._transformed_data['y'] = np.array([y])
+        self._transformed_data['y'] = np.array(y)
 
 
 class RiverToScikitLearnSampleTransformer(AbstractSampleTransformer):
     def transform(self):
         self._transformed_data = {}
         self._transformed_data['x'] = np.array([list(self._data['x'].values())])
-        self._transformed_data['y'] = np.array([self._data['y']])
+        self._transformed_data['y'] = np.array(self._data['y'])
 
 
 if __name__ == '__main__':

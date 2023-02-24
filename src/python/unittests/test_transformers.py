@@ -34,8 +34,15 @@ class TransformerTests(unittest.TestCase):
         transformer = ListToScikitLearnTransformer()
         transformer.set_samples(ttw.train_samples)
         transformer.execute()
+
+        print('Transformed x values')
         print(transformer.transformed_data['x'])
+        print('Transformed y values')
         print(transformer.transformed_data['y'])
+
+        self.assertTrue(isinstance(transformer.transformed_data['x'], np.ndarray))
+        self.assertTrue(isinstance(transformer.transformed_data['y'], np.ndarray))
+        self.assertTrue(np.allclose(np.array([[0.1],[0.2]]), transformer.transformed_data['x'], equal_nan=True))
 
 
 if __name__ == '__main__':

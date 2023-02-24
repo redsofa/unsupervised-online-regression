@@ -5,6 +5,8 @@ from nrc.metrics.regression import *
 from nrc.util.transformers import ListToScikitLearnTransformer
 import os
 from common_test_utils import get_test_data_stream
+import numpy as np
+
 
 # TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
@@ -79,42 +81,55 @@ class TestTrainTestWindow(unittest.TestCase):
             (x, y) = get_one_data_point(10, 11, 12)
             ttw.add_one_sample(x = x, y = y)
 
-
     def test_train_regression_model(self):
         # Configure window sizes
-        window_size = 10
-        train_size = round(window_size * 0.8)
-        test_size = round(window_size * 0.2)
+        train_size = 2
+        test_size = 1
 
-        print(f'window_size : {window_size}')
         print(f'train_size : {train_size}')
         print(f'test_size : {test_size}')
 
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
+        # Create instance of list data transformer
         transformer = ListToScikitLearnTransformer()
         # Configure a TrainTest_Window instance
         ttw = TrainTestWindow(train_size, test_size)
-
+        # Pull data from stream until the TrainTestWindow is full
         for x, y  in data_stream:
             ttw.add_one_sample(x, y)
             if ttw.is_filled:
                 break
 
-
+        # Transform train samples
         transformer.set_samples(ttw.train_samples)
         transformer.transform()
         train_data = transformer.transformed_data
+        print('train_data x : ')
+        print(train_data['x'])
+        print('train_data y : ')
+        print(train_data['y'])
+        # Make sure train and testing data look like we would expect
+        self.assertEqual(train_size, len(train_data['x']))
+        self.assertEqual(train_size, len(train_data['y']))
+        self.assertTrue(np.allclose(np.array([[1.0, 2.0],[2.2, 3.5]]), train_data['x'], equal_nan=True))
+        self.assertTrue(np.allclose(np.array([23, 22]), train_data['y'], equal_nan=True))
 
+        # Transform test samples
         transformer.set_samples(ttw.test_samples)
         transformer.transform()
         test_data = transformer.transformed_data
+        print('test_data x :')
+        print(test_data['x'])
+        print('test_data y :')
+        print(test_data['y'])
+        # Make sure test data looks like what we would expect
+        self.assertEqual(test_size, len(test_data['x']))
+        self.assertEqual(test_size, len(test_data['y']))
+        self.assertTrue(np.allclose(np.array([[3.0, 3.1]]), test_data['x'], equal_nan=True))
+        self.assertTrue(np.allclose(np.array([21]), test_data['y'], equal_nan=True))
 
-        print(train_data)
-        print(test_data)
 
-
-        self.assertTrue(False)
 
 class TestSlidingWindow(unittest.TestCase):
     def test_window_init_and_empty(self):
