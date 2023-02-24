@@ -51,8 +51,10 @@ class TrainTestWindow():
                 and (self._test_win.len() == self._test_size)
 
     def add_one_sample(self, x, y):
-        target = {'y' : y}
-        data = x | target # merge x and y dictionaries (python 3.9+)
+        indep = {'x' : x}
+        dep = {'y' : y}
+
+        data = indep | dep # merge x and y dictionaries (python 3.9+)
         if self._train_win.len() < self._train_size:
             self._train_win.add_data(data)
         elif self._test_win.len() < self._test_size:

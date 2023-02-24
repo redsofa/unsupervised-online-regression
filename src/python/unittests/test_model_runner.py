@@ -3,7 +3,7 @@ from nrc.models.runner import ModelRunner
 from nrc.factories.model import ModelFactory
 from nrc.factories.stream import StreamFactory
 from nrc.util.window import TrainTestWindow, RegressionMetricsWindow
-from common_utils import get_test_data_stream
+from common_test_utils import get_test_data_stream
 import io
 
 

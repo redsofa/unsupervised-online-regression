@@ -1,5 +1,5 @@
 import unittest
-from nrc.util.transformers import RiverToScikitLearnTransformer
+from nrc.util.transformers import RiverToScikitLearnSampleTransformer
 import numpy as np
 
 
@@ -7,11 +7,11 @@ def generate_data():
     return({'f1':2.4, 'f2':35}, 0)
 
 
-class TestRiverToScikitLearnTransformer(unittest.TestCase):
-    def test_basic_transform(self):
-        print(f'\nExecuting {TestRiverToScikitLearnTransformer.test_basic_transform.__name__} test')
+class TestRiverToScikitLearnSampleTransformer(unittest.TestCase):
+    def test_basic_sample_transform(self):
+        print(f'\nExecuting {TestRiverToScikitLearnSampleTransformer.test_basic_sample_transform.__name__} test')
         river_data = generate_data()
-        transformer = RiverToScikitLearnTransformer()
+        transformer = RiverToScikitLearnSampleTransformer()
         transformer.set_one_sample(river_data[0], river_data[1])
         transformer.execute()
 

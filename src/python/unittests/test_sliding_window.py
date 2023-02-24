@@ -2,9 +2,9 @@ import sys
 import unittest
 from nrc.util.window import *
 from nrc.metrics.regression import *
+from nrc.util.transformers import ListToScikitLearnTransformer
 import os
-from common_utils import get_test_data_stream
-
+from common_test_utils import get_test_data_stream
 
 # TODO : Test values properly and verify that metrics get added properly
 class TestRegressionMetricsWindow(unittest.TestCase):
@@ -90,13 +90,28 @@ class TestTrainTestWindow(unittest.TestCase):
         print(f'train_size : {train_size}')
         print(f'test_size : {test_size}')
 
-
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
-
+        transformer = ListToScikitLearnTransformer()
         # Configure a TrainTest_Window instance
-        tt_win = TrainTestWindow(train_size, test_size)
+        ttw = TrainTestWindow(train_size, test_size)
 
+        for x, y  in data_stream:
+            ttw.add_one_sample(x, y)
+            if ttw.is_filled:
+                break
+
+
+        transformer.set_samples(ttw.train_samples)
+        transformer.transform()
+        train_data = transformer.transformed_data
+
+        transformer.set_samples(ttw.test_samples)
+        transformer.transform()
+        test_data = transformer.transformed_data
+
+        print(train_data)
+        print(test_data)
 
 
         self.assertTrue(False)
