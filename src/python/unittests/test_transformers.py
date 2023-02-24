@@ -23,7 +23,7 @@ class TestRiverToScikitLearnSampleTransformer(unittest.TestCase):
         self.assertTrue(isinstance(transformer.transformed_data['x'], np.ndarray))
         self.assertTrue(isinstance(transformer.transformed_data['y'], np.ndarray))
         self.assertTrue(np.allclose(np.array([[2.4, 35]]), transformer.transformed_data['x'], equal_nan=True))
-
+        self.assertTrue(np.allclose(np.array([[0]]), transformer.transformed_data['y'], equal_nan=True))
 
 if __name__ == '__main__':
     unittest.main()
