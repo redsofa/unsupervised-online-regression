@@ -12,23 +12,24 @@ class AbstractTransformer(ABC):
 
     def execute(self):
         self.transform()
+        return self._transformed_data
 
     @property
     def transformed_data(self):
         return self._transformed_data
 
     @abstractmethod
-    def transform(self): pass
-
-
-class AbstractSampleTransformer(AbstractTransformer):
-    def set_one_sample(self, x, y):
-        _tmp = {'x':x, 'y':y }
-        self._data = _tmp
+    def transform(self):
+        pass
 
 
 class AbstractListTransformer(AbstractTransformer):
-    def set_samples(self, samples):
+    @property
+    def samples(self):
+        return self._data
+
+    @samples.setter
+    def samples(self, samples):
         self._data = samples
 
 
@@ -44,13 +45,6 @@ class ListToScikitLearnTransformer(AbstractListTransformer):
 
         self._transformed_data['x'] = np.array(x)
         self._transformed_data['y'] = np.array(y)
-
-
-class RiverToScikitLearnSampleTransformer(AbstractSampleTransformer):
-    def transform(self):
-        self._transformed_data = {}
-        self._transformed_data['x'] = np.array([list(self._data['x'].values())])
-        self._transformed_data['y'] = np.array(self._data['y'])
 
 
 if __name__ == '__main__':

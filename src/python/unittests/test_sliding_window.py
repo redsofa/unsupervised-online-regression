@@ -106,7 +106,7 @@ class TestTrainTestWindow(unittest.TestCase):
                 break
 
         # Transform train samples
-        transformer.set_samples(ttw.train_samples)
+        transformer.samples = ttw.train_samples
         transformer.transform()
         train_data = transformer.transformed_data
         print('train_data x : ')
@@ -131,7 +131,7 @@ class TestTrainTestWindow(unittest.TestCase):
         self.assertTrue(np.allclose(np.array(expected_train_y), train_data['y'], equal_nan=True))
 
         # Transform test samples
-        transformer.set_samples(ttw.test_samples)
+        transformer.samples = ttw.test_samples
         transformer.transform()
         test_data = transformer.transformed_data
         print('test_data x :')

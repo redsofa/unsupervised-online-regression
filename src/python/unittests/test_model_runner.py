@@ -1,5 +1,6 @@
 import unittest
 from nrc.models.regression import SckitLearnLinearRegressionModel
+from nrc.util.transformers import ListToScikitLearnTransformer
 from nrc.models.runner import ModelRunner
 from nrc.factories.model import ModelFactory
 from nrc.factories.stream import StreamFactory
@@ -41,11 +42,15 @@ class TestModelRunner(unittest.TestCase):
         # Get a ScikitLearnRegressionModel instance
         model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
 
+        # Get instance of ListToScikitLearnTransformer
+        transformer = ListToScikitLearnTransformer()
+
         # Configure the ModelRunner instance
         m_run.set_train_test_window(tt_win)
         m_run.set_data_stream(data_stream)
         m_run.set_model(model)
         m_run.set_max_samples(max_samples)
+        m_run.set_transformer(transformer)
         m_run.run()
 
         print(f'Model run time: {m_run.run_time}')

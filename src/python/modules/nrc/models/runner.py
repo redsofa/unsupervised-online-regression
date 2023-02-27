@@ -1,15 +1,3 @@
-'''
-The high-level API for running model could look like this :
-
-model_runner.set_train_test_window(train_test_window)
-model_runner.set_metrics(regression_metrics_window)
-model_runner.set_model(regression_model)
-model_runner.set_stream(csv_stream)
-model_runner.set_max_samples()
-model_runner.validate_settings() # check that the ttw total size < max_samples
-model_runner.run()
-'''
-
 import time
 
 
@@ -26,6 +14,7 @@ class ModelRunner():
         self._end_time = None
         self._stop_run = False
         self._sample_count = 0
+        self._transformer = None
 
     @property
     def start_time(self):
@@ -47,18 +36,15 @@ class ModelRunner():
         return self._initial_training_done
 
     def _trigger_initial_training(self):
-        print('initial training triggered')
-        # TODO Transformer for test and train to np arrays
-        # TODO Train model
+        print('Initial training triggered')
 
-        train = self._tt_win.train_samples
-        test = self._tt_win.test_samples
-        print(train)
-        print()
-        print(test)
-        print()
-        print()
+        self._transformer.samples = self._tt_win.train_samples
+        train = self._transformer.execute()
+        self._transformer.samples = self._tt_win.test_samples
+        test = self._transformer.execute()
+        self._model.fit(train['x'], train['y'])
         self._initial_training_done = True
+        print('Initial training complete')
 
     def add_one_sample(self, x, y):
         self._sample_count += 1
@@ -117,6 +103,8 @@ class ModelRunner():
         if self._tt_win is None:
             raise Exceptino(f'Cannot run the algorithm {self._model.name}, the TrainTestWindow instance has not been set.')
 
+    def set_transformer(self, transformer):
+        self._transformer = transformer
 
     def set_max_samples(self, max_samples):
         self._max_samples = max_samples
