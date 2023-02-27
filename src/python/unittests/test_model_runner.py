@@ -37,7 +37,7 @@ class TestModelRunner(unittest.TestCase):
         tt_win = TrainTestWindow(train_size, test_size)
 
         # Configure regression metrics window instance
-        m_met = RegressionMetricsWindow(buffer_size)
+        met_win = RegressionMetricsWindow(buffer_size)
 
         # Get a ScikitLearnRegressionModel instance
         model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
@@ -50,6 +50,7 @@ class TestModelRunner(unittest.TestCase):
         m_run.set_data_stream(data_stream)
         m_run.set_model(model)
         m_run.set_max_samples(max_samples)
+        m_run.set_metrics_window(met_win)
         m_run.set_transformer(transformer)
         m_run.run()
 
