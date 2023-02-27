@@ -13,6 +13,30 @@ class RegressionMetricsWindow():
         return self._metrics_win.len()
 
 
+class DataBuffer():
+    def __init__(self, size):
+        self._size = size
+        self._data_win = SlidingWindow(self._size)
+
+    @property
+    def sample_count(self):
+        return self._bufer_win.len()
+
+    @property
+    def is_filled(self):
+        return (self._data_win.len() >= self._size)
+
+    def add_one_sample(self, x, y):
+        indep = {'x' : x}
+        dep = {'y' : y}
+
+        data = indep | dep # merge x and y dictionaries (python 3.9+)
+        if self._data_win.len() < self._size:
+            self._data_win.add_data(data)
+        else:
+            raise Exception('Train and test windows are full')
+
+
 class TrainTestWindow():
     def __init__(self, train_size, test_size):
         self._train_size = train_size
@@ -47,8 +71,8 @@ class TrainTestWindow():
 
     @property
     def is_filled(self):
-        return (self._train_win.len() == self._train_size) \
-                and (self._test_win.len() == self._test_size)
+        return (self._train_win.len() >= self._train_size) \
+                and (self._test_win.len() >= self._test_size)
 
     def add_one_sample(self, x, y):
         indep = {'x' : x}

@@ -1,5 +1,6 @@
 import time
-
+import numpy as np
+from nrc.util.transformers import DepVaritoInstanceTransformer
 
 class ModelRunner():
     def __init__(self):
@@ -15,6 +16,7 @@ class ModelRunner():
         self._stop_run = False
         self._sample_count = 0
         self._transformer = None
+        self._instance_transformer = DepVaritoInstanceTransformer()
 
     @property
     def start_time(self):
@@ -37,7 +39,6 @@ class ModelRunner():
 
     def _trigger_initial_training(self):
         print('Initial training triggered')
-
         self._transformer.samples = self._tt_win.train_samples
         train = self._transformer.execute()
         self._transformer.samples = self._tt_win.test_samples
@@ -53,15 +54,29 @@ class ModelRunner():
                 print('Maximum instance count reached. Stopping stream processing.')
                 self._stop_run = True
                 return
-        # we are in the initial training mode.. Need to fill up
+        # We are in the initial training mode.. Need to fill up
         # the train/test window
         if not self._tt_win.is_filled:
             self._tt_win.add_one_sample(x, y)
             if self._tt_win.is_filled:
                 self._trigger_initial_training()
         else:
-            # Add to buffer
-            pass
+            # The stream data comes in as a dictionary. We need a transformer to transform it
+            # prior to passing the x, y values to the model for prediction.
+            self._instance_transformer.dep_var = x
+            tr_instance = self._instance_transformer.execute()
+            # Make prediction
+            y_pred = self._model.predict(tr_instance['x'])
+            print(y_pred)
+            # Add to buffer (x, y_pred)
+            # Add to post_train_ train_test_winddow
+            # Check buffer size
+            # if buffer size == the max_buffer_size 
+            # fit model
+            # make predictions...
+            # Calculate RMSE
+            # if d_threashold < delta... etc ...
+
 
     def run(self):
         print('\nLaunching model runner')
@@ -84,9 +99,6 @@ class ModelRunner():
             if self.initial_training_done:
                 print('model trained... on to buffers and predictions ')
 
-
-            # https://stackoverflow.com/questions/46440267/how-two-consecutive-yield-statement-work-in-python
-            # TODO : look into yield or multiple yields
 
         self._end_time = time.time()
 

@@ -22,6 +22,24 @@ class AbstractTransformer(ABC):
     def transform(self):
         pass
 
+class AbstractDepVarTransformer(AbstractTransformer):
+    @property
+    def dep_var(self):
+        return self._data
+
+    @dep_var.setter
+    def dep_var(self, x):
+        self._data = []
+        self._data.append(x)
+
+class DepVaritoInstanceTransformer(AbstractDepVarTransformer):
+    def transform(self):
+        self._transformed_data = {}
+        x = []
+        x.append(list(self._data[0].values()))
+        self._transformed_data['x'] = np.array(x)
+        self._transformed_data['y'] = None
+
 
 class AbstractListTransformer(AbstractTransformer):
     @property
