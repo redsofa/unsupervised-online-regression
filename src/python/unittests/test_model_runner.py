@@ -1,10 +1,12 @@
 import unittest
+from nrc.models.regression import SckitLearnLinearRegressionModel
 from nrc.models.runner import ModelRunner
 from nrc.factories.model import ModelFactory
 from nrc.factories.stream import StreamFactory
 from nrc.util.window import TrainTestWindow, RegressionMetricsWindow
 from common_test_utils import get_test_data_stream
 import io
+from sklearn import linear_model
 
 
 class TestModelRunner(unittest.TestCase):
@@ -37,11 +39,7 @@ class TestModelRunner(unittest.TestCase):
         m_met = RegressionMetricsWindow(buffer_size)
 
         # Get a ScikitLearnRegressionModel instance
-        model = ModelFactory.get_instance(
-                'sklearn_linear_regression_model',
-                1,
-                1,
-                1)
+        model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
 
         # Configure the ModelRunner instance
         m_run.set_train_test_window(tt_win)

@@ -99,6 +99,9 @@ class ModelRunner():
                 print('model trained... on to buffers and predictions ')
 
 
+            # https://stackoverflow.com/questions/46440267/how-two-consecutive-yield-statement-work-in-python
+            # TODO : look into yield or multiple yields
+
         self._end_time = time.time()
 
     def validate_settings(self):

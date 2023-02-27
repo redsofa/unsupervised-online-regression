@@ -1,27 +1,28 @@
 from nrc.models.base import *
-
+from sklearn import linear_model
 
 # https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
-class SckitLearnLinearRegressionModel(BaseRegressionModel):
-    def __init__(self, i_pre_train_size, i_buffer_size, i_max_samples=None):
-        super().__init__(i_pre_train_size, i_buffer_size, 'sklearn_linear_regression_model', i_max_samples)
+class SckitLearnLinearRegressionModel():
 
-    def process_one(self, x, y):
-        print(f'TRAINED -  processing one... New instance : features: {x} -- target: {y}')
+    def __init__(self):
+        self._model = linear_model.LinearRegression()
 
-    def pre_train_one(self, x, y):
-        print(f'PRE-TRAIN - pre-training one... New instance : features: {x} -- target: {y}')
+    def predict(self, x):
+        return self._model.predict(x)
 
-    def predict_and_update_one(self, x, y):
+    def fit(self, x, y):
+        self._model.fit(x, y)
+
+    def evaluate(self, x_test, y_pred, y_true):
         pass
 
-    def _evaluate_metrics(self):
-        pass
+    @property
+    def name(self):
+        return SckitLearnLinearRegressionModel.get_name()
 
-    def _update_buffer_yn(self):
-        pass
-
-
+    @staticmethod
+    def get_name():
+        return 'sklearn_linear_regression_model' 
 
 if __name__ == '__main__':
     pass
