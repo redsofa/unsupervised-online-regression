@@ -4,7 +4,7 @@ from nrc.util.transformers import ListToScikitLearnTransformer
 from nrc.models.runner import ModelRunner
 from nrc.factories.model import ModelFactory
 from nrc.factories.stream import StreamFactory
-from nrc.util.window import TrainTestWindow, RegressionMetricsWindow
+from nrc.util.window import TrainTestWindow, DataBuffer
 from common_test_utils import get_test_data_stream
 import io
 from sklearn import linear_model
@@ -36,23 +36,22 @@ class TestModelRunner(unittest.TestCase):
         # Configure a TrainTest_Window instance
         tt_win = TrainTestWindow(train_size, test_size)
 
-        # Configure regression metrics window instance
-        met_win = RegressionMetricsWindow(buffer_size)
-
         # Get a ScikitLearnRegressionModel instance
         model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
 
         # Get instance of ListToScikitLearnTransformer
         transformer = ListToScikitLearnTransformer()
 
+        buffer = DataBuffer(buffer_size)
+
         # Configure the ModelRunner instance
-        m_run.set_train_test_window(tt_win)
-        m_run.set_data_stream(data_stream)
-        m_run.set_model(model)
-        m_run.set_max_samples(max_samples)
-        m_run.set_metrics_window(met_win)
-        m_run.set_transformer(transformer)
-        m_run.run()
+        m_run.set_train_test_window(tt_win)\
+            .set_data_stream(data_stream)\
+            .set_model(model)\
+            .set_max_samples(max_samples)\
+            .set_transformer(transformer)\
+            .set_buffer(buffer)\
+            .run()
 
         print(f'Model run time: {m_run.run_time}')
 

@@ -17,25 +17,31 @@ def get_test_data_stream():
                 2.0,3.1,22
                 4.2,3.1,22
                 2.0,3.5,27
-                2.1,3.1,22
-                2.0,3.1,25
-                2.4,3.2,22
-                3.0,3.4,25
-                1.0,2.0,23
-                2.2,3.5,22
-                3.0,3.1,21
-                2.0,3.1,20
-                2.4,3.4,22
-                2.4,3.4,22
-                2.4,3.4,22
-                2.0,3.2,24
+                2.1,3.1,None
+                2.0,3.1,None
+                2.4,3.2,None
+                3.0,3.4,None
+                1.0,2.0,None
+                2.2,3.5,None
+                3.0,3.1,None
+                2.0,3.1,None
+                2.4,3.4,None
+                2.4,3.4,None
+                2.4,3.4,None
+                2.0,3.2,None
                 '''.replace(' ', '')
 
         ret_val = io.StringIO(sample_data)
         return ret_val
 
+    def  int_or_none(val):
+        try :
+            return int(val)
+        except:
+            return None
+
     def get_stream_params():
-        return {"converters":{"c1":float, "c2":float, 'y':int}, "target":"y"}
+        return {"converters":{"c1":float, "c2":float, 'y':int_or_none}, "target":"y"}
 
     test_data = get_test_data()
     params = get_stream_params()

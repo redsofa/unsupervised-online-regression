@@ -208,7 +208,7 @@ class TestSlidingWindow(unittest.TestCase):
         # Pull data from the sliding window.
         # The oldest bit of data should come out first (e.g. 6, 7, 8, 9, 10)
         for n in [6, 7, 8, 9, 10]:
-            data = w.pop()
+            data = w.get_and_remove_oldest()
             self.assertEqual(n, data)
 
         # Length of window should be 0 after we've pulled everything out from it.

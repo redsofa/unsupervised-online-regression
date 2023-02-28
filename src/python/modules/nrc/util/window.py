@@ -34,7 +34,10 @@ class DataBuffer():
         if self._data_win.len() < self._size:
             self._data_win.add_data(data)
         else:
-            raise Exception('Train and test windows are full')
+            raise Exception('Buffer is full')
+
+    def get_and_remove_oldest_sample(self):
+        self._data_win.get_and_remove_oldest()
 
 
 class TrainTestWindow():
@@ -117,7 +120,7 @@ class SlidingWindow():
     def get_as_list(self):
         return list(self._data)
 
-    def pop(self):
+    def get_and_remove_oldest(self):
         return self._data.popleft()
 
 
