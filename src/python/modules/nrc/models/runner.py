@@ -44,6 +44,8 @@ class ModelRunner():
         self._transformer.samples = self._tt_win.test_samples
         test = self._transformer.execute()
         self._model.fit(train['x'], train['y'])
+        #TODO : CALCULATE METRICS AND ADD TO THE METRICS WINDOW...
+        #TODO : Might only need to keep track of two metrics values.. may not need window for this...
         self._initial_training_done = True
         print('Initial training complete')
 
@@ -55,7 +57,7 @@ class ModelRunner():
                 self._stop_run = True
                 return
         # We are in the initial training mode.. Need to fill up
-        # the train/test window
+        # the train/test window so we can train the initial model.
         if not self._tt_win.is_filled:
             self._tt_win.add_one_sample(x, y)
             if self._tt_win.is_filled:
@@ -65,16 +67,34 @@ class ModelRunner():
             # prior to passing the x, y values to the model for prediction.
             self._instance_transformer.dep_var = x
             tr_instance = self._instance_transformer.execute()
+
+            # IF SIZE(B) < b :
+            #  fill up the buffer and a post-initial-training train/test window
+            #  keep filling the buffer and windows until we reach the maximum buffer size
+            # If the Size of B == b:
+            #   Predictions = model.fit(training window)
+            #   evaluate with testing data
+            #   Calculate d from the calculated RMSE value
+            #   if the d < delta_threshold :
+            #     REMOVE first entry from buffer ..???
+            #   else:
+            #     model = retrain model using buffer
+            #     slush the buffer
+            #  Z1 = Z2 (Metrics values)
             # Make prediction
             y_pred = self._model.predict(tr_instance['x'])
             print(y_pred)
+            # B = B + {x_ins, y_ins)
+
+            
+
             # Add to buffer (x, y_pred)
             # Add to post_train_ train_test_winddow
             # Check buffer size
-            # if buffer size == the max_buffer_size 
+            # if buffer size == the max_buffer_size
             # fit model
             # make predictions...
-            # Calculate RMSE
+            # Calculate METRICS
             # if d_threashold < delta... etc ...
 
 
