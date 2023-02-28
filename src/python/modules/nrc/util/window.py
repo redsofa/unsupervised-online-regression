@@ -73,6 +73,12 @@ class TrainTestWindow():
         return (self._train_win.len() >= self._train_size) \
                 and (self._test_win.len() >= self._test_size)
 
+    def slide_in_test_sample(self, x, y):
+        pass
+
+    def slide_in_train_sample(self, x, y):
+        pass
+
     def add_one_sample(self, x, y):
         indep = {'x' : x}
         dep = {'y' : y}

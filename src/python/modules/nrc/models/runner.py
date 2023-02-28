@@ -71,10 +71,17 @@ class ModelRunner():
     def _process_prediction(self, x, y):
         print(f'Processing prediction (x, y): ({x}, {y})')
         if not self._buffer.is_filled :
-            # Note that x and y are numpy arrays
+            # Note that x and y are numpy arrays. No transformations needed to use in prediction.
             # Fill up the buffer and a post-initial-training train/test window
             # Keep filling the buffer and windows until we reach the maximum buffer size
             self._buffer.add_one_sample(x, y)
+
+
+            # TODO : Update training window
+            # TODO : Update testing window
+            self._tt_win.slide_in_train_sample(x, y)
+            self._tt_win.slide_in_test_sample(x, y)
+
         else :
             print('Buffer is full!!')
 
