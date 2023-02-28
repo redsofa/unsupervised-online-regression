@@ -14,24 +14,20 @@ class RegressionMetricsWindow():
 
 
 class DataBuffer():
-    def __init__(self, size):
-        self._size = size
-        self._data_win = SlidingWindow(self._size)
-
-    @property
-    def sample_count(self):
-        return self._bufer_win.len()
+    def __init__(self, max_len):
+        self._max_len = max_len
+        self._data_win = SlidingWindow(self._max_len)
 
     @property
     def is_filled(self):
-        return (self._data_win.len() >= self._size)
+        return (self._data_win.len() >= self._max_len)
 
     def add_one_sample(self, x, y):
         indep = {'x' : x}
         dep = {'y' : y}
 
         data = indep | dep # merge x and y dictionaries (python 3.9+)
-        if self._data_win.len() < self._size:
+        if self._data_win.len() < self._max_len:
             self._data_win.add_data(data)
         else:
             raise Exception('Buffer is full')

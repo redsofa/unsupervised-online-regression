@@ -65,44 +65,53 @@ class ModelRunner():
         self._initial_training_done = True
         print('Initial training complete')
 
-    def _process_prediction(self, x, y):
-        print(x, y)
-        # IF SIZE(B) < b :
-        #  fill up the buffer and a post-initial-training train/test window
-        #  keep filling the buffer and windows until we reach the maximum buffer size
-        # If the Size of B == b:
-        #   Predictions = model.fit(training window)
-        #   evaluate with testing data
-        #   Calculate d from the calculated RMSE value
-        #   if the d < delta_threshold :
-        #     REMOVE first entry from buffer ..???
-        #   else:
-        #     model = retrain model using buffer
-        #     slush the buffer
-        #  Z1 = Z2 (Metrics values)
-        # Make prediction
-        #y_pred = self._model.predict(tr_instance['x'])
-        #print(y_pred)
-        # B = B + {x_ins, y_ins)
+    def _swap_model(self, model):
+        self._model = model
 
-        # Add to buffer (x, y_pred)
-        # Add to post_train_ train_test_winddow
-        # Check buffer size
-        # if buffer size == the max_buffer_size
-        # fit model
-        # make predictions...
-        # Calculate METRICS
-        # if d_threashold < delta... etc ...
+    def _process_prediction(self, x, y):
+        print(f'Processing prediction (x, y): ({x}, {y})')
+        if not self._buffer.is_filled :
+            # Note that x and y are numpy arrays
+            # Fill up the buffer and a post-initial-training train/test window
+            # Keep filling the buffer and windows until we reach the maximum buffer size
+            self._buffer.add_one_sample(x, y)
+        else :
+            print('Buffer is full!!')
+
+
+            # If the Size of B == b:
+            #   Predictions = model.fit(training window)
+            #   evaluate with testing data
+            #   Calculate d from the calculated RMSE value
+            #   if the d < delta_threshold :
+            #     REMOVE first entry from buffer ..???
+            #   else:
+            #     model = retrain model using buffer
+            #     slush the buffer
+            #  Z1 = Z2 (Metrics values)
+            # Make prediction
+            #y_pred = self._model.predict(tr_instance['x'])
+            #print(y_pred)
+            # B = B + {x_ins, y_ins)
+
+            # Add to buffer (x, y_pred)
+            # Add to post_train_ train_test_winddow
+            # Check buffer size
+            # if buffer size == the max_buffer_size
+            # fit model
+            # make predictions...
+            # Calculate METRICS
+            # if d_threashold < delta... etc ...
 
     def _trigger_one_prediction(self, x):
         # The stream data comes in as a dictionary. We need a transformer to transform it
         # prior to passing the x value to the model for prediction.
         self._instance_transformer.dep_var = x
-        x_instance = self._instance_transformer.execute()
+        instance = self._instance_transformer.execute()
         # Make a prediction with trained model
-        y_pred = self._model.predict(x_instance['x'])
+        y_pred = self._model.predict(instance['x'])
         # Process that prediction
-        self._process_prediction(x_instance, y_pred)
+        self._process_prediction(instance['x'], y_pred)
 
     def add_one_sample(self, x, y):
         self._sample_count += 1
