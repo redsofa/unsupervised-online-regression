@@ -2,7 +2,7 @@ import sys
 import unittest
 from nrc.util.window import *
 from nrc.metrics.regression import *
-from nrc.util.transformers import ListToScikitLearnTransformer
+from nrc.util.transformers import XYTransformers
 import os
 from common_test_utils import get_test_data_stream
 import numpy as np
@@ -64,7 +64,8 @@ class TestTrainTestWindow(unittest.TestCase):
             # The TrainTestWindow should not be full until we are out of this loop
             self.assertFalse(ttw.is_filled)
             (x, y) = get_one_data_point(i, i+1, i+2)
-            ttw.add_one_sample(x, y)
+            sample = XYTransformers.xy_to_numpy_dictionary(x, y)
+            ttw.add_one_sample(sample)
 
         # The TrainTestWindow should not be full
         self.assertTrue(ttw.is_filled)
@@ -81,7 +82,9 @@ class TestTrainTestWindow(unittest.TestCase):
         # the TrainTestWindow is configured for
         with self.assertRaises(Exception):
             (x, y) = get_one_data_point(10, 11, 12)
-            ttw.add_one_sample(x = x, y = y)
+            sample = XYTransformers.xy_to_numpy_dictionary(x, y)
+            ttw.add_one_sample(sample)
+
 
     def test_train_regression_model(self):
         # Configure window size
@@ -95,27 +98,29 @@ class TestTrainTestWindow(unittest.TestCase):
 
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
-        # Create instance of list data transformer
-        transformer = ListToScikitLearnTransformer()
+
         # Configure a TrainTest_Window instance
         ttw = TrainTestWindow(train_size, test_size)
         # Pull data from stream until the TrainTestWindow is full
         for x, y  in data_stream:
-            ttw.add_one_sample(x, y)
+            # Incoming data looks like :
+            #
+            # x : {'c1': 1.0, 'c2': 2.0}
+            # y : 23
+            #
+            # Need to convert it to a dictionary that looks like:
+            # {'x': array([1., 2.]), 'y': array([23])}
+            #
+            sample = XYTransformers.xy_to_numpy_dictionary(x, y)
+            ttw.add_one_sample(sample)
             if ttw.is_filled:
                 break
 
-        # Transform train samples
-        transformer.samples = ttw.train_samples
-        transformer.transform()
-        train_data = transformer.transformed_data
-        print('train_data x : ')
-        print(train_data['x'])
-        print('train_data y : ')
-        print(train_data['y'])
+        x_train, y_train = XYTransformers.arr_dict_to_xy(ttw.train_samples)
+
         # Make sure train and testing data look like we would expect
-        self.assertEqual(train_size, len(train_data['x']))
-        self.assertEqual(train_size, len(train_data['y']))
+        self.assertEqual(train_size, len(x_train))
+        self.assertEqual(train_size, len(y_train))
         expected_train_x = [
                 [1.0,2.0],
                 [2.2,3.5],
@@ -126,52 +131,32 @@ class TestTrainTestWindow(unittest.TestCase):
                 [6.0,3.1],
                 [2.0,3.1],
         ]
-        expected_train_y = [23,22,21,20,22,24,26,22]
-        self.assertTrue(np.allclose(np.array(expected_train_x), train_data['x'], equal_nan=True))
-        self.assertTrue(np.allclose(np.array(expected_train_y), train_data['y'], equal_nan=True))
+        expected_train_y = [[23],[22],[21],[20],[22],[24],[26],[22]]
+        self.assertTrue(np.allclose(np.array(expected_train_x), x_train, equal_nan=True))
+        self.assertTrue(np.allclose(np.array(expected_train_y), y_train, equal_nan=True))
 
-        # Transform test samples
-        transformer.samples = ttw.test_samples
-        transformer.transform()
-        test_data = transformer.transformed_data
-        print('test_data x :')
-        print(test_data['x'])
-        print('test_data y :')
-        print(test_data['y'])
+        x_test, y_test = XYTransformers.arr_dict_to_xy(ttw.test_samples)
+
         # Make sure test data looks like what we would expect
-        self.assertEqual(test_size, len(test_data['x']))
-        self.assertEqual(test_size, len(test_data['y']))
+        self.assertEqual(test_size, len(x_test))
+        self.assertEqual(test_size, len(y_test))
 
         expected_test_x = [
                 [4.2, 3.1],
                 [2.0, 3.5]
         ]
-        expected_test_y = [22, 27]
-        self.assertTrue(np.allclose(np.array(expected_test_x), test_data['x'], equal_nan=True))
-        self.assertTrue(np.allclose(np.array(expected_test_y), test_data['y'], equal_nan=True))
+        expected_test_y = [[22], [27]]
+        self.assertTrue(np.allclose(np.array(expected_test_x), x_test, equal_nan=True))
+        self.assertTrue(np.allclose(np.array(expected_test_y), y_test, equal_nan=True))
 
         # Create and fit regression model
         regr = linear_model.LinearRegression()
-        regr.fit(train_data['x'], train_data['y'])
-
+        regr.fit(x_train, y_train)
         # Make predictions
-        preds = regr.predict(test_data['x'])
-        print('predictions :')
-        print(preds)
-        print()
+        preds = regr.predict(x_test)
 
-
-        # Get some metrics from sckit
-        # The coefficients
-        print("Coefficients: \n", regr.coef_)
-        # The mean squared error
-        print("Mean squared error: %.2f" % mean_squared_error(test_data['y'], preds))
-        # The coefficient of determination: 1 is perfect prediction
-        print("Coefficient of determination: %.2f" % r2_score(test_data['y'], preds))
-        print()
-
-        self.assertAlmostEqual(18.26, mean_squared_error(test_data['y'], preds), places=2)
-        self.assertAlmostEqual(-1.92, r2_score(test_data['y'], preds), places=2)
+        self.assertAlmostEqual(18.26, mean_squared_error(y_test, preds), places=2)
+        self.assertAlmostEqual(-1.92, r2_score(y_test, preds), places=2)
 
 
 class TestSlidingWindow(unittest.TestCase):

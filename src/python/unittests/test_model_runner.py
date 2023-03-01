@@ -1,6 +1,5 @@
 import unittest
 from nrc.models.regression import SckitLearnLinearRegressionModel
-from nrc.util.transformers import ListToScikitLearnTransformer
 from nrc.models.runner import ModelRunner
 from nrc.factories.model import ModelFactory
 from nrc.factories.stream import StreamFactory
@@ -39,9 +38,6 @@ class TestModelRunner(unittest.TestCase):
         # Get a ScikitLearnRegressionModel instance
         model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
 
-        # Get instance of ListToScikitLearnTransformer
-        transformer = ListToScikitLearnTransformer()
-
         buffer = DataBuffer(buffer_size)
 
         # Configure the ModelRunner instance
@@ -49,7 +45,6 @@ class TestModelRunner(unittest.TestCase):
             .set_data_stream(data_stream)\
             .set_model(model)\
             .set_max_samples(max_samples)\
-            .set_transformer(transformer)\
             .set_buffer(buffer)\
             .run()
 

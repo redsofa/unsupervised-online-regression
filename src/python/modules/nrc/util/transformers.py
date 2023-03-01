@@ -1,68 +1,23 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-class AbstractTransformer(ABC):
-    def __init__(self):
-        self._data = None
-        self._transformed_data = None
 
-    @property
-    def data(self):
-        return self._data
-
-    def execute(self):
-        self.transform()
-        return self._transformed_data
-
-    @property
-    def transformed_data(self):
-        return self._transformed_data
-
-    @abstractmethod
-    def transform(self):
-        pass
-
-class AbstractDepVarTransformer(AbstractTransformer):
-    @property
-    def dep_var(self):
-        return self._data
-
-    @dep_var.setter
-    def dep_var(self, x):
-        self._data = []
-        self._data.append(x)
-
-class DepVaritoInstanceTransformer(AbstractDepVarTransformer):
-    def transform(self):
-        self._transformed_data = {}
-        x = []
-        x.append(list(self._data[0].values()))
-        self._transformed_data['x'] = np.array(x)
-        self._transformed_data['y'] = None
-
-
-class AbstractListTransformer(AbstractTransformer):
-    @property
-    def samples(self):
-        return self._data
-
-    @samples.setter
-    def samples(self, samples):
-        self._data = samples
-
-
-class ListToScikitLearnTransformer(AbstractListTransformer):
-    def transform(self):
-        self._transformed_data = {}
+class XYTransformers():
+    @staticmethod
+    def arr_dict_to_xy(xy_list):
         x = []
         y = []
-
-        for e in self._data:
-            x.append(list(e['x'].values()))
+        for e in xy_list:
+            x.append(e['x'])
             y.append(e['y'])
+        return (x, y)
 
-        self._transformed_data['x'] = np.array(x)
-        self._transformed_data['y'] = np.array(y)
+    @staticmethod
+    def xy_to_numpy_dictionary(x, y):
+        xy_dict = {'x': x, 'y': {'y1': y}}
+        x = np.array(list(xy_dict['x'].values()))
+        y = np.array(list(xy_dict['y'].values()))
+        return {'x': x, 'y': y}
 
 
 if __name__ == '__main__':

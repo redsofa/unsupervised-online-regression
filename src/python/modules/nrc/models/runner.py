@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from nrc.util.transformers import DepVaritoInstanceTransformer
+from nrc.util.transformers import XYTransformers
 from sklearn.metrics import mean_squared_error
 
 
@@ -18,7 +18,7 @@ class ModelRunner():
         self._stop_run = False
         self._sample_count = 0
         self._transformer = None
-        self._instance_transformer = DepVaritoInstanceTransformer()
+        #        self._instance_transformer = DepVaritoInstanceTransformer()
         self._buffer = None
 
     @property
@@ -45,22 +45,19 @@ class ModelRunner():
         # The data comes in as a dictionary (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
         # It needs to be transformed to numpy arrays
 
-        # Transform the training data
-        self._transformer.samples = self._tt_win.train_samples
-        train = self._transformer.execute()
-        # Transform the test data
-        self._transformer.samples = self._tt_win.test_samples
-        test = self._transformer.execute()
+        # Transform the training and testing data
+        x_train, y_train = XYTransformers.arr_dict_to_xy(self._tt_win.train_samples)
+        x_test, y_test = XYTransformers.arr_dict_to_xy(self._tt_win.test_samples)
 
         # Fit the model to the training data
-        self._model.fit(train['x'], train['y'])
+        self._model.fit(x_train, y_train)
 
         # Make predictions on the test data
-        y_preds = self._model.predict(test['x'])
+        y_preds = self._model.predict(x_test)
 
         # Evaluate the model's performance (compare truth values with predictions) and store
         # the evaluation metric
-        self._evaluation_metric = mean_squared_error(test['y'], y_preds)
+        self._evaluation_metric = mean_squared_error(y_test, y_preds)
 
         self._initial_training_done = True
         print('Initial training complete')
@@ -68,20 +65,30 @@ class ModelRunner():
     def _swap_model(self, model):
         self._model = model
 
-    def _process_prediction(self, x, y):
-        print(f'Processing prediction (x, y): ({x}, {y})')
+    def _process_prediction(self, x, y_pred):
+        print(f'Processing prediction (x, y_pred): ({x}, {y_pred})')
+        # If buffer is not full
         if not self._buffer.is_filled :
             # Note that x and y are numpy arrays. No transformations needed to use in prediction.
             # Fill up the buffer and a post-initial-training train/test window
             # Keep filling the buffer and windows until we reach the maximum buffer size
-            self._buffer.add_one_sample(x, y)
+            '''
+            self._buffer.add_one_sample(x, y_pred)
 
+            # Remove the oldest sample from the training window
+            self._tt_win.get_and_remove_oldest_train_sample()
 
-            # TODO : Update training window
-            # TODO : Update testing window
-            self._tt_win.slide_in_train_sample(x, y)
-            self._tt_win.slide_in_test_sample(x, y)
+            # The first sample x,y in the test window will be taken out and put into into the
+            # train window.
+            # Save and take out the oldest sample from the testing window
+            oldest_test_sample = self._tt_win.get_and_remove_oldest_test_sample()
 
+            # The new test instance is the new incoming x value and the prediction
+            self._tt_win.add_one_test_sample(x, y_pred)
+
+            # Put the oldest test sample into the training window
+            self._tt_win.add_one_train_sample(oldest_test_sample)
+            '''
         else :
             print('Buffer is full!!')
 
@@ -110,17 +117,14 @@ class ModelRunner():
             # Calculate METRICS
             # if d_threashold < delta... etc ...
 
-    def _trigger_one_prediction(self, x):
-        # The stream data comes in as a dictionary. We need a transformer to transform it
-        # prior to passing the x value to the model for prediction.
-        self._instance_transformer.dep_var = x
-        instance = self._instance_transformer.execute()
+    def _trigger_one_prediction(self, sample):
+        x = [sample['x']]
         # Make a prediction with trained model
-        y_pred = self._model.predict(instance['x'])
+        y_pred = self._model.predict(x)
         # Process that prediction
-        self._process_prediction(instance['x'], y_pred)
+        self._process_prediction(x, y_pred)
 
-    def add_one_sample(self, x, y):
+    def add_one_sample(self, sample):
         self._sample_count += 1
         if self._max_samples is not None:
             if self._sample_count >= self._max_samples:
@@ -130,11 +134,11 @@ class ModelRunner():
         # We are in the initial training mode.. Need to fill up
         # the train/test window so we can train the initial model.
         if not self._tt_win.is_filled:
-            self._tt_win.add_one_sample(x, y)
+            self._tt_win.add_one_sample(sample)
             if self._tt_win.is_filled:
                 self._trigger_initial_training()
         else:
-            self._trigger_one_prediction(x)
+            self._trigger_one_prediction(sample)
 
     def run(self):
         print('\nLaunching model runner')
@@ -146,7 +150,18 @@ class ModelRunner():
         for x, y in self._data_stream:
             # The add_one_sample() method figures out if we should stop the run because
             # we have reached the maximum number of records we want to process from the stream.
-            self.add_one_sample(x, y)
+
+            # Incoming data looks like :
+            #
+            # x : {'c1': 1.0, 'c2': 2.0}
+            # y : 23
+            #
+            # Need to convert it to a dictionary that looks like:
+            # {'x': array([1., 2.]), 'y': array([23])}
+            #
+            sample = XYTransformers.xy_to_numpy_dictionary(x, y)
+
+            self.add_one_sample(sample)
 
             # Stop running the algorithm if we this flag has been set.
             # This flag usually means that the maximum number of records to process from the stream
@@ -171,10 +186,6 @@ class ModelRunner():
 
         if self._buffer is None:
             raise Exceptino(f'Cannot run the algorithm {self._model.name}, the DataBuffer instance has not been set.')
-
-    def set_transformer(self, transformer):
-        self._transformer = transformer
-        return self
 
     def set_max_samples(self, max_samples):
         self._max_samples = max_samples

@@ -1,6 +1,6 @@
 import io
 from nrc.factories.stream import StreamFactory
-
+import numpy as np
 
 # Common unit test helper functions
 def get_test_data_stream():

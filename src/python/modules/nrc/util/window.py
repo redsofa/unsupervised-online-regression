@@ -22,6 +22,12 @@ class DataBuffer():
     def is_filled(self):
         return (self._data_win.len() >= self._max_len)
 
+    def add_one_sample(self, sample):
+        if self._data_win.len() < self._max_len:
+            self._data_win.add_data(data)
+        else:
+            raise Exception('Buffer is full')
+
     def add_one_sample(self, x, y):
         indep = {'x' : x}
         dep = {'y' : y}
@@ -33,7 +39,7 @@ class DataBuffer():
             raise Exception('Buffer is full')
 
     def get_and_remove_oldest_sample(self):
-        self._data_win.get_and_remove_oldest()
+        return self._data_win.get_and_remove_oldest()
 
 
 class TrainTestWindow():
@@ -73,12 +79,35 @@ class TrainTestWindow():
         return (self._train_win.len() >= self._train_size) \
                 and (self._test_win.len() >= self._test_size)
 
-    def slide_in_test_sample(self, x, y):
-        pass
+    def add_one_test_sample(self, x, y):
+        indep = {'x' : x}
+        dep = {'y': y}
+        data = indep | dep
+        self._test_win.add_data(data)
 
-    def slide_in_train_sample(self, x, y):
-        pass
+    def add_one_train_sample(self, x, y):
+        indep = {'x' : x}
+        dep = {'y': y}
+        data = indep | dep
+        self._train_win.add_data(data)
 
+    def get_and_remove_oldest_train_sample(self):
+        return self._test_win.get_and_remove_oldest()
+
+    def get_and_remove_oldest_test_sample(self):
+        return self._train_win.get_and_remove_oldest()
+
+    def add_one_sample(self, sample):
+        if self._train_win.len() < self._train_size:
+            self._train_win.add_data(sample)
+        elif self._test_win.len() < self._test_size:
+            self._test_win.add_data(sample)
+        else:
+            raise Exception('Train and test windows are full')
+        if self.is_filled :
+            if self._on_filled_handler:
+                self._on_filled_handler()
+    '''
     def add_one_sample(self, x, y):
         indep = {'x' : x}
         dep = {'y' : y}
@@ -93,6 +122,7 @@ class TrainTestWindow():
         if self.is_filled :
             if self._on_filled_handler:
                 self._on_filled_handler()
+    '''
 
     def register_on_window_filled_handler(self, function):
         self._on_filled_handler = function
