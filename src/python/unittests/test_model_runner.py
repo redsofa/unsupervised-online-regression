@@ -6,12 +6,23 @@ from nrc.factories.stream import StreamFactory
 from nrc.util.window import TrainTestWindow, DataBuffer
 from common_test_utils import get_test_data_stream
 import io
+from sklearn.metrics import mean_squared_error
 from sklearn import linear_model
-
+import math
 
 class TestModelRunner(unittest.TestCase):
     def test_simple_model_run(self):
         print(f'\nExecuting {TestModelRunner.test_simple_model_run.__name__} test')
+
+        def model_evaluation_fn(**kwargs):
+            return mean_squared_error(kwargs['y_true'], kwargs['y_pred'])
+
+        def threshold_calculation_fn(**kwargs):
+            Z1 = kwargs['Z1']
+            Z2 = kwargs['Z2']
+            buffer_max_len = kwargs['buffer_max_len']
+            d = (math.sqrt(abs(Z2 - Z1))**2)/buffer_max_len
+            return d
 
         # Configure window sizes
         train_test_window_size = 10
@@ -45,12 +56,11 @@ class TestModelRunner(unittest.TestCase):
             .set_data_stream(data_stream)\
             .set_max_samples(max_samples)\
             .set_buffer(buffer)\
+            .set_evaluation_fn(model_evaluation_fn)\
+            .set_threshold_calculation_fn(threshold_calculation_fn)\
             .set_threshold(5)\
             .run():
-                #pass
-                #
                 print(f'Yielded prediction - Input Features : {x}, Predictions {y}')
-
 
         print(f'Model run time: {m_run.run_time}')
 
