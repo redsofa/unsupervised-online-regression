@@ -19,6 +19,10 @@ class XYTransformers():
         y = np.array(list(xy_dict['y'].values()))
         return {'x': x, 'y': y}
 
+    @staticmethod
+    def xy_pred_to_numpy_dictionary(x, y):
+        return {'x': x[0], 'y': y[0]}
+
 
 if __name__ == '__main__':
     pass

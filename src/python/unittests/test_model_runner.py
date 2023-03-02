@@ -14,20 +14,20 @@ class TestModelRunner(unittest.TestCase):
         print(f'\nExecuting {TestModelRunner.test_simple_model_run.__name__} test')
 
         # Configure window sizes
-        window_size = 10
-        train_size = round(window_size * 0.8)
-        test_size = round(window_size * 0.2)
-        buffer_size = round(window_size * 0.4)
-        max_samples = None
+        train_test_window_size = 10
+        train_size = round(train_test_window_size * 0.8)
+        test_size = round(train_test_window_size * 0.2)
+        buffer_size = test_size
+        max_samples = None # If set to None, it will process data until the end of the stream
 
-        print(f'window_size : {window_size}')
+        print(f'train_test_window_size : {train_test_window_size}')
         print(f'train_size : {train_size}')
         print(f'test_size : {test_size}')
         print(f'buffer_size : {buffer_size}')
         print(f'max_samples : {max_samples}')
 
         # Create the ModelRunner object
-        m_run = ModelRunner()
+        m_run = ModelRunner(model_name = SckitLearnLinearRegressionModel.name)
 
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
@@ -35,18 +35,22 @@ class TestModelRunner(unittest.TestCase):
         # Configure a TrainTest_Window instance
         tt_win = TrainTestWindow(train_size, test_size)
 
-        # Get a ScikitLearnRegressionModel instance
-        model = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
-
         buffer = DataBuffer(buffer_size)
 
         # Configure the ModelRunner instance
-        m_run.set_train_test_window(tt_win)\
+        # and run it... As it runs, we get 
+        # predictions as it's processing the stream.
+        for x, y in m_run\
+            .set_train_test_window(tt_win)\
             .set_data_stream(data_stream)\
-            .set_model(model)\
             .set_max_samples(max_samples)\
             .set_buffer(buffer)\
-            .run()
+            .set_threshold(5)\
+            .run():
+                #pass
+                #
+                print(f'Yielded prediction - Input Features : {x}, Predictions {y}')
+
 
         print(f'Model run time: {m_run.run_time}')
 

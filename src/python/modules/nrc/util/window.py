@@ -24,22 +24,27 @@ class DataBuffer():
 
     def add_one_sample(self, sample):
         if self._data_win.len() < self._max_len:
-            self._data_win.add_data(data)
+            self._data_win.add_data(sample)
         else:
             raise Exception('Buffer is full')
 
-    def add_one_sample(self, x, y):
-        indep = {'x' : x}
-        dep = {'y' : y}
-
-        data = indep | dep # merge x and y dictionaries (python 3.9+)
-        if self._data_win.len() < self._max_len:
-            self._data_win.add_data(data)
-        else:
-            raise Exception('Buffer is full')
+    def remove_samples(self, count):
+        for e in range(0, count):
+            self.get_and_remove_oldest_sample()
 
     def get_and_remove_oldest_sample(self):
         return self._data_win.get_and_remove_oldest()
+
+    def clear_contents(self):
+        self._data_win.clear_contents()
+
+    @property
+    def samples(self):
+        return self._data_win.get_as_list()
+
+    @property
+    def max_len(self):
+        return self._max_len
 
 
 class TrainTestWindow():
@@ -79,23 +84,23 @@ class TrainTestWindow():
         return (self._train_win.len() >= self._train_size) \
                 and (self._test_win.len() >= self._test_size)
 
-    def add_one_test_sample(self, x, y):
-        indep = {'x' : x}
-        dep = {'y': y}
-        data = indep | dep
-        self._test_win.add_data(data)
+    def add_one_test_sample(self, sample):
+        if self._test_win.len() < self._test_size:
+            self._test_win.add_data(sample)
+        else:
+            raise Exception('Testing window is full. Cannot add to it.')
 
-    def add_one_train_sample(self, x, y):
-        indep = {'x' : x}
-        dep = {'y': y}
-        data = indep | dep
-        self._train_win.add_data(data)
+    def add_one_train_sample(self, sample):
+        if self._train_win.len() < self._train_size:
+            self._train_win.add_data(sample)
+        else:
+            raise Exception('Training window is full. Cannot add to it.')
 
     def get_and_remove_oldest_train_sample(self):
-        return self._test_win.get_and_remove_oldest()
+        return self._train_win.get_and_remove_oldest()
 
     def get_and_remove_oldest_test_sample(self):
-        return self._train_win.get_and_remove_oldest()
+        return self._test_win.get_and_remove_oldest()
 
     def add_one_sample(self, sample):
         if self._train_win.len() < self._train_size:
@@ -103,26 +108,10 @@ class TrainTestWindow():
         elif self._test_win.len() < self._test_size:
             self._test_win.add_data(sample)
         else:
-            raise Exception('Train and test windows are full')
+            raise Exception('Train and test windows are full. Can no longer add to these.')
         if self.is_filled :
             if self._on_filled_handler:
                 self._on_filled_handler()
-    '''
-    def add_one_sample(self, x, y):
-        indep = {'x' : x}
-        dep = {'y' : y}
-
-        data = indep | dep # merge x and y dictionaries (python 3.9+)
-        if self._train_win.len() < self._train_size:
-            self._train_win.add_data(data)
-        elif self._test_win.len() < self._test_size:
-            self._test_win.add_data(data)
-        else:
-            raise Exception('Train and test windows are full')
-        if self.is_filled :
-            if self._on_filled_handler:
-                self._on_filled_handler()
-    '''
 
     def register_on_window_filled_handler(self, function):
         self._on_filled_handler = function
