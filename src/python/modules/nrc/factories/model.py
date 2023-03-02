@@ -12,8 +12,6 @@ class ModelFactory():
         else:
             raise Exception('Model not available from factory')
 
-        print(f'\nInstantiated model : {model_name}')
-        print()
         return ret_val
 
     @staticmethod

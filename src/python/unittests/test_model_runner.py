@@ -7,8 +7,9 @@ from nrc.util.window import TrainTestWindow, DataBuffer
 from common_test_utils import get_test_data_stream
 import io
 from sklearn.metrics import mean_squared_error
-from sklearn import linear_model
+#from sklearn import linear_model
 import math
+import numpy as np
 
 class TestModelRunner(unittest.TestCase):
     def test_simple_model_run(self):
@@ -48,6 +49,9 @@ class TestModelRunner(unittest.TestCase):
 
         buffer = DataBuffer(buffer_size)
 
+        features = [] 
+        predictions = []
+
         # Configure the ModelRunner instance
         # and run it... As it runs, we get 
         # predictions as it's processing the stream.
@@ -60,13 +64,41 @@ class TestModelRunner(unittest.TestCase):
             .set_threshold_calculation_fn(threshold_calculation_fn)\
             .set_threshold(5)\
             .run():
-                print(f'Yielded prediction - Input Features : {x}, Predictions {y}')
+                features.append(x)
+                predictions.append(y)
 
         print(f'Model run time: {m_run.run_time}')
 
-        # Initially fail the test to ensure code gets executed in
-        # test run
-        self.assertTrue(False)
+        expected_features = [
+            [[2.1, 3.1]], 
+            [[2. , 3.1]], 
+            [[2.4, 3.2]], 
+            [[3. , 3.4]], 
+            [[1., 2.]], 
+            [[2.2, 3.5]], 
+            [[3. , 3.1]], 
+            [[2. , 3.1]], 
+            [[2.4, 3.4]], 
+            [[2.4, 3.4]], 
+            [[2.4, 3.4]], 
+            [[2. , 3.2]]
+        ]
+        expected_predictions = [
+           [[21.98889487]], 
+           [[21.89803473]], 
+           [[22.1024364]], 
+           [[22.32951945]], 
+           [[22.73886122]], 
+           [[21.44359941]], 
+           [[22.80663616]], 
+           [[21.89803473]], 
+           [[21.78435859]], 
+           [[21.78435859]], 
+           [[21.78435859]],
+           [[21.73899583]]
+        ]
+        self.assertTrue(np.allclose(np.array(expected_predictions), predictions, equal_nan=True))
+        self.assertTrue(np.allclose(np.array(expected_features), features, equal_nan=True))
 
 
 if __name__ == '__main__':

@@ -44,7 +44,6 @@ class ModelRunner():
         return self._initial_training_done
 
     def _trigger_initial_training(self):
-        print('Initial training triggered')
         # The data comes in as a dictionary (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
         # It needs to be transformed to numpy arrays
 
@@ -63,13 +62,11 @@ class ModelRunner():
         self._Z1 = self._evaluation_fn(y_true=y_test, y_pred=y_preds)
 
         self._initial_training_done = True
-        print('Initial training complete')
 
     def _swap_model(self, model):
         self._model = model
 
     def _train_model_on_buffer(self):
-        print('training model on buffer')
         train_samples = self._buffer.samples[0:1] 
         test_samples = self._buffer.samples[2:3]
         # Transform the training and testing data
