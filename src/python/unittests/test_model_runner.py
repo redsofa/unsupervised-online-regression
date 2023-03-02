@@ -14,17 +14,6 @@ import numpy as np
 class TestModelRunner(unittest.TestCase):
     def test_simple_model_run(self):
         print(f'\nExecuting {TestModelRunner.test_simple_model_run.__name__} test')
-
-        def model_evaluation_fn(**kwargs):
-            return mean_squared_error(kwargs['y_true'], kwargs['y_pred'])
-
-        def threshold_calculation_fn(**kwargs):
-            Z1 = kwargs['Z1']
-            Z2 = kwargs['Z2']
-            buffer_max_len = kwargs['buffer_max_len']
-            d = (math.sqrt(abs(Z2 - Z1))**2)/buffer_max_len
-            return d
-
         # Configure window sizes
         train_test_window_size = 10
         train_size = round(train_test_window_size * 0.8)
@@ -39,7 +28,7 @@ class TestModelRunner(unittest.TestCase):
         print(f'max_samples : {max_samples}')
 
         # Create the ModelRunner object
-        m_run = ModelRunner(model_name = SckitLearnLinearRegressionModel.name)
+        m_run = ModelRunner(model_name = SckitLearnLinearRegressionModel.get_name())
 
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
@@ -60,8 +49,6 @@ class TestModelRunner(unittest.TestCase):
             .set_data_stream(data_stream)\
             .set_max_samples(max_samples)\
             .set_buffer(buffer)\
-            .set_evaluation_fn(model_evaluation_fn)\
-            .set_threshold_calculation_fn(threshold_calculation_fn)\
             .set_threshold(5)\
             .run():
                 features.append(x)

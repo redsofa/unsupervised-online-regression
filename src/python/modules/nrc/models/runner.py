@@ -21,8 +21,8 @@ class ModelRunner():
         self._sample_count = 0
         self._buffer = None
         self._delta_threshold = None
-        self._evaluation_fn = None
-        self._threshold_calculation_fn = None
+        self._evaluation_fn = self._model.model_evaluation_fn
+        self._threshold_calculation_fn = self._model.threshold_calculation_fn
 
     @property
     def start_time(self):
@@ -153,7 +153,7 @@ class ModelRunner():
         print('\nLaunching model runner')
         print('Validating model runner settings')
         self.validate_settings()
-        print(f'Running model : {self._model.name}')
+        print(f'Running model : {self._model_name}')
         self._start_time  = time.time()
 
         for x, y in self._data_stream:
@@ -189,22 +189,17 @@ class ModelRunner():
 
         # Check that the stream has been set
         if self._data_stream is None:
-            raise Exception(f'Cannot run the algorithm {self._model.name}. The input data stream has not been set.')
+            raise Exception(f'Cannot run the algorithm {self._model_name}. The input data stream has not been set.')
 
         # Check if TrainTestWindow instance has been set
         if self._tt_win is None:
-            raise Exceptino(f'Cannot run the algorithm {self._model.name}. The TrainTestWindow instance has not been set.')
+            raise Exceptino(f'Cannot run the algorithm {self._model_name}. The TrainTestWindow instance has not been set.')
 
         if self._buffer is None:
-            raise Exceptino(f'Cannot run the algorithm {self._model.name}. The DataBuffer instance has not been set.')
+            raise Exceptino(f'Cannot run the algorithm {self._model_name}. The DataBuffer instance has not been set.')
 
         if self._delta_threshold is None:
-            raise Exception(f'Cannot run the algorithm {self._model.name}. The delta threshold is not set.') 
-
-    def set_threshold_calculation_fn(self, fn):
-        self._threshold_calculation_fn = fn
-        return self
-
+            raise Exception(f'Cannot run the algorithm {self._model_name}. The delta threshold is not set.') 
 
     def set_threshold(self, delta):
         self._delta_threshold = delta
@@ -230,6 +225,6 @@ class ModelRunner():
         self._buffer = buffer
         return self
 
-    def set_evaluation_fn(self, fn):
-        self._evaluation_fn = fn
-        return self
+
+if __name__ == '__main__':
+    pass

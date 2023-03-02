@@ -9,7 +9,7 @@ class Test_ModelFactory(unittest.TestCase):
     def test_get_valid_stub_model_Instance(self):
         buffer_size = 10
         pre_train_size = 5
-        m = ModelFactory.get_instance(SckitLearnLinearRegressionModel.name)
+        m = ModelFactory.get_instance(SckitLearnLinearRegressionModel.get_name())
         self.assertTrue(type(m) is SckitLearnLinearRegressionModel)
 
     def test_get_invalid_model(self):

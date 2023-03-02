@@ -2,8 +2,9 @@
 
 # Command to start the Python program
 python ../python/main.py \
-    --input_file_name ../../datasets/small.csv \
-    --stream_parameters ../../datasets/small.parameters \
+    --input_stream_file ../../datasets/small.csv \
+    --stream_parameter_file ../../datasets/small.parameters \
+    --train_samples 8 \
+    --test_samples 2 \
     --buffer_size 10 \
-    --max_samples 15 \
-    --pre_train_size 5
+    --delta_threshold 5
