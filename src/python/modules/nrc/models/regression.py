@@ -1,4 +1,3 @@
-from nrc.models.base import *
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 import math

@@ -1,4 +1,3 @@
-from nrc.models.stub import StubRegressionModel
 from nrc.models.regression import SckitLearnLinearRegressionModel
 
 
