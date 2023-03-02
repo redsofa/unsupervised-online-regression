@@ -37,15 +37,6 @@ def main():
 
     features = [] 
     predictions = []
-    '''
-    for x, y in data_stream:
-        print(x)
-        print(y)
-
-    return
-    '''
-
-    print(args)
 
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
