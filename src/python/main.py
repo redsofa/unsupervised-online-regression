@@ -48,12 +48,10 @@ def main():
 
     # Run the model
     for x, y in m_run.run():
-        print(x, y)
+        features.append(x)
+        predictions.append(y)
 
-        #features.append(x)
-        #predictions.append(y)
-
-    #print(predictions)
+    print(predictions)
 
     print(f'Model run time: {m_run.run_time}')
 
