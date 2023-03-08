@@ -1,13 +1,8 @@
 import argparse
-import time
-from nrc.factories.stream import StreamFactory
-from nrc.models.runner import ModelRunner
-from nrc.settings.default_params import *
-from nrc.util.stream import *
-from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+
 
 def get_args():
     parser = argparse.ArgumentParser(description="Plot unsupervised, online regression modeling results.")
@@ -27,9 +22,17 @@ def main():
     # Calculate MSE and RMSE values
     mse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values)
     print(f'MSE : {mse}')
+
     #  Setting squared to False will return the RMSE.
     rmse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values, squared=False)
     print(f'RMSE : {rmse}')
+
+    mae = mean_absolute_error(p_df.y_true.values, p_df.y_pred.values)
+    print(f'MAE : {mae}')
+
+    r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
+    print(f'R2 : {r2}')
+
 
 if __name__ == '__main__':
     main()
