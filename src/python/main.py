@@ -7,7 +7,7 @@ from nrc.util.stream import *
 from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
     ret_val = pd.DataFrame({'x': x_arr, 'y_pred': y_pred_arr, 'y_true': y_true_arr}, columns=['x', 'y_pred', 'y_true'])
@@ -67,9 +67,16 @@ def main():
     # Calculate MSE and RMSE values
     mse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values)
     print(f'MSE : {mse}')
+
     #  Setting squared to False will return the RMSE.
     rmse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values, squared=False)
     print(f'RMSE : {rmse}')
+
+    mae = mean_absolute_error(p_df.y_true.values, p_df.y_pred.values)
+    print(f'MAE : {mae}')
+
+    r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
+    print(f'R2 : {r2}')
 
     print(f'Model run time: {m_run.run_time}')
 
