@@ -11,8 +11,8 @@ python ../../python/main.py \
     --output_csv_file ~/data/UCI/energy/energydata_complete_out.csv \
     --train_samples 4000 \
     --test_samples 800 \
-    --buffer_size 4800 \
-    --delta_threshold 8
+    --buffer_size 2000 \
+    --delta_threshold 10
 
 echo '\n'
 
