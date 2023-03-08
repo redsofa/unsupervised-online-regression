@@ -64,21 +64,16 @@ def main():
     p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
     p_df.to_csv(args.output_csv_file, index=False)
 
-    # Calculate MSE and RMSE values
-    mse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values)
-    print(f'MSE : {mse}')
+    print()
+    print('Program Arguments')
+    for key, value in vars(args).items():
+        print (f'{key} - {value}')
 
-    #  Setting squared to False will return the RMSE.
-    rmse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values, squared=False)
-    print(f'RMSE : {rmse}')
-
-    mae = mean_absolute_error(p_df.y_true.values, p_df.y_pred.values)
-    print(f'MAE : {mae}')
-
-    r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
-    print(f'R2 : {r2}')
+    print()
 
     print(f'Model run time: {m_run.run_time}')
+
+    print(f'Prediction count : {len(y_pred_arr)}')
 
     print('Results file saved')
 

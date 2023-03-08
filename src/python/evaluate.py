@@ -14,6 +14,14 @@ def get_args():
 
 def main():
     args = get_args()
+
+    print()
+    print('Program Arguments')
+    for key, value in vars(args).items():
+        print (f'{key} - {value}')
+
+    print()
+
     print(f'Reading input file : {args.input_results_file}')
     p_df = pd.read_csv(args.input_results_file)
 
