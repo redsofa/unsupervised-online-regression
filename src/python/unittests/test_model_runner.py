@@ -38,13 +38,13 @@ class TestModelRunner(unittest.TestCase):
 
         buffer = DataBuffer(buffer_size)
 
-        features = [] 
+        features = []
         predictions = []
 
         # Configure the ModelRunner instance
-        # and run it... As it runs, we get 
+        # and run it... As it runs, we get
         # predictions as it's processing the stream.
-        for x, y in m_run\
+        for x, y_pred, y_true in m_run\
             .set_train_test_window(tt_win)\
             .set_data_stream(data_stream)\
             .set_max_samples(max_samples)\
@@ -52,35 +52,35 @@ class TestModelRunner(unittest.TestCase):
             .set_threshold(5)\
             .run():
                 features.append(x)
-                predictions.append(y)
+                predictions.append(y_pred)
 
         print(f'Model run time: {m_run.run_time}')
 
         expected_features = [
-            [[2.1, 3.1]], 
-            [[2. , 3.1]], 
-            [[2.4, 3.2]], 
-            [[3. , 3.4]], 
-            [[1., 2.]], 
-            [[2.2, 3.5]], 
-            [[3. , 3.1]], 
-            [[2. , 3.1]], 
-            [[2.4, 3.4]], 
-            [[2.4, 3.4]], 
-            [[2.4, 3.4]], 
+            [[2.1, 3.1]],
+            [[2. , 3.1]],
+            [[2.4, 3.2]],
+            [[3. , 3.4]],
+            [[1., 2.]],
+            [[2.2, 3.5]],
+            [[3. , 3.1]],
+            [[2. , 3.1]],
+            [[2.4, 3.4]],
+            [[2.4, 3.4]],
+            [[2.4, 3.4]],
             [[2. , 3.2]]
         ]
         expected_predictions = [
-           [[21.98889487]], 
-           [[21.89803473]], 
-           [[22.1024364]], 
-           [[22.32951945]], 
-           [[22.73886122]], 
-           [[21.44359941]], 
-           [[22.80663616]], 
-           [[21.89803473]], 
-           [[21.78435859]], 
-           [[21.78435859]], 
+           [[21.98889487]],
+           [[21.89803473]],
+           [[22.1024364]],
+           [[22.32951945]],
+           [[22.73886122]],
+           [[21.44359941]],
+           [[22.80663616]],
+           [[21.89803473]],
+           [[21.78435859]],
+           [[21.78435859]],
            [[21.78435859]],
            [[21.73899583]]
         ]

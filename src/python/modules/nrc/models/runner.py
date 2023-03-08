@@ -177,7 +177,7 @@ class ModelRunner():
                 self.add_one_sample(sample)
             else:
                 x, y_pred = self._make_one_prediction(sample)
-                yield(x, y_pred)
+                yield(x, y_pred, y)
                 self._process_prediction(x, y_pred)
 
         self._end_time = time.time()

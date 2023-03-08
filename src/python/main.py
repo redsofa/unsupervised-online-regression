@@ -5,6 +5,12 @@ from nrc.models.runner import ModelRunner
 from nrc.settings.default_params import *
 from nrc.util.stream import *
 from nrc.util.window import TrainTestWindow, DataBuffer
+import pandas as pd
+import numpy as np
+
+def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
+    ret_val = pd.DataFrame({'x': x_arr, 'y_pred': y_pred_arr, 'y_true': y_true_arr}, columns=['x', 'y_pred', 'y_true'])
+    return ret_val
 
 def get_args():
     parser = argparse.ArgumentParser(description="Unsupervised, online regression modeling.")
@@ -15,6 +21,7 @@ def get_args():
     parser.add_argument('-5', '--buffer_size', type=int, required=False, default=DEFAULT_BUFFER_SIZE, help='Data buffer size to use.')
     parser.add_argument('-6', '--max_samples', type=int, required=False, default=DEFAULT_MAX_SAMPLES, help='Max Number of samples to process.')
     parser.add_argument('-7', '--delta_threshold', type=float, required=False, default=DEFAULT_DELTA_THRESHOLD, help='Evaluation metrics difference threshold.')
+    parser.add_argument('-8', '--output_csv_file', type=str, required=False, default=DEFAULT_OUTPUT_FILE, help='Default output CSV file.')
     args = parser.parse_args()
     return args
 
@@ -35,8 +42,9 @@ def main():
     # Configure the buffer
     buffer = DataBuffer(args.buffer_size)
 
-    features = []
-    predictions = []
+    x_arr = []
+    y_pred_arr = []
+    y_true_arr = []
 
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
@@ -47,11 +55,17 @@ def main():
         .set_threshold(args.delta_threshold)
 
     # Run the model
-    for x, y in m_run.run():
-        features.append(x)
-        predictions.append(y)
+    for x, y_pred, y_true in m_run.run():
+        x_arr.append(x[0])
+        y_pred_arr.append(y_pred[0][0])
+        y_true_arr.append(y_true)
 
-    print(predictions)
+
+
+    p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
+    print(p_df.head(100))
+    p_df.to_csv(args.output_csv_file, index=False)
+
 
     print(f'Model run time: {m_run.run_time}')
 
