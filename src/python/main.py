@@ -57,7 +57,7 @@ def main():
 
     # Run the model
     for x, y_pred, y_true in m_run.run():
-        x_arr.append(x[0])
+        x_arr.append(x[0].tolist())
         y_pred_arr.append(y_pred[0][0])
         y_true_arr.append(y_true)
 
