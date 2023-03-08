@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Command to start the Python program
-python ../python/main.py \
+python ../../python/main.py \
     --input_stream_file ~/data/UCI/pp_gas_emission/gt_2015.csv \
     --stream_parameter_file ~/data/UCI/pp_gas_emission/gt_2015.params \
     --train_samples 2000 \

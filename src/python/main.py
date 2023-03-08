@@ -9,7 +9,7 @@ from nrc.util.window import TrainTestWindow, DataBuffer
 def get_args():
     parser = argparse.ArgumentParser(description="Unsupervised, online regression modeling.")
     parser.add_argument('-1', '--input_stream_file', type=str, required=False, default=DEFAULT_INPUT_STREAM_FILE, help="Input file (csv).")
-    parser.add_argument('-2', '--stream_parameter_file', type=str, required=False, default=DEFAULT_BUFFER_SIZE, help='Stream configuration file.')
+    parser.add_argument('-2', '--stream_parameter_file', type=str, required=False, default=DEFAULT_STREAM_PARAMETER_FILE, help='Stream configuration file.')
     parser.add_argument('-3', '--train_samples', type=int, required=False, default=DEFAULT_TRAIN_SAMPLES, help='Number of training samples to use.')
     parser.add_argument('-4', '--test_samples', type=int, required=False, default=DEFAULT_TEST_SAMPLES, help='Number of test samples to use.')
     parser.add_argument('-5', '--buffer_size', type=int, required=False, default=DEFAULT_BUFFER_SIZE, help='Data buffer size to use.')
@@ -22,11 +22,11 @@ def get_args():
 def main():
     args = get_args()
     # Array of models to run.
-    model_name = 'sklearn_linear_regression_model' 
+    model_name = 'sklearn_linear_regression_model'
     # stream_params specifies how to transform the input data stream features and which column is
     # the target variable.
     stream_params = load_stream_params(args.stream_parameter_file)
-    # Get the datastream 
+    # Get the datastream
     data_stream = StreamFactory.get_csv_stream(args.input_stream_file, **stream_params)
 
     # Configure a TrainTest_Window instance
@@ -35,7 +35,7 @@ def main():
     # Configure the buffer
     buffer = DataBuffer(args.buffer_size)
 
-    features = [] 
+    features = []
     predictions = []
 
     # Configure the ModelRunner instance

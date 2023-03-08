@@ -59,8 +59,8 @@ python main.py
 OR
 
 ~~~
-cd ./src/bash
-sh run_python_program.sh
+cd ./src/bash/experiments
+sh example.sh
 ~~~
 
 
@@ -68,7 +68,7 @@ sh run_python_program.sh
 ~~~
 From the project root :
 
-cd ./src/bash
+cd ./src/bash/unit_testing
 sh run_unit_tests.sh
 ~~~
 
