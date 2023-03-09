@@ -11,7 +11,7 @@ python ../../python/main.py \
     --output_stats_file ~/data/fred_open_data/air_quality/aq_sensor_stats.txt \
     --train_samples 600 \
     --test_samples 200 \
-    --buffer_size 800 \
+    --buffer_size 200 \
     --delta_threshold 5
 
 echo '\n'

@@ -61,16 +61,13 @@ class ModelRunner():
         # the evaluation metric
         self._Z1 = self._evaluation_fn(y_true=y_test, y_pred=y_preds)
 
-        # Normalize the Z1 value (Average value of RMSE)
-        self._Z1 = self._Z1/len(y_test)
-
         self._initial_training_done = True
 
     def _swap_model(self, model):
         self._model = model
 
     def _train_model_on_buffer(self):
-        train_samples = self._buffer.samples[0:1] 
+        train_samples = self._buffer.samples[0:1]
         test_samples = self._buffer.samples[2:3]
         # Transform the training and testing data
         x_train, y_train = XYTransformers.arr_dict_to_xy(train_samples)
@@ -108,7 +105,7 @@ class ModelRunner():
         if not self._buffer.is_filled :
             new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
             self._buffer.add_one_sample(new_sample)
-            #The oldest sample in the training will be removed 
+            #The oldest sample in the training will be removed
             oldest_train_sample = self._tt_win.get_and_remove_oldest_train_sample()
             #The oldest sample in the testing window will be removed
             #AND added to the training window
@@ -117,11 +114,16 @@ class ModelRunner():
             self._tt_win.add_one_test_sample(new_sample)
         else :
             new_model, Z2 = self._trigger_new_model_training()
+
             d = self._threshold_calculation_fn(Z1 = self._Z1, Z2 = Z2 , buffer_max_len = self._buffer.max_len)
+
+            #print(f'd is  {d}, threshold is : {self._delta_threshold}')
 
             if (d < self._delta_threshold):
                 self._buffer.remove_samples(1)
+                print('no drift')
             else:
+                print('drift')
                 # We have a drift
                 # Fit new model on the buffer
                 self._train_model_on_buffer()
@@ -129,7 +131,7 @@ class ModelRunner():
                 self._buffer.clear_contents()
 
             self._Z1 = Z2
-            
+
     def _make_one_prediction(self, sample):
         # A sample looks something like {'x': array([1., 2.]), 'y': array([None])}
         x = [sample['x']]
@@ -202,7 +204,7 @@ class ModelRunner():
             raise Exceptino(f'Cannot run the algorithm {self._model_name}. The DataBuffer instance has not been set.')
 
         if self._delta_threshold is None:
-            raise Exception(f'Cannot run the algorithm {self._model_name}. The delta threshold is not set.') 
+            raise Exception(f'Cannot run the algorithm {self._model_name}. The delta threshold is not set.')
 
     def set_threshold(self, delta):
         self._delta_threshold = delta

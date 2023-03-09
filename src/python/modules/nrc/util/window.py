@@ -46,6 +46,9 @@ class DataBuffer():
     def max_len(self):
         return self._max_len
 
+    def len(self):
+        self._data_win.len()
+
 
 class TrainTestWindow():
     def __init__(self, train_size, test_size):
