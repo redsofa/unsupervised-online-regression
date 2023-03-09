@@ -10,9 +10,9 @@ python ../../python/main.py \
     --stream_parameter_file ~/data/UCI/energy/energydata_complete.params \
     --output_csv_file ~/data/UCI/energy/energydata_complete_out.csv \
     --output_stats_file ~/data/UCI/energy/energydata_complete_stats.txt \
-    --train_samples 4000 \
-    --test_samples 800 \
-    --buffer_size 2000 \
+    --train_samples 1000 \
+    --test_samples 200 \
+    --buffer_size 200 \
     --delta_threshold 1e-15
 
 echo '\n'

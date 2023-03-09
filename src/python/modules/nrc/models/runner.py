@@ -125,9 +125,15 @@ class ModelRunner():
                 self._buffer.remove_samples(1)
             else:
                 # We have a drift
+
+                # Call the drift event handler. This is a function that subscribes to
+                # "drift detected" events.
+                self._drift_handler(
+                    prediction_count = self._prediction_count,
+                    drift_indicator_value = d
+                )
                 # Fit new model on the buffer
-                self._drift_handler(prediction_count = self._prediction_count)
-                self._train_model_on_buffer()
+                self._model = self._train_model_on_buffer()
                 # Clear the buffer
                 self._buffer.clear_contents()
 

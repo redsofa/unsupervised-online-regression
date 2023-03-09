@@ -29,6 +29,7 @@ def get_args():
 
 def drift_handler(**kwargs):
     print(f'Drift detected at prediction number : {kwargs["prediction_count"]}')
+    print(f'Value of d is : {kwargs["drift_indicator_value"]}')
 
 def main():
     args = get_args()

@@ -9,10 +9,10 @@ python ../../python/main.py \
     --stream_parameter_file ~/data/fred_open_data/air_quality/aq_sensor.params \
     --output_csv_file ~/data/fred_open_data/air_quality/aq_sensor_out.csv \
     --output_stats_file ~/data/fred_open_data/air_quality/aq_sensor_stats.txt \
-    --train_samples 600 \
-    --test_samples 200 \
+    --train_samples 120 \
+    --test_samples 30 \
     --buffer_size 200 \
-    --delta_threshold 1e-10
+    --delta_threshold 2
     #--delta_threshold 10
 
 echo '\n'
