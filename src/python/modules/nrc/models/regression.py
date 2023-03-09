@@ -31,7 +31,7 @@ class SckitLearnLinearRegressionModel():
             Z2 = kwargs['Z2']
             buffer_max_len = kwargs['buffer_max_len']
             # d = (math.abs(Z2 - Z1))
-            d = (math.abs(Z2 - Z1))
+            d = (abs(Z2 - Z1))
             return d
         return fn
 
