@@ -10,10 +10,11 @@ python ../../python/main.py \
     --stream_parameter_file ~/data/UCI/pp_gas_emission/gt_2015.params \
     --output_csv_file ~/data/UCI/pp_gas_emission/gt_2015_out.csv \
     --output_stats_file ~/data/UCI/pp_gas_emission/gt_2015_stats.txt \
-    --train_samples 2000 \
-    --test_samples 400 \
-    --buffer_size 2400 \
-    --delta_threshold 5
+    --train_samples 100 \
+    --test_samples 40 \
+    --buffer_size 40 \
+    --delta_threshold 1e-10
+    #--delta_threshold 5
 
 echo '\n'
 

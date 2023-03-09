@@ -27,6 +27,9 @@ def get_args():
     args = parser.parse_args()
     return args
 
+def drift_handler(**kwargs):
+    print(f'Drift detected at prediction number : {kwargs["prediction_count"]}')
+
 def main():
     args = get_args()
     # Array of models to run.
@@ -53,7 +56,8 @@ def main():
         .set_data_stream(data_stream)\
         .set_max_samples(args.max_samples)\
         .set_buffer(buffer)\
-        .set_threshold(args.delta_threshold)
+        .set_threshold(args.delta_threshold)\
+        .set_drift_handler(drift_handler)
 
     # Run the model
     for x, y_pred, y_true in m_run.run():

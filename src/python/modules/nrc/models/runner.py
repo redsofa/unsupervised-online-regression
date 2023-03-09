@@ -19,10 +19,12 @@ class ModelRunner():
         self._end_time = None
         self._stop_run = False
         self._sample_count = 0
+        self._prediction_count = 0
         self._buffer = None
         self._delta_threshold = None
         self._evaluation_fn = self._model.model_evaluation_fn
         self._threshold_calculation_fn = self._model.threshold_calculation_fn
+        self._drift_handler = None
 
     @property
     def start_time(self):
@@ -124,6 +126,7 @@ class ModelRunner():
             else:
                 # We have a drift
                 # Fit new model on the buffer
+                self._drift_handler(prediction_count = self._prediction_count)
                 self._train_model_on_buffer()
                 # Clear the buffer
                 self._buffer.clear_contents()
@@ -131,6 +134,7 @@ class ModelRunner():
             self._Z1 = Z2
 
     def _make_one_prediction(self, sample):
+        self._prediction_count += 1
         # A sample looks something like {'x': array([1., 2.]), 'y': array([None])}
         x = [sample['x']]
         # Make a prediction with trained model
@@ -228,6 +232,9 @@ class ModelRunner():
         self._buffer = buffer
         return self
 
+    def set_drift_handler(self, fn):
+        self._drift_handler = fn
+        return self
 
 if __name__ == '__main__':
     pass
