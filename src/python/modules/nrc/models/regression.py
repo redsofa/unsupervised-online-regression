@@ -23,7 +23,7 @@ class SckitLearnLinearRegressionModel():
         def fn(**kwargs):
             return mean_squared_error(kwargs['y_true'], kwargs['y_pred'])
         return fn
-    
+
     @property
     def threshold_calculation_fn(self):
         def fn(**kwargs):
@@ -37,7 +37,7 @@ class SckitLearnLinearRegressionModel():
 
     @staticmethod
     def get_name():
-        return 'sklearn_linear_regression_model' 
+        return 'sklearn_linear_regression_model'
 
 if __name__ == '__main__':
     pass
