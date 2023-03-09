@@ -61,6 +61,9 @@ class ModelRunner():
         # the evaluation metric
         self._Z1 = self._evaluation_fn(y_true=y_test, y_pred=y_preds)
 
+        # Normalize the Z1 value (Average value of RMSE)
+        self._Z1 = self._Z1/len(y_test)
+
         self._initial_training_done = True
 
     def _swap_model(self, model):

@@ -21,7 +21,7 @@ class SckitLearnLinearRegressionModel():
     @property
     def model_evaluation_fn(self):
         def fn(**kwargs):
-            return mean_squared_error(kwargs['y_true'], kwargs['y_pred'])
+            return mean_squared_error(kwargs['y_true'], kwargs['y_pred'], squared=False)
         return fn
 
     @property
