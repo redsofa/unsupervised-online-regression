@@ -121,9 +121,7 @@ class ModelRunner():
 
             if (d < self._delta_threshold):
                 self._buffer.remove_samples(1)
-                print('no drift')
             else:
-                print('drift')
                 # We have a drift
                 # Fit new model on the buffer
                 self._train_model_on_buffer()
