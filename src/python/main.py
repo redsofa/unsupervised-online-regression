@@ -22,10 +22,10 @@ def get_args():
     parser.add_argument('-5', '--buffer_size', type=int, required=False, default=DEFAULT_BUFFER_SIZE, help='Data buffer size to use.')
     parser.add_argument('-6', '--max_samples', type=int, required=False, default=DEFAULT_MAX_SAMPLES, help='Max Number of samples to process.')
     parser.add_argument('-7', '--delta_threshold', type=float, required=False, default=DEFAULT_DELTA_THRESHOLD, help='Evaluation metrics difference threshold.')
-    parser.add_argument('-8', '--output_csv_file', type=str, required=False, default=DEFAULT_OUTPUT_FILE, help='Default output CSV file.')
+    parser.add_argument('-8', '--output_csv_file', type=str, required=False, default=DEFAULT_OUTPUT_CSV_FILE, help='Default output CSV file.')
+    parser.add_argument('-9', '--output_stats_file', type=str, required=False, default=DEFAULT_OUTPUT_STATS_FILE, help='Default output CSV file.')
     args = parser.parse_args()
     return args
-
 
 def main():
     args = get_args()
@@ -64,18 +64,16 @@ def main():
     p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
     p_df.to_csv(args.output_csv_file, index=False)
 
-    print()
-    print('Program Arguments')
-    for key, value in vars(args).items():
-        print (f'{key} - {value}')
+    with open(args.output_stats_file, 'w') as f:
+        f.write('Program Arguments :\n\n')
+        for key, value in vars(args).items():
+            f.write(f'{key} : {value}\n')
+        f.write('\n')
+        f.write(f'Model run time : {m_run.run_time}\n')
+        f.write(f'Prediction count : {len(y_pred_arr)}')
 
-    print()
+    print('Results files saved')
 
-    print(f'Model run time: {m_run.run_time}')
-
-    print(f'Prediction count : {len(y_pred_arr)}')
-
-    print('Results file saved')
 
 if __name__ == '__main__':
     main()

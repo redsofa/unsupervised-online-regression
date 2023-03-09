@@ -1,14 +1,14 @@
 #!/bin/bash
+# exit when any command fails
+set -e
 
-
-
-# Command to start the model
 echo 'Launching Model ...'
-
+# Command to start the model
 python ../../python/main.py \
     --input_stream_file ~/data/UCI/parkinsons/parkinsons_updrs.data \
     --stream_parameter_file ~/data/UCI/parkinsons/parkinsons_updrs.params \
     --output_csv_file ~/data/UCI/parkinsons/parkinsons_updrs_out.csv \
+    --output_stats_file ~/data/UCI/parkinsons/parkinsons_updrs_stats.txt \
     --train_samples 700 \
     --test_samples 200 \
     --buffer_size 900 \
