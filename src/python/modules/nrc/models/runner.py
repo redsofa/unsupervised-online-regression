@@ -119,13 +119,13 @@ class ModelRunner():
 
             d = self._threshold_calculation_fn(Z1 = self._Z1, Z2 = Z2 , buffer_max_len = self._buffer.max_len)
 
-            #print(f'd is  {d}, threshold is : {self._delta_threshold}')
+            # print(f'd is  {d}, threshold is : {self._delta_threshold}')
 
             if (d < self._delta_threshold):
                 self._buffer.remove_samples(1)
             else:
                 # We have a drift
-
+                # input("Drift Detected. Press enter to continue")
                 # Call the drift event handler. This is a function that subscribes to
                 # "drift detected" events.
                 self._drift_handler(

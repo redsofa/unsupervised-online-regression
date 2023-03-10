@@ -9,10 +9,10 @@ python ../../python/main.py \
     --stream_parameter_file ~/data/UCI/parkinsons/parkinsons_updrs.params \
     --output_csv_file ~/data/UCI/parkinsons/parkinsons_updrs_out.csv \
     --output_stats_file ~/data/UCI/parkinsons/parkinsons_updrs_stats.txt \
-    --train_samples 700 \
-    --test_samples 200 \
-    --buffer_size 900 \
-    --delta_threshold 0.3
+    --train_samples 500 \
+    --test_samples 100 \
+    --buffer_size 100 \
+    --delta_threshold 4
 
 echo '\n'
 
