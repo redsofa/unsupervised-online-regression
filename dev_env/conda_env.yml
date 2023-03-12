@@ -13,6 +13,7 @@ dependencies:
   - contourpy=1.0.5=py39haf03e11_0
   - cycler=0.11.0=pyhd3eb1b0_0
   - dill=0.3.6=py39hecd8cb5_0
+  - flake8=6.0.0=py39hecd8cb5_0
   - flit-core=3.6.0=pyhd3eb1b0_0
   - fonttools=4.25.0=pyhd3eb1b0_0
   - freetype=2.12.1=hd8bbffd_0
@@ -26,13 +27,16 @@ dependencies:
   - lazy-object-proxy=1.6.0=py39h9ed2024_0
   - lcms2=2.12=hf1fd2bf_0
   - lerc=3.0=he9d5cce_0
+  - libblas=3.9.0=12_osx64_mkl
   - libbrotlicommon=1.0.9=hca72f7f_7
   - libbrotlidec=1.0.9=hca72f7f_7
   - libbrotlienc=1.0.9=hca72f7f_7
+  - libcblas=3.9.0=12_osx64_mkl
   - libcxx=14.0.6=h9765a3e_0
   - libdeflate=1.17=hb664fd8_0
   - libffi=3.4.2=hecd8cb5_6
   - libgfortran=3.0.1=h93005f0_2
+  - liblapack=3.9.0=12_osx64_mkl
   - libpng=1.6.39=h6c40b1e_0
   - libtiff=4.5.0=hcec6c5f_2
   - libwebp=1.2.4=hf6ce154_1
@@ -53,10 +57,13 @@ dependencies:
   - pillow=9.4.0=py39hcec6c5f_0
   - pip=22.3.1=py39hecd8cb5_0
   - platformdirs=2.5.2=py39hecd8cb5_0
+  - pycodestyle=2.10.0=py39hecd8cb5_0
+  - pyflakes=3.0.1=py39hecd8cb5_0
   - pylint=2.14.5=py39hecd8cb5_0
   - pyparsing=3.0.9=py39hecd8cb5_0
   - python=3.9.16=h218abb5_0
   - python-dateutil=2.8.2=pyhd3eb1b0_0
+  - python_abi=3.9=2_cp39
   - readline=8.2=hca72f7f_0
   - scikit-learn=1.0.2=py39hae1ba45_1
   - setuptools=65.6.3=py39hecd8cb5_0
