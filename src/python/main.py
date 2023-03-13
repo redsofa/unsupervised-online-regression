@@ -1,17 +1,16 @@
 import argparse
-import time
 from nrc.factories.stream import StreamFactory
 from nrc.models.runner import ModelRunner
 from nrc.settings.default_params import *
 from nrc.util.stream import *
 from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
-import numpy as np
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
     ret_val = pd.DataFrame({'x': x_arr, 'y_pred': y_pred_arr, 'y_true': y_true_arr}, columns=['x', 'y_pred', 'y_true'])
     return ret_val
+
 
 def get_args():
     parser = argparse.ArgumentParser(description="Unsupervised, online regression modeling.")
@@ -26,6 +25,7 @@ def get_args():
     parser.add_argument('-9', '--output_stats_file', type=str, required=False, default=DEFAULT_OUTPUT_STATS_FILE, help='Default output CSV file.')
     args = parser.parse_args()
     return args
+
 
 def drift_handler(**kwargs):
     print(f'Drift detected at prediction number : {kwargs["prediction_count"]}')
