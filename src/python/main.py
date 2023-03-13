@@ -1,17 +1,25 @@
 import argparse
 from nrc.factories.stream import StreamFactory
 from nrc.models.runner import ModelRunner
-from nrc.settings.default_params import *
-from nrc.util.stream import *
+from nrc.settings.default_params import (
+    DEFAULT_INPUT_STREAM_FILE,
+    DEFAULT_STREAM_PARAMETER_FILE,
+    DEFAULT_TRAIN_SAMPLES,
+    DEFAULT_TEST_SAMPLES,
+    DEFAULT_BUFFER_SIZE,
+    DEFAULT_MAX_SAMPLES,
+    DEFAULT_DELTA_THRESHOLD,
+    DEFAULT_OUTPUT_CSV_FILE,
+    DEFAULT_OUTPUT_STATS_FILE
+)
+from nrc.util.stream import load_stream_params
 from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
 
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
     ret_val = pd.DataFrame(
-        {"x": x_arr,
-         "y_pred": y_pred_arr,
-         "y_true": y_true_arr},
+        {"x": x_arr, "y_pred": y_pred_arr, "y_true": y_true_arr},
         columns=["x", "y_pred", "y_true"],
     )
     return ret_val
