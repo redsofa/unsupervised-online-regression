@@ -77,6 +77,9 @@ def main():
     print(f"Reading input file : {pred_csv_file}")
     p_df = pd.read_csv(pred_csv_file)
 
+    min_y_true = p_df.y_true.min()
+    max_y_true = p_df.y_true.max()
+
     with open(stats_file, "a") as f:
         f.write("\n\nPrediction Metrics :\n\n")
         # Calculate MSE and RMSE values
@@ -92,6 +95,10 @@ def main():
 
         r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
         f.write(f"R2 : {r2}\n")
+        f.write('\n')
+
+        f.write(f'Min y_true : {min_y_true} - Max y_true : {max_y_true}\n')
+
 
     print("Results files updated")
 
