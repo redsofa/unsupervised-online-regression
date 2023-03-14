@@ -2,14 +2,51 @@ import argparse
 import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
+from nrc.settings.default_params import (
+    DEFAULT_OUTPUT_DIR,
+    DEFAULT_OUTPUT_PREDICTIONS_FILE,
+    DEFAULT_OUTPUT_STATS_FILE,
+    DEFAULT_OUTPUT_PLOT_FILE
+)
+from nrc.util.files import mkdir_structure
 
 
 def get_args():
     parser = argparse.ArgumentParser(
         description="Plot unsupervised, online regression modeling results."
     )
-    parser.add_argument("-1", "--input_results_file", type=str, required=True)
-    parser.add_argument("-2", "--output_plots_file", type=str, required=False)
+    parser.add_argument(
+        "-1",
+        "--output_dir",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Root of output files directory for this script.",
+    )
+    parser.add_argument(
+        "-2",
+        "--predictions_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_PREDICTIONS_FILE,
+        help="Predictions output CSV file for this script.",
+    )
+    parser.add_argument(
+        "-3",
+        "--stats_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_STATS_FILE,
+        help="File name for the output statistics",
+    )
+    parser.add_argument(
+        "-4",
+        "--plot_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_PLOT_FILE,
+        help="File name for the output statistics",
+    )
     args = parser.parse_args()
     return args
 
@@ -31,38 +68,34 @@ def pred_true_plot(pdf, file_name):
 
 def main():
     args = get_args()
+    mkdir_structure(args.output_dir)
 
-    print()
-    print("Program Arguments")
-    for key, value in vars(args).items():
-        print(f"{key} - {value}")
+    stats_file = f"{args.output_dir}/{args.stats_file}"
+    pred_csv_file = f"{args.output_dir}/{args.predictions_file}"
+    plot_file = f'{args.output_dir}/{args.plot_file}'
 
-    print()
+    print(f"Reading input file : {pred_csv_file}")
+    p_df = pd.read_csv(pred_csv_file)
 
-    print(f"Reading input file : {args.input_results_file}")
-    p_df = pd.read_csv(args.input_results_file)
+    with open(stats_file, "a") as f:
+        f.write("\n\nPrediction Metrics :\n\n")
+        # Calculate MSE and RMSE values
+        mse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values)
+        f.write(f"MSE : {mse}\n")
 
-    print()
-    print("Print results file header")
-    print(p_df.head(10))
-    print()
-    print("Metrics Calculations")
+        #  Setting squared to False will return the RMSE.
+        rmse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values, squared=False)
+        f.write(f"RMSE : {rmse}\n")
 
-    # Calculate MSE and RMSE values
-    mse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values)
-    print(f"MSE : {mse}")
+        mae = mean_absolute_error(p_df.y_true.values, p_df.y_pred.values)
+        f.write(f"MAE : {mae}\n")
 
-    #  Setting squared to False will return the RMSE.
-    rmse = mean_squared_error(p_df.y_true.values, p_df.y_pred.values, squared=False)
-    print(f"RMSE : {rmse}")
+        r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
+        f.write(f"R2 : {r2}\n")
 
-    mae = mean_absolute_error(p_df.y_true.values, p_df.y_pred.values)
-    print(f"MAE : {mae}")
+    print("Results files updated")
 
-    r2 = r2_score(p_df.y_true.values, p_df.y_pred.values)
-    print(f"R2 : {r2}")
-
-    pred_true_plot(p_df, args.output_plots_file)
+    pred_true_plot(p_df, plot_file)
 
 
 if __name__ == "__main__":

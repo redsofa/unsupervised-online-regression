@@ -1,7 +1,10 @@
-DEFAULT_INPUT_STREAM_FILE = '../../datasets/small.csv'
-DEFAULT_STREAM_PARAMETER_FILE = '../../datasets/small.parameters'
-DEFAULT_OUTPUT_CSV_FILE = '../../datasets/small_out.csv'
-DEFAULT_OUTPUT_STATS_FILE = '../../datasets/small_stats.txt'
+DEFAULT_RAW_DATA_DIR = "../../datasets"
+DEFAULT_OUTPUT_DIR = "../../datasets"
+DEFAULT_INPUT_CSV_FILE = "small.csv"
+DEFAULT_INPUT_CSV_PARAMETERS_FILE = "small.parameters"
+DEFAULT_OUTPUT_PREDICTIONS_FILE = "small_predictions.csv"
+DEFAULT_OUTPUT_PLOT_FILE = 'small.png'
+DEFAULT_OUTPUT_STATS_FILE = "small_stats.txt"
 DEFAULT_TRAIN_SAMPLES = 8
 DEFAULT_TEST_SAMPLES = 2
 DEFAULT_BUFFER_SIZE = 10

@@ -2,19 +2,22 @@ import argparse
 from nrc.factories.stream import StreamFactory
 from nrc.models.runner import ModelRunner
 from nrc.settings.default_params import (
-    DEFAULT_INPUT_STREAM_FILE,
-    DEFAULT_STREAM_PARAMETER_FILE,
+    DEFAULT_RAW_DATA_DIR,
+    DEFAULT_OUTPUT_DIR,
+    DEFAULT_INPUT_CSV_FILE,
+    DEFAULT_INPUT_CSV_PARAMETERS_FILE,
+    DEFAULT_OUTPUT_PREDICTIONS_FILE,
+    DEFAULT_OUTPUT_STATS_FILE,
     DEFAULT_TRAIN_SAMPLES,
     DEFAULT_TEST_SAMPLES,
     DEFAULT_BUFFER_SIZE,
     DEFAULT_MAX_SAMPLES,
     DEFAULT_DELTA_THRESHOLD,
-    DEFAULT_OUTPUT_CSV_FILE,
-    DEFAULT_OUTPUT_STATS_FILE
 )
 from nrc.util.stream import load_stream_params
 from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
+from nrc.util.files import mkdir_structure
 
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
@@ -31,22 +34,54 @@ def get_args():
     )
     parser.add_argument(
         "-1",
-        "--input_stream_file",
+        "--raw_data_dir",
         type=str,
         required=False,
-        default=DEFAULT_INPUT_STREAM_FILE,
-        help="Input file (csv).",
+        default=DEFAULT_RAW_DATA_DIR,
+        help="Root of input files directory for this script.",
     )
     parser.add_argument(
         "-2",
-        "--stream_parameter_file",
+        "--output_dir",
         type=str,
         required=False,
-        default=DEFAULT_STREAM_PARAMETER_FILE,
-        help="Stream configuration file.",
+        default=DEFAULT_OUTPUT_DIR,
+        help="Root of output files directory for this script.",
     )
     parser.add_argument(
         "-3",
+        "--input_csv_file",
+        type=str,
+        required=False,
+        default=DEFAULT_INPUT_CSV_FILE,
+        help="Input CSV file for this script.",
+    )
+    parser.add_argument(
+        "-4",
+        "--input_csv_param_file",
+        type=str,
+        required=False,
+        default=DEFAULT_INPUT_CSV_PARAMETERS_FILE,
+        help="Input CSV parameters file for this script.",
+    )
+    parser.add_argument(
+        "-5",
+        "--output_predictions_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_PREDICTIONS_FILE,
+        help="Predictions output CSV file for this script.",
+    )
+    parser.add_argument(
+        "-6",
+        "--output_stats_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_STATS_FILE,
+        help="File name for the output statistics",
+    )
+    parser.add_argument(
+        "-7",
         "--train_samples",
         type=int,
         required=False,
@@ -54,7 +89,7 @@ def get_args():
         help="Number of training samples to use.",
     )
     parser.add_argument(
-        "-4",
+        "-8",
         "--test_samples",
         type=int,
         required=False,
@@ -62,7 +97,7 @@ def get_args():
         help="Number of test samples to use.",
     )
     parser.add_argument(
-        "-5",
+        "-9",
         "--buffer_size",
         type=int,
         required=False,
@@ -70,7 +105,7 @@ def get_args():
         help="Data buffer size to use.",
     )
     parser.add_argument(
-        "-6",
+        "-10",
         "--max_samples",
         type=int,
         required=False,
@@ -78,28 +113,12 @@ def get_args():
         help="Max Number of samples to process.",
     )
     parser.add_argument(
-        "-7",
+        "-11",
         "--delta_threshold",
         type=float,
         required=False,
         default=DEFAULT_DELTA_THRESHOLD,
         help="Evaluation metrics difference threshold.",
-    )
-    parser.add_argument(
-        "-8",
-        "--output_csv_file",
-        type=str,
-        required=False,
-        default=DEFAULT_OUTPUT_CSV_FILE,
-        help="Default output CSV file.",
-    )
-    parser.add_argument(
-        "-9",
-        "--output_stats_file",
-        type=str,
-        required=False,
-        default=DEFAULT_OUTPUT_STATS_FILE,
-        help="Default output CSV file.",
     )
     args = parser.parse_args()
     return args
@@ -112,13 +131,25 @@ def drift_handler(**kwargs):
 
 def main():
     args = get_args()
+    # Create the output directory if it does not exit.
+    mkdir_structure(args.output_dir)
+
     # Array of models to run.
     model_name = "sklearn_linear_regression_model"
+
+    # Store fully qualified names of files that are used in this script
+    stream_params_file = f"{args.raw_data_dir}/{args.input_csv_param_file}"
+    input_stream_file = f"{args.raw_data_dir}/{args.input_csv_file}"
+    output_pred_csv_file = f"{args.output_dir}/{args.output_predictions_file}"
+    output_stats_file = f"{args.output_dir}/{args.output_stats_file}"
+
     # stream_params specifies how to transform the input data stream features and which column is
-    # the target variable.
-    stream_params = load_stream_params(args.stream_parameter_file)
+    # the target variable. These settings are stored in a JSON file. Load the parameters from
+    # file.
+    stream_params = load_stream_params(stream_params_file)
+
     # Get the datastream
-    data_stream = StreamFactory.get_csv_stream(args.input_stream_file, **stream_params)
+    data_stream = StreamFactory.get_csv_stream(input_stream_file, **stream_params)
 
     # Configure a TrainTest_Window instance
     tt_win = TrainTestWindow(args.train_samples, args.test_samples)
@@ -145,9 +176,9 @@ def main():
         y_true_arr.append(y_true)
 
     p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
-    p_df.to_csv(args.output_csv_file, index=False)
+    p_df.to_csv(output_pred_csv_file, index=False)
 
-    with open(args.output_stats_file, "w") as f:
+    with open(output_stats_file, "w") as f:
         f.write("Program Arguments :\n\n")
         for key, value in vars(args).items():
             f.write(f"{key} : {value}\n")

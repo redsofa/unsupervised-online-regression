@@ -1,12 +1,28 @@
-#!/bin/bash
+##!/bin/bash
+# exit when any command fails
+set -e
 
-# Command to start the Python program
+echo 'Launching Model ...'
+# Command to start the model
 python ../../python/main.py \
-    --input_stream_file ../../../datasets/small.csv \
-    --stream_parameter_file ../../../datasets/small.parameters \
-    --output_csv_file ../../../datasets/small_out.csv \
-    --output_stats_file ../../../datasets/small_stats.txt \
+    --raw_data_dir ../../../datasets \
+    --output_dir ../../../datasets \
+    --input_csv_file small.csv \
+    --input_csv_param_file small.parameters \
+    --output_predictions_file small_predictions.csv \
+    --output_stats_file small_stats.txt \
     --train_samples 8 \
     --test_samples 2 \
-    --buffer_size 10 \
+    --buffer_size 2 \
     --delta_threshold 5
+    #--delta_threshold 2
+
+echo '\n'
+
+echo 'Model Evaluation'
+# Command to stat the model evaluation
+python ../../python/evaluate.py \
+    --output_dir ../../../datasets \
+    --predictions_file small_predictions.csv \
+    --stats_file small_stats.txt \
+    --plot_file small.png

@@ -1,23 +1,28 @@
-#!/bin/bash
+##!/bin/bash
 # exit when any command fails
 set -e
 
 echo 'Launching Model ...'
 # Command to start the model
 python ../../python/main.py \
-    --input_stream_file ~/data/UCI/parkinsons/parkinsons_updrs.data \
-    --stream_parameter_file ~/data/UCI/parkinsons/parkinsons_updrs.params \
-    --output_csv_file ~/data/UCI/parkinsons/parkinsons_updrs_out.csv \
-    --output_stats_file ~/data/UCI/parkinsons/parkinsons_updrs_stats.txt \
+    --raw_data_dir ~/data/usup_reg/raw/uci/parkinsons \
+    --output_dir ~/data/usup_reg/work/uci/parkinsons \
+    --input_csv_file parkinsons_updrs.data \
+    --input_csv_param_file parkinsons_updrs.params \
+    --output_predictions_file parkinsons_updrs_predictions.csv \
+    --output_stats_file parkinsons_updrs_stats.txt \
     --train_samples 500 \
     --test_samples 100 \
     --buffer_size 100 \
     --delta_threshold 4
+    #--delta_threshold 1e-10
 
 echo '\n'
 
 echo 'Model Evaluation'
 # Command to stat the model evaluation
 python ../../python/evaluate.py \
-    --input_results_file ~/data/UCI/parkinsons/parkinsons_updrs_out.csv \
-    --output_plots_file ~/data/UCI/parkinsons/parkinsons_updrs_plots.png
+    --output_dir ~/data/usup_reg/work/uci/parkinsons \
+    --predictions_file parkinsons_updrs_predictions.csv \
+    --stats_file parkinsons_updrs_stats.txt \
+    --plot_file parkinsons_updrs.png
