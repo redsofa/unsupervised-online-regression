@@ -3,7 +3,6 @@ import unittest
 from nrc.util.window import *
 from nrc.metrics.regression import *
 from nrc.util.transformers import XYTransformers
-import os
 from common_test_utils import get_test_data_stream
 import numpy as np
 from sklearn import linear_model
@@ -98,7 +97,6 @@ class TestTrainTestWindow(unittest.TestCase):
 
         # Configure a CSV stream instance of testing data
         data_stream = get_test_data_stream()
-
         # Configure a TrainTest_Window instance
         ttw = TrainTestWindow(train_size, test_size)
         # Pull data from stream until the TrainTestWindow is full
