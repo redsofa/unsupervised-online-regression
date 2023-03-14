@@ -2,11 +2,13 @@
 # exit when any command fails
 set -e
 
+NOW=$( date "+%Y_%m_%d__%H_%M_%S" )
+
 echo 'Launching Model ...'
 # Command to start the model
 python ../../python/main.py \
     --raw_data_dir ~/data/usup_reg/raw/city_of_fredericton/air_quality \
-    --output_dir ~/data/usup_reg/work/city_of_fredericton/air_quality \
+    --output_dir ~/data/usup_reg/work/city_of_fredericton/air_quality/$NOW \
     --input_csv_file aq_sensor.csv \
     --input_csv_param_file aq_sensor.params \
     --output_predictions_file aq_sensors_predictions.csv \
@@ -22,7 +24,7 @@ echo '\n'
 echo 'Model Evaluation'
 # Command to stat the model evaluation
 python ../../python/evaluate.py \
-    --output_dir ~/data/usup_reg/work/city_of_fredericton/air_quality \
+    --output_dir ~/data/usup_reg/work/city_of_fredericton/air_quality/$NOW \
     --predictions_file aq_sensors_predictions.csv \
     --stats_file aq_sensors_stats.txt \
     --plot_file aq_sensors_plot.png

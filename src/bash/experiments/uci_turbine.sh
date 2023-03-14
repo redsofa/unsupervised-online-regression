@@ -2,11 +2,13 @@
 # exit when any command fails
 set -e
 
+NOW=$( date "+%Y_%m_%d__%H_%M_%S" )
+
 echo 'Launching Model ...'
 # Command to start the model
 python ../../python/main.py \
     --raw_data_dir ~/data/usup_reg/raw/uci/turbine \
-    --output_dir ~/data/usup_reg/work/uci/turbine \
+    --output_dir ~/data/usup_reg/work/uci/turbine/$NOW \
     --input_csv_file gt_2015.csv \
     --input_csv_param_file gt_2015.params \
     --output_predictions_file gt_2015_predictions.csv \
@@ -22,7 +24,7 @@ echo '\n'
 echo 'Model Evaluation'
 # Command to stat the model evaluation
 python ../../python/evaluate.py \
-    --output_dir ~/data/usup_reg/work/uci/turbine \
+    --output_dir ~/data/usup_reg/work/uci/turbine/$NOW \
     --predictions_file gt_2015_predictions.csv \
     --stats_file gt_2015_stats.txt \
     --plot_file gt_2015.png
