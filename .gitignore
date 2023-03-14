@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 tags
+datasets/small.png
+datasets/small_predictions.csv
+datasets/small_stats.txt
 
 # C extensions
 *.so
