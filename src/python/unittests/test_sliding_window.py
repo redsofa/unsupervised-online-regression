@@ -1,7 +1,6 @@
-import sys
 import unittest
-from nrc.util.window import *
-from nrc.metrics.regression import *
+from nrc.util.window import RegressionMetricsWindow, TrainTestWindow, SlidingWindow
+from nrc.metrics.regression import RegressionMetrics
 from nrc.util.transformers import XYTransformers
 from common_test_utils import get_test_data_stream
 import numpy as np
@@ -17,22 +16,22 @@ class TestRegressionMetricsWindow(unittest.TestCase):
         # Create the regression metrics object
         m = RegressionMetrics()
         # Add a few y_true and y_pred values
-        m.add_one_prediction(2,23)
-        m.add_one_prediction(4,2)
+        m.add_one_prediction(2, 23)
+        m.add_one_prediction(4, 2)
 
         # Add metrics to the metrics window
         rmw.add_one_metric(m)
 
         m2 = RegressionMetrics()
         # Add a few y_true and y_pred values
-        m2.add_one_prediction(2,23)
-        m2.add_one_prediction(4,2)
+        m2.add_one_prediction(2, 23)
+        m2.add_one_prediction(4, 2)
         rmw.add_one_metric(m2)
 
         m3 = RegressionMetrics()
         # Add a few y_true and y_pred values
-        m3.add_one_prediction(2,23)
-        m3.add_one_prediction(4,2)
+        m3.add_one_prediction(2, 23)
+        m3.add_one_prediction(4, 2)
         rmw.add_one_metric(m3)
 
         self.assertEqual(2, rmw.len())
@@ -42,12 +41,11 @@ class TestTrainTestWindow(unittest.TestCase):
     def test_window_sizes(self):
         # Utility function to generate a River-like datapoint.
         def get_one_data_point(f1, f2, y):
-            return ({'f1':f1, 'f2': f2}, y)
+            return ({'f1': f1, 'f2': f2}, y)
 
         # Window size configuration
         train_window_size = 4
         test_window_size = 2
-        ttw_size = train_window_size + test_window_size
 
         # Create a TrainTestWindow instance
         ttw = TrainTestWindow(train_window_size, test_window_size)
@@ -84,7 +82,6 @@ class TestTrainTestWindow(unittest.TestCase):
             sample = XYTransformers.xy_to_numpy_dictionary(x, y)
             ttw.add_one_sample(sample)
 
-
     def test_train_regression_model(self):
         # Configure window size
         window_size = 10
@@ -100,7 +97,7 @@ class TestTrainTestWindow(unittest.TestCase):
         # Configure a TrainTest_Window instance
         ttw = TrainTestWindow(train_size, test_size)
         # Pull data from stream until the TrainTestWindow is full
-        for x, y  in data_stream:
+        for x, y in data_stream:
             # Incoming data looks like :
             #
             # x : {'c1': 1.0, 'c2': 2.0}
@@ -120,16 +117,16 @@ class TestTrainTestWindow(unittest.TestCase):
         self.assertEqual(train_size, len(x_train))
         self.assertEqual(train_size, len(y_train))
         expected_train_x = [
-                [1.0,2.0],
-                [2.2,3.5],
-                [3.0,3.1],
-                [2.0,3.1],
-                [2.4,3.4],
-                [2.0,3.1],
-                [6.0,3.1],
-                [2.0,3.1],
+                [1.0, 2.0],
+                [2.2, 3.5],
+                [3.0, 3.1],
+                [2.0, 3.1],
+                [2.4, 3.4],
+                [2.0, 3.1],
+                [6.0, 3.1],
+                [2.0, 3.1],
         ]
-        expected_train_y = [[23],[22],[21],[20],[22],[24],[26],[22]]
+        expected_train_y = [[23], [22], [21], [20], [22], [24], [26], [22]]
         self.assertTrue(np.allclose(np.array(expected_train_x), x_train, equal_nan=True))
         self.assertTrue(np.allclose(np.array(expected_train_y), y_train, equal_nan=True))
 
