@@ -12,6 +12,7 @@ python ../../python/main.py \
     --input_csv_file parkinsons_updrs.data \
     --input_csv_param_file parkinsons_updrs.params \
     --output_predictions_file parkinsons_updrs_predictions.csv \
+    --output_drifts_csv_file parkinsons_updrs_drifts.csv \
     --output_stats_file parkinsons_updrs_stats.txt \
     --train_samples 500 \
     --test_samples 100 \
@@ -26,5 +27,6 @@ echo 'Model Evaluation'
 python ../../python/evaluate.py \
     --output_dir ~/data/usup_reg/work/uci/parkinsons/$NOW \
     --predictions_file parkinsons_updrs_predictions.csv \
+    --drift_file parkinsons_updrs_drifts.csv \
     --stats_file parkinsons_updrs_stats.txt \
     --plot_file parkinsons_updrs.png

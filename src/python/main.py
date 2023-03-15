@@ -3,6 +3,7 @@ from nrc.factories.stream import StreamFactory
 from nrc.models.runner import ModelRunner
 from nrc.settings.default_params import (
     DEFAULT_RAW_DATA_DIR,
+    DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
     DEFAULT_OUTPUT_DIR,
     DEFAULT_INPUT_CSV_FILE,
     DEFAULT_INPUT_CSV_PARAMETERS_FILE,
@@ -18,6 +19,17 @@ from nrc.util.stream import load_stream_params
 from nrc.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
 from nrc.util.files import mkdir_structure
+from functools import partial
+
+
+def drift_to_df(drift_arr):
+    ret_val = pd.DataFrame(
+            {
+                "location": [e[0] for e in drift_arr],
+                "delta": [e[1] for e in drift_arr]
+            }, columns=["location", "delta"]
+    )
+    return ret_val
 
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
@@ -120,13 +132,23 @@ def get_args():
         default=DEFAULT_DELTA_THRESHOLD,
         help="Evaluation metrics difference threshold.",
     )
+    parser.add_argument(
+        "-12",
+        "--output_drifts_csv_file",
+        type=str,
+        required=False,
+        default=DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
+        help="Detected drift location CSV file (indices are relative to predictions csv file.)",
+    )
     args = parser.parse_args()
     return args
 
 
-def drift_handler(**kwargs):
-    print(f'Drift detected at prediction number : {kwargs["prediction_count"]}')
-    print(f'Value of d is : {kwargs["drift_indicator_value"]}')
+def drift_handler(*args, **kwargs):
+    # The args arguments come from the utilization of a partial function definition
+    drift_arr = args[0]
+    # The kwargs come from the handler code call inside the model runner
+    drift_arr.append([kwargs['prediction_count'], kwargs['drift_indicator_value']])
 
 
 def main():
@@ -141,6 +163,7 @@ def main():
     stream_params_file = f"{args.raw_data_dir}/{args.input_csv_param_file}"
     input_stream_file = f"{args.raw_data_dir}/{args.input_csv_file}"
     output_pred_csv_file = f"{args.output_dir}/{args.output_predictions_file}"
+    output_drift_csv_file = f"{args.output_dir}/{args.output_drifts_csv_file}"
     output_stats_file = f"{args.output_dir}/{args.output_stats_file}"
 
     # stream_params specifies how to transform the input data stream features and which column is
@@ -160,13 +183,16 @@ def main():
     x_arr = []
     y_pred_arr = []
     y_true_arr = []
+    drift_arr = []
+
+    partial_drift_fn = partial(drift_handler, drift_arr)
 
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
     m_run.set_train_test_window(tt_win).set_data_stream(data_stream).set_max_samples(
         args.max_samples
     ).set_buffer(buffer).set_threshold(args.delta_threshold).set_drift_handler(
-        drift_handler
+        partial_drift_fn
     )
 
     # Run the model
@@ -178,13 +204,22 @@ def main():
     p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
     p_df.to_csv(output_pred_csv_file, index=False)
 
+    p_df = drift_to_df(drift_arr)
+    p_df.to_csv(output_drift_csv_file, index=False)
+
     with open(output_stats_file, "w") as f:
         f.write("Program Arguments :\n\n")
         for key, value in vars(args).items():
             f.write(f"{key} : {value}\n")
         f.write("\n")
         f.write(f"Model run time : {m_run.run_time}\n")
-        f.write(f"Prediction count : {len(y_pred_arr)}")
+        f.write(f"Prediction count : {len(y_pred_arr)}\n")
+        f.write('\n')
+        f.write('Detected Drifts : [prediction index, value of delta]\n')
+        for e in drift_arr:
+            f.write(f'{e}\n')
+        if len(drift_arr) == 0:
+            f.write('No Drifts Detected')
 
     print("Results files saved")
 

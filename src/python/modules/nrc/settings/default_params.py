@@ -1,10 +1,11 @@
 DEFAULT_RAW_DATA_DIR = "../../datasets"
-DEFAULT_OUTPUT_DIR = "../../datasets"
+DEFAULT_OUTPUT_DIR = "/tmp"
 DEFAULT_INPUT_CSV_FILE = "small.csv"
 DEFAULT_INPUT_CSV_PARAMETERS_FILE = "small.parameters"
-DEFAULT_OUTPUT_PREDICTIONS_FILE = "small_predictions.csv"
-DEFAULT_OUTPUT_PLOT_FILE = 'small.png'
-DEFAULT_OUTPUT_STATS_FILE = "small_stats.txt"
+DEFAULT_OUTPUT_PREDICTIONS_FILE = "prediction.csv"
+DEFAULT_OUTPUT_PLOT_FILE = 'prediction_plots.png'
+DEFAULT_OUTPUT_STATS_FILE = "prediction_stats.txt"
+DEFAULT_OUTPUT_DRIFTS_CSV_FILE = 'prediction_drifts.csv'
 DEFAULT_TRAIN_SAMPLES = 8
 DEFAULT_TEST_SAMPLES = 2
 DEFAULT_BUFFER_SIZE = 10

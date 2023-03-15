@@ -12,12 +12,13 @@ python ../../python/main.py \
     --input_csv_file energydata_complete.csv \
     --input_csv_param_file energydata_complete.params \
     --output_predictions_file energydata_complete_predictions.csv \
+    --output_drifts_csv_file energydata_complete_drifts.csv \
     --output_stats_file energydata_complete_stats.txt \
     --train_samples 500 \
     --test_samples 100 \
     --buffer_size 100 \
-    --delta_threshold 200
-    #--delta_threshold 2
+    --delta_threshold 2
+    #--delta_threshold 200
 
 echo '\n'
 
@@ -26,5 +27,6 @@ echo 'Model Evaluation'
 python ../../python/evaluate.py \
     --output_dir ~/data/usup_reg/work/uci/energy/$NOW \
     --predictions_file energydata_complete_predictions.csv \
+    --drift_file energydata_complete_drifts.csv \
     --stats_file energydata_complete_stats.txt \
     --plot_file energydata_complete.png
