@@ -17,7 +17,7 @@ class RegressionMetrics:
         self._R2.update(y_true, y_pred)
 
     def __str__(self):
-        d ={}
+        d = {}
         d['MAE'] = self._MAE.get()
         d['MSE'] = self._MSE.get()
         d['RMSE'] = self._RMSE.get()

@@ -1,5 +1,5 @@
 import unittest
-from nrc.metrics.regression import *
+from nrc.metrics.regression import RegressionMetrics
 
 
 class TestRegressionMetrics(unittest.TestCase):
@@ -7,8 +7,8 @@ class TestRegressionMetrics(unittest.TestCase):
         # Create the regression metrics object
         m = RegressionMetrics()
         # Add a few y_true and y_pred values
-        m.add_one_prediction(2,23)
-        m.add_one_prediction(4,2)
+        m.add_one_prediction(2, 23)
+        m.add_one_prediction(4, 2)
         # Get the various metrics out of the object.
         self.assertAlmostEqual(11.500000, m.mae, places=6)
         self.assertAlmostEqual(222.500000, m.mse, places=6)

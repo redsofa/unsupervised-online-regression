@@ -1,6 +1,5 @@
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
-import math
 
 
 # https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html#sphx-glr-auto-examples-linear-model-plot-ols-py
@@ -29,8 +28,7 @@ class SckitLearnLinearRegressionModel():
         def fn(**kwargs):
             Z1 = kwargs['Z1']
             Z2 = kwargs['Z2']
-            buffer_max_len = kwargs['buffer_max_len']
-            # d = (math.abs(Z2 - Z1))
+            # buffer_max_len = kwargs['buffer_max_len']
             d = (abs(Z2 - Z1))
             return d
         return fn
@@ -38,6 +36,7 @@ class SckitLearnLinearRegressionModel():
     @staticmethod
     def get_name():
         return 'sklearn_linear_regression_model'
+
 
 if __name__ == '__main__':
     pass
