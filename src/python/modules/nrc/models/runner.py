@@ -1,11 +1,9 @@
 import time
-import math
-import numpy as np
 from nrc.util.transformers import XYTransformers
-from sklearn.metrics import mean_squared_error
 from nrc.factories.model import ModelFactory
 
-class ModelRunner():
+
+class ModelRunner:
     def __init__(self, model_name):
         self._tt_win = None
         self._initial_training_done = False
@@ -27,6 +25,10 @@ class ModelRunner():
         self._drift_handler = None
 
     @property
+    def model_name(self):
+        return self._model_name
+
+    @property
     def start_time(self):
         return self._start_time
 
@@ -46,7 +48,8 @@ class ModelRunner():
         return self._initial_training_done
 
     def _trigger_initial_training(self):
-        # The data comes in as a dictionary (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
+        # The data comes in as a dictionary
+        # (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
         # It needs to be transformed to numpy arrays
 
         # Transform the training and testing data
@@ -82,7 +85,8 @@ class ModelRunner():
         return new_model
 
     def _trigger_new_model_training(self):
-        # The data comes in as a dictionary (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
+        # The data comes in as a dictionary
+        # (e.g. {x: {f1 : 0.1, f2: 0.3, ... fn: xn}, y : [y1,... yn]}
         # It needs to be transformed to numpy arrays
 
         # Transform the training and testing data
@@ -104,24 +108,26 @@ class ModelRunner():
         return new_model, eval_metric
 
     def _process_prediction(self, x, y_pred):
-        if not self._buffer.is_filled :
+        if not self._buffer.is_filled:
             new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
             self._buffer.add_one_sample(new_sample)
-            #The oldest sample in the training will be removed
-            oldest_train_sample = self._tt_win.get_and_remove_oldest_train_sample()
-            #The oldest sample in the testing window will be removed
-            #AND added to the training window
+            # The oldest sample in the training will be removed
+            self._tt_win.get_and_remove_oldest_train_sample()
+            # The oldest sample in the testing window will be removed
+            # AND added to the training window
             oldest_test_sample = self._tt_win.get_and_remove_oldest_test_sample()
             self._tt_win.add_one_train_sample(oldest_test_sample)
             self._tt_win.add_one_test_sample(new_sample)
-        else :
+        else:
             new_model, Z2 = self._trigger_new_model_training()
 
-            d = self._threshold_calculation_fn(Z1 = self._Z1, Z2 = Z2 , buffer_max_len = self._buffer.max_len)
+            d = self._threshold_calculation_fn(
+                Z1=self._Z1, Z2=Z2, buffer_max_len=self._buffer.max_len
+            )
 
             # print(f'd is  {d}, threshold is : {self._delta_threshold}')
 
-            if (d < self._delta_threshold):
+            if d < self._delta_threshold:
                 self._buffer.remove_samples(1)
             else:
                 # We have a drift
@@ -129,8 +135,7 @@ class ModelRunner():
                 # Call the drift event handler. This is a function that subscribes to
                 # "drift detected" events.
                 self._drift_handler(
-                    prediction_count = self._prediction_count,
-                    drift_indicator_value = d
+                    prediction_count=self._prediction_count, drift_indicator_value=d
                 )
                 # Fit new model on the buffer
                 self._model = self._train_model_on_buffer()
@@ -142,7 +147,7 @@ class ModelRunner():
     def _make_one_prediction(self, sample):
         self._prediction_count += 1
         # A sample looks something like {'x': array([1., 2.]), 'y': array([None])}
-        x = [sample['x']]
+        x = [sample["x"]]
         # Make a prediction with trained model
         y_pred = self._model.predict(x)
         # Process that prediction
@@ -152,7 +157,7 @@ class ModelRunner():
         self._sample_count += 1
         if self._max_samples is not None:
             if self._sample_count >= self._max_samples:
-                print('Maximum instance count reached. Stopping stream processing.')
+                print("Maximum instance count reached. Stopping stream processing.")
                 self._stop_run = True
                 return
         # We are in the initial training mode.. Need to fill up
@@ -163,56 +168,74 @@ class ModelRunner():
                 self._trigger_initial_training()
 
     def run(self):
-        print('\nLaunching model runner')
-        print('Validating model runner settings')
+        print("\nLaunching model runner")
+        print("Validating model runner settings")
         self.validate_settings()
-        print(f'Running model : {self._model_name}')
-        self._start_time  = time.time()
+        print(f"Running model : {self._model_name}")
+        self._start_time = time.time()
 
-        for x, y in self._data_stream:
-            # Stop running the algorithm if we this flag has been set.
-            # This flag usually means that the maximum number of records to process from the stream
-            # has been reached. The add_one_sample() method figures out if we should stop the run because
-            # we have reached the maximum number of records we want to process from the stream.
-            if self._stop_run :
-                break
+        try:
+            for x, y in self._data_stream:
+                # Stop running the algorithm if we this flag has been set.
+                # This flag usually means that the maximum number of records to process from the
+                # stream has been reached. The add_one_sample() method figures out if we should
+                # stop the run because we have reached the maximum number of records we want to
+                # process from the stream.
+                if self._stop_run:
+                    break
 
-            # Incoming data looks like :
-            #
-            # x : {'c1': 1.0, 'c2': 2.0}
-            # y : 23
-            #
-            # Need to convert it to a dictionary that looks like:
-            # {'x': array([1., 2.]), 'y': array([23])}
-            #
-            sample = XYTransformers.xy_to_numpy_dictionary(x, y)
-            if not self._initial_training_done:
-                self.add_one_sample(sample)
-            else:
-                x, y_pred = self._make_one_prediction(sample)
-                yield(x, y_pred, y)
-                self._process_prediction(x, y_pred)
+                # Incoming data looks like :
+                #
+                # x : {'c1': 1.0, 'c2': 2.0}
+                # y : 23
+                #
+                # Need to convert it to a dictionary that looks like:
+                # {'x': array([1., 2.]), 'y': array([23])}
+                #
+                sample = XYTransformers.xy_to_numpy_dictionary(x, y)
+                if not self._initial_training_done:
+                    self.add_one_sample(sample)
+                else:
+                    x, y_pred = self._make_one_prediction(sample)
+                    yield (x, y_pred, y)
+                    self._process_prediction(x, y_pred)
 
-        self._end_time = time.time()
+            self._end_time = time.time()
+        except Exception as e:
+            raise e
 
     def validate_settings(self):
         # Check that the model has been set
         if self._model is None:
-            raise Exception('Cannot launch the model runner. The model instance has not been set.')
+            raise Exception(
+                "Cannot launch the model runner. The model instance has not been set."
+            )
 
         # Check that the stream has been set
         if self._data_stream is None:
-            raise Exception(f'Cannot run the algorithm {self._model_name}. The input data stream has not been set.')
+            raise Exception(
+                f"Cannot run the algorithm {self._model_name}. "
+                "The input data stream has not been set."
+            )
 
         # Check if TrainTestWindow instance has been set
         if self._tt_win is None:
-            raise Exceptino(f'Cannot run the algorithm {self._model_name}. The TrainTestWindow instance has not been set.')
+            raise Exception(
+                f"Cannot run the algorithm {self._model_name}. "
+                "The TrainTestWindow instance has not been set."
+            )
 
         if self._buffer is None:
-            raise Exceptino(f'Cannot run the algorithm {self._model_name}. The DataBuffer instance has not been set.')
+            raise Exception(
+                f"Cannot run the algorithm {self._model_name}. "
+                "The DataBuffer instance has not been set."
+            )
 
         if self._delta_threshold is None:
-            raise Exception(f'Cannot run the algorithm {self._model_name}. The delta threshold is not set.')
+            raise Exception(
+                f"Cannot run the algorithm {self._model_name}. "
+                "The delta threshold is not set."
+            )
 
     def set_threshold(self, delta):
         self._delta_threshold = delta
@@ -242,5 +265,6 @@ class ModelRunner():
         self._drift_handler = fn
         return self
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pass

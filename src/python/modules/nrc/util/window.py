@@ -109,7 +109,7 @@ class TrainTestWindow():
             self._test_win.add_data(sample)
         else:
             raise Exception('Train and test windows are full. Can no longer add to these.')
-        if self.is_filled :
+        if self.is_filled:
             if self._on_filled_handler:
                 self._on_filled_handler()
 
@@ -121,7 +121,7 @@ class TrainTestWindow():
 class SlidingWindow():
     def __init__(self, max_len):
         self._max_len = max_len
-        self._data = deque(maxlen = max_len)
+        self._data = deque(maxlen=max_len)
 
     def clear_contents(self):
         self._data.clear()
