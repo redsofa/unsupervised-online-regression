@@ -11,25 +11,66 @@ class TestModelRunner(unittest.TestCase):
         print(f"\nExecuting {TestModelRunner.test_invalid_runner_run.__name__} test")
         m_run = ModelRunner(model_name=SckitLearnLinearRegressionModel.get_name())
 
-        with self.assertRaises(Exception) as ex:
+        with self.assertRaises(Exception):
             # m_run is a generator. It does not execute any code unless we start iterating
             # over it. Therefore, we have to call the next() method on it
             next(m_run.run())
 
-        print(ex.exception)
-
-    # TODO : Make this testing more thorough. Need to test all invalid settings. 
     def test_invalid_runner_validate_settings(self):
         print(f"\nExecuting {TestModelRunner.test_invalid_runner_validate_settings.__name__} test")
         m_run = ModelRunner(model_name=SckitLearnLinearRegressionModel.get_name())
 
+        # Try validating the ModelRunner instance when no settings have been configured on it.
         with self.assertRaises(Exception) as ex:
             m_run.validate_settings()
 
-        expected_error_msg = f"Cannot run the algorithm {m_run.model_name}."\
-                             " The input data stream has not been set."
+        expected_error_msg = f"Cannot run the algorithm {m_run.model_name}. "\
+                             "The input data stream has not been set."
 
         self.assertEquals(str(ex.exception), expected_error_msg)
+
+        # Now configure a CSV stream instance of testing data. The validation exception should
+        # be the next one in the ModelRunner's validate_settings() method.
+        data_stream = get_test_data_stream()
+
+        m_run = m_run.set_data_stream(data_stream)
+
+        with self.assertRaises(Exception) as ex:
+            m_run.validate_settings()
+
+        expected_error_msg = f"Cannot run the algorithm {m_run.model_name}. "\
+                             "The TrainTestWindow instance has not been set."
+
+        self.assertEquals(str(ex.exception), expected_error_msg)
+
+        # Now configure a TrainTestWindow instance. Validation exception should be different.
+        tt_win = TrainTestWindow(10, 2)
+        m_run = m_run.set_train_test_window(tt_win)
+
+        with self.assertRaises(Exception) as ex:
+            m_run.validate_settings()
+
+        expected_error_msg = f"Cannot run the algorithm {m_run.model_name}. "\
+                             "The DataBuffer instance has not been set."
+
+        self.assertEquals(str(ex.exception), expected_error_msg)
+
+        # Now configure a DataBuffer instance. Validation exception should be different again.
+        buffer = DataBuffer(2)
+        m_run = m_run.set_buffer(buffer)
+
+        with self.assertRaises(Exception) as ex:
+            m_run.validate_settings()
+
+        expected_error_msg = f"Cannot run the algorithm {m_run.model_name}. "\
+                             "The delta threshold is not set."
+
+        # Now set the DeltaThreshold
+        m_run = m_run.set_threshold(1)
+
+        # TODO : Test other validation cases once implemented.
+        # This call should no longer raise any exception
+        m_run.validate_settings()
 
     def test_simple_model_run(self):
         print(f"\nExecuting {TestModelRunner.test_simple_model_run.__name__} test")
