@@ -4,7 +4,7 @@ from nrc.factories.model import ModelFactory
 
 
 class ModelRunner:
-    def __init__(self, model_name):
+    def __init__(self, model_name: str) -> None:
         self._tt_win = None
         self._initial_training_done = False
         self._Z1 = None
