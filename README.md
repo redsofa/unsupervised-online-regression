@@ -12,7 +12,7 @@ Conda with the following command:
 ## (1) - Create the Conda Environment - (Do This Once)
 ~~~
 cd ./dev_env
-conda env create -n <env_name> -f '`environment.yaml'
+conda env create -n <env_name> -f environment.yaml
 ~~~
 Note that the default environment name in the `environment.yaml` file is `reg-env`.
 In the command example above, replace `<env_name>` with your desired Conda environment name.
