@@ -1,4 +1,4 @@
-from nrc.models.regression import SckitLearnLinearRegressionModel
+from fluire.models.regression import SckitLearnLinearRegressionModel
 
 
 class ModelFactory():
