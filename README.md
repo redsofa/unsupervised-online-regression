@@ -89,26 +89,3 @@ we would appreciate that you use the following citations:
 ... TODO
 }
 ```
-
-<hr>
-<br>
-<br>
-<br>
-
-# (EXTRA REFERENCE) - To export the working Conda environment
-~~~
-conda activate <env_name>
-conda env export > environment.yaml
-~~~
-
-
-# (EXTRA REFERENCE) - Tmux and Vim development environment
-
-## Start Tmux dev environment
-~~~
-cd .vim
-sh tmux_dev_env.sh
-~~~
-
-
-
