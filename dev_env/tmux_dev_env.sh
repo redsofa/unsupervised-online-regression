@@ -6,19 +6,19 @@ tmux -2 new-session -d -s ${TMUX_SESSION}
 
 # First window (DEV))
 tmux rename-window "(DEV)"
-tmux send-keys "cd ${REPOSITORY_ROOT}/src; vim" C-m
+tmux send-keys "cd ${REPOSITORY_ROOT}/src/python; conda activate reg-env; vim" C-m
 
 # Split panes
 tmux split-window -v
 tmux resize-pane -D 10
 tmux select-pane -t 1
-tmux send-keys "cd ${REPOSITORY_ROOT}/src; clear " C-m
+tmux send-keys "cd ${REPOSITORY_ROOT}/src/python; conda activate reg-env; clear " C-m
 #tmux split-window -h
 #tmux send-keys "cd $REPOSITORY_ROOT; clear" C-m
 
 # Second window (UTIL)
 tmux new-window -n "(UTIL)"
-tmux send-keys "cd ${REPOSITORY_ROOT}/src; clear " C-m
+tmux send-keys "cd ${REPOSITORY_ROOT}/src/python; conda activate reg-env; clear " C-m
 
 # Split UTIL window
 #tmux split-window -h
