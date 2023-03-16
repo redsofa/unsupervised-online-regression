@@ -1,5 +1,5 @@
 
-# Conda environment
+# Conda Environment
 Note: These commands were tested on a Mac only. They may need some modifications in order to run on other platforms.
 
 
@@ -9,7 +9,7 @@ For reproducibility, the core packages (and their versions) used for building an
 the scripts can be found in `environment.yaml`. To reproduce this environment, use
 Conda with the following command:
 
-## (1) - Create the working Conda environment on new machine
+## (1) - Create the Conda Environment - (Do This Once)
 ~~~
 cd ./dev_env
 conda env create -n <env_name> -f '`environment.yaml'
@@ -19,14 +19,14 @@ In the command example above, replace `<env_name>` with your desired Conda envir
 If no `-n <env_name>` parameter is supplied, the default name of `reg-env` will be used.
 
 
-## (2) -  Activate the environment
+## (2) -  Activate the Environment  - (Do This Once)
 ~~~
 cd ../
 conda activate <env_name>
 ~~~
 
 
-## (3) - Environment Variables inside Conda <env_name> context
+## (3) - Environment Variables Inside Conda <env_name> Context  - (Do this once)
 
 - IMPORTTANT !! Make sure you are in the project's root
 - Copy/paste the content below in a terminal and hit enter to run them
@@ -51,7 +51,7 @@ echo unset PYTHONPATH >> ./etc/conda/deactivate.d/env_vars.sh && \
 cd $ROOT_DIR
 ~~~
 
-## (4) - Reload Conda environment
+## (4) - Reload Conda environment  - (Do this When You Use the Package)
 ~~~
 conda deactivate
 conda activate <env_name>
@@ -81,7 +81,7 @@ sh run_unit_tests.sh
 ~~~
 
 
-## (7) - Download the Raw Data
+## (7) - Download the Raw Data - (Do This Once)
 
 From the project root :
 ~~~
