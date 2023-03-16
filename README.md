@@ -6,7 +6,7 @@ Note: These commands were tested on a Mac only. They may need some modifications
 # Setup
 
 For reproducibility, the core packages (and their versions) used for building and running
-the scripts can be found in environment.yaml. To reproduce this environment, use
+the scripts can be found in 'environment.yaml'. To reproduce this environment, use
 Conda with the following command:
 
 ## (1) - Create the working Conda environment on new machine
