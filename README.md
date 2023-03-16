@@ -11,7 +11,6 @@ Conda with the following command:
 
 ## (1) - Create the Conda Environment - (Do This Once)
 ~~~
-cd ./dev_env
 conda env create -n <env_name> -f environment.yaml
 ~~~
 Note that the default environment name in the `environment.yaml` file is `reg-env`.
@@ -21,7 +20,6 @@ If no `-n <env_name>` parameter is supplied, the default name of `reg-env` will 
 
 ## (2) -  Activate the Environment  - (Do this Once)
 ~~~
-cd ../
 conda activate <env_name>
 ~~~
 
