@@ -73,14 +73,37 @@ sh example.sh
 
 
 ## (6) - Run Unit Tests
-~~~
-From the project root :
 
+From the project root :
+~~~
 cd ./src/bash/unit_testing
 sh run_unit_tests.sh
 ~~~
 
-## (7) - Citation
+
+## (7) - Download the Raw Data
+
+From the project root :
+~~~
+!!!! TODO !!!!
+~~~
+
+
+## (8) - Run the Experiments
+
+The `./src/bash/experiments` contains multilpe shell scripts with preconfigured arguments. Run these or use them as templates for your
+own experiments using alternate parameter configuration runs.
+
+From the project root :
+
+~~~
+cd ./src/bash/experiments
+sh <experiment_name>.sh
+~~~
+
+
+
+## (9) - Citation
 If you use or reference this work in a scientific publication,
 we would appreciate that you use the following citations:
 
