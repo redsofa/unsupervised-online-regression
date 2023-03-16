@@ -3,12 +3,20 @@
 Note: These commands were tested on a Mac only. They may need some modifications in order to run on other platforms.
 
 
+# Setup
+
+For reproducibility, the core packages (and their versions) used for building and running
+the scripts can be found in environment.yaml. To reproduce this environment, use
+Conda with the following command:
+
 ## (1) - Create the working Conda environment on new machine
 ~~~
 cd ./dev_env
-conda env create -n <env_name> -f conda_env.yml
+conda env create -n <env_name> -f environment.yml
 ~~~
-Note that the default environment name in the conda_env.yml file is ```reg-env```
+Note that the default environment name in the environment.yml file is `reg-env`.
+In the command example above, replace `<env_name>` with your desired Conda environment name.
+If no `-n <env_name>` parameter is supplied, the default name of `reg-env` will be used.
 
 
 ## (2) -  Activate the environment
@@ -90,7 +98,7 @@ we would appreciate that you use the following citations:
 # (EXTRA REFERENCE) - To export the working Conda environment
 ~~~
 conda activate <env_name>
-conda env export > conda_env.yml
+conda env export > environment.yaml
 ~~~
 
 
@@ -98,7 +106,7 @@ conda env export > conda_env.yml
 
 ## Start Tmux dev environment
 ~~~
-cd ./dev_env
+cd .vim
 sh tmux_dev_env.sh
 ~~~
 
