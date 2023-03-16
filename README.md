@@ -40,7 +40,7 @@ rm -f ./etc/conda/activate.d/env_vars.sh && \
 
 touch ./etc/conda/activate.d/env_vars.sh && \
 echo '#!/bin/bash' >> ./etc/conda/activate.d/env_vars.sh && \
-echo export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}/src/python/modules >> ./etc/conda/activate.d/env_vars.sh && \
+echo export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}/src/python/packages/fluire/modules >> ./etc/conda/activate.d/env_vars.sh && \
 
 rm -f ./etc/conda/deactivate.d/env_vars.sh && \
 touch ./etc/conda/deactivate.d/env_vars.sh && \
