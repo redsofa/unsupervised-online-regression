@@ -91,8 +91,8 @@ From the project root :
 
 ## (8) - Run the Experiments
 
-The `./src/bash/experiments` contains multilpe shell scripts with preconfigured arguments. Run these or use them as templates for your
-own experiments using alternate parameter configuration runs.
+The `./src/bash/experiments` directory contains multilpe shell scripts with preconfigured arguments. Run these or use them as 
+templates for your own experiments using alternate parameter configuration runs.
 
 From the project root :
 
