@@ -19,7 +19,7 @@ In the command example above, replace `<env_name>` with your desired Conda envir
 If no `-n <env_name>` parameter is supplied, the default name of `reg-env` will be used.
 
 
-## (2) -  Activate the Environment  - (Do This Once)
+## (2) -  Activate the Environment  - (Do this Once)
 ~~~
 cd ../
 conda activate <env_name>
@@ -51,7 +51,7 @@ echo unset PYTHONPATH >> ./etc/conda/deactivate.d/env_vars.sh && \
 cd $ROOT_DIR
 ~~~
 
-## (4) - Reload Conda environment  - (Do this When You Use the Package)
+## (4) - Reload Conda Environment  - (Do this Whenever You Use the Package)
 ~~~
 conda deactivate
 conda activate <env_name>
@@ -81,7 +81,7 @@ sh run_unit_tests.sh
 ~~~
 
 
-## (7) - Download the Raw Data - (Do This Once)
+## (7) - Download the Raw Data - (Do this Once)
 
 From the project root :
 ~~~
