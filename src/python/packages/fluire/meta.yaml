@@ -1,0 +1,33 @@
+{% set name = "fluire" %}
+{% set version = "0.0.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  path: ./
+
+build:
+  number: 0
+  script: "$PYTHON -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+
+test:
+  imports:
+    - fluire
+
+about:
+  home: https://nrc.canada.ca/en
+  license: Apache Version 2.0
+  summary: Incremental Learning Library
+
+extra:
+  recipe-maintainers:
+    - redsofa
