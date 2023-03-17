@@ -2,7 +2,10 @@ from setuptools import setup
 import versioneer
 
 requirements = [
-    # package requirements go here
+    "pandas>=1.5.3",
+    "scikit-learn>=1.0.2",
+    "numpy>=1.24.1",
+    "river>=0.15.0"
 ]
 
 setup(
