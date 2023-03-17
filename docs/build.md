@@ -5,7 +5,7 @@
 ### Conda Build
 ~~~
 cd ./src/python/packages/fluire
-conda build ./conda.recipe
+conda build --py 3.9 ./conda.recipe
 ~~~
 ** This will create a file in your conda environment under the conda-bld directory
 
