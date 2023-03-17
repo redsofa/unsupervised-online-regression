@@ -1,6 +1,7 @@
 
-# Setup Conda Environment for Development Purposes
+# To Setup a Conda Environment for Development Purposes
 * See the [./docs/conda.md](./docs/conda.md) file.
+
 
 # Building the Package(s)
 * See the [./docs/build.md](./docs/build.md) file.
@@ -13,7 +14,6 @@
 ~~~
 
 
-
 # Running the Experiments
 The `./src/bash/experiments` directory contains multilpe shell scripts with preconfigured arguments. Run these or use them as 
 templates for your own experiments using alternate parameter configuration runs.
@@ -24,7 +24,6 @@ From the project root :
 cd ./src/bash/experiments
 sh <experiment_name>.sh
 ~~~
-
 
 
 ## Citation
