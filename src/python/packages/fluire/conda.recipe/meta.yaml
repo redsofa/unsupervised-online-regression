@@ -1,8 +1,8 @@
-{% set data = load_setup_py_data() %}
+{% set data = load_setup_py_data(setup_file='../setup.py', from_recipe_dir=True) %}
 
 package:
   name: fluire
-  version: {{ data['version'] }}
+  version: {{ data.get('version') }}
 
 source:
   path: ..
