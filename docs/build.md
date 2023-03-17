@@ -1,6 +1,17 @@
 # Building the Package(s)
 ## Fluire
 * Building the fluire package :
+
+### Conda Build
+~~~
+cd ./src/python/packages/fluire
+conda build ./conda.recipe
+~~~
+** This will create a file in your conda environment under the conda-bld directory
+
+
+
+### PIP - (Here for reference.. Use Conda build)
 ~~~
 cd ./src/python/packages/fluire
 pip wheel .
