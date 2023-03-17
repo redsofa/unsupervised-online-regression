@@ -1,5 +1,5 @@
 import io
-from nrc.factories.stream import StreamFactory
+from fluire.factories.stream import StreamFactory
 
 
 # Common unit test helper functions

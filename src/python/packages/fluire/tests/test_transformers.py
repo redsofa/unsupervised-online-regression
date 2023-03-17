@@ -1,7 +1,7 @@
 import unittest
-from nrc.util.transformers import XYTransformers
+from fluire.util.transformers import XYTransformers
 import numpy as np
-from nrc.util.window import TrainTestWindow
+from fluire.util.window import TrainTestWindow
 
 
 class TransformerTests(unittest.TestCase):

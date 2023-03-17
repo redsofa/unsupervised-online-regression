@@ -1,7 +1,7 @@
 import unittest
-from nrc.models.regression import SckitLearnLinearRegressionModel
-from nrc.models.runner import ModelRunner
-from nrc.util.window import TrainTestWindow, DataBuffer
+from fluire.models.regression import SckitLearnLinearRegressionModel
+from fluire.models.runner import ModelRunner
+from fluire.util.window import TrainTestWindow, DataBuffer
 from common_test_utils import get_test_data_stream
 import numpy as np
 

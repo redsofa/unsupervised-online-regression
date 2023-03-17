@@ -1,4 +1,4 @@
-from nrc.factories.stream import StreamFactory
+from fluire.factories.stream import StreamFactory
 import unittest
 import io
 
