@@ -3,13 +3,14 @@ Note: These commands were tested on a Mac only. They may need some modifications
 
 
 # Setup
-
 For reproducibility, the core packages (and their versions) used for building and running
 the scripts can be found in `environment.yaml`. To reproduce this environment, use
 Conda with the following command:
 
 
 ## (1) - Create the Conda Environment - (Do This Once)
+!!! IMPORTTANT !!! Make sure you are in the project's root prior to running these commands.
+
 ~~~
 conda env create -n <env_name> -f environment.yaml
 ~~~
@@ -26,11 +27,8 @@ conda activate <env_name>
 
 ## (3) - Environment Variables Inside Conda <env_name> Context  - (Do this once)
 
-- !!! IMPORTTANT !!! Make sure you are in the project's root
 - Copy/paste the content below in a terminal and hit enter to run them
 - This command only needs to be run once
-
-
 ~~~
 ROOT_DIR="$(pwd)" && \
 cd $CONDA_PREFIX && \
@@ -63,7 +61,6 @@ python main.py
 ~~~
 
 OR
-
 ~~~
 cd ./src/bash/experiments
 sh example.sh
@@ -71,7 +68,6 @@ sh example.sh
 
 
 ## (6) - Run Unit Tests
-
 From the project root :
 ~~~
 cd ./src/bash/unit_testing

@@ -7,16 +7,14 @@
 
 
 # Raw Data Download
-
-From the project root :
+* From the project root :
 ~~~
 !!!! TODO !!!!
 ~~~
 
 
 
-# Runing the Experiments
-
+# Running the Experiments
 The `./src/bash/experiments` directory contains multilpe shell scripts with preconfigured arguments. Run these or use them as 
 templates for your own experiments using alternate parameter configuration runs.
 
