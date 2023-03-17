@@ -14,7 +14,8 @@ setup(
     author="Rene Richard",
     author_email='rene.richard@nrc-cnrc.gc.ca',
     url='https://github.com/redsofa/fluire',
-    packages=['fluire'],
+    packages=['fluire', 'fluire.util', 'fluire.factories', 'fluire.metrics', 'fluire.models',
+             'fluire.settings'],
     entry_points={
         'console_scripts': [
             'fluire=fluire.cli:cli'
