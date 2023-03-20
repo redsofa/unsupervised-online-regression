@@ -1,7 +1,7 @@
 import unittest
-from nrc.util.window import RegressionMetricsWindow, TrainTestWindow, SlidingWindow
-from nrc.metrics.regression import RegressionMetrics
-from nrc.util.transformers import XYTransformers
+from fluire.util.window import RegressionMetricsWindow, TrainTestWindow, SlidingWindow
+from fluire.metrics.regression import RegressionMetrics
+from fluire.util.transformers import XYTransformers
 from common_test_utils import get_test_data_stream
 import numpy as np
 from sklearn import linear_model

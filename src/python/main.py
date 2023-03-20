@@ -1,7 +1,7 @@
 import argparse
-from nrc.factories.stream import StreamFactory
-from nrc.models.runner import ModelRunner
-from nrc.settings.default_params import (
+from fluire.factories.stream import StreamFactory
+from fluire.models.runner import ModelRunner
+from fluire.settings.default_params import (
     DEFAULT_RAW_DATA_DIR,
     DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
     DEFAULT_OUTPUT_DIR,
@@ -15,10 +15,10 @@ from nrc.settings.default_params import (
     DEFAULT_MAX_SAMPLES,
     DEFAULT_DELTA_THRESHOLD,
 )
-from nrc.util.stream import load_stream_params
-from nrc.util.window import TrainTestWindow, DataBuffer
+from fluire.util.stream import load_stream_params
+from fluire.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
-from nrc.util.files import mkdir_structure
+from fluire.util.files import mkdir_structure
 from functools import partial
 
 

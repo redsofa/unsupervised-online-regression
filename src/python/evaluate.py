@@ -2,14 +2,14 @@ import argparse
 import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
-from nrc.settings.default_params import (
+from fluire.settings.default_params import (
     DEFAULT_OUTPUT_DIR,
     DEFAULT_OUTPUT_PREDICTIONS_FILE,
     DEFAULT_OUTPUT_STATS_FILE,
     DEFAULT_OUTPUT_PLOT_FILE,
     DEFAULT_OUTPUT_DRIFTS_CSV_FILE
 )
-from nrc.util.files import mkdir_structure
+from fluire.util.files import mkdir_structure
 
 
 def get_args():

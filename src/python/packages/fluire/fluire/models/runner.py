@@ -1,6 +1,6 @@
 import time
-from nrc.util.transformers import XYTransformers
-from nrc.factories.model import ModelFactory
+from fluire.util.transformers import XYTransformers
+from fluire.factories.model import ModelFactory
 
 
 class ModelRunner:

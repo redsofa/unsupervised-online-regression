@@ -1,5 +1,5 @@
-from nrc.factories.model import ModelFactory
-from nrc.models.regression import SckitLearnLinearRegressionModel
+from fluire.factories.model import ModelFactory
+from fluire.models.regression import SckitLearnLinearRegressionModel
 import unittest
 
 

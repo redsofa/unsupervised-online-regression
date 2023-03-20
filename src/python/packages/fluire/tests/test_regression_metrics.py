@@ -1,5 +1,5 @@
 import unittest
-from nrc.metrics.regression import RegressionMetrics
+from fluire.metrics.regression import RegressionMetrics
 
 
 class TestRegressionMetrics(unittest.TestCase):
