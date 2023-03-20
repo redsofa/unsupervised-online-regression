@@ -1,7 +1,0 @@
-[report]
-omit =
-    setup.py
-    fluire/__main__.py
-    fluire/_version.py
-    versioneer.py
-    tests/*
