@@ -74,7 +74,7 @@ def pred_true_plot(pred_df, drift_df, file_name):
     # add drift markers to plot
     for e in drift_df.values:
         plt.axvline(e[0], color="red", linestyle="dashdot")
-    plt.legend(["y_pred", "y_true", "drift"])
+    plt.legend(["y_true", "y_pred", "drift"])
     plt.savefig(file_name)
 
 
