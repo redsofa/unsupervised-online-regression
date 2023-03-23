@@ -144,6 +144,13 @@ def get_args():
     return args
 
 
+def model_retrained_handler(*args, **kwargs):
+    count_dict = args[0]
+    count_dict['count'] += 1
+    # Make sure the model memory address changes
+    # print(kwargs['model'])
+
+
 def drift_handler(*args, **kwargs):
     # The args arguments come from the utilization of a partial function definition
     drift_arr = args[0]
@@ -184,16 +191,20 @@ def main():
     y_pred_arr = []
     y_true_arr = []
     drift_arr = []
+    retrain_count = {'count': 0}
 
     partial_drift_fn = partial(drift_handler, drift_arr)
+    partial_retrain_fn = partial(model_retrained_handler, retrain_count)
 
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
-    m_run.set_train_test_window(tt_win).set_data_stream(data_stream).set_max_samples(
-        args.max_samples
-    ).set_buffer(buffer).set_threshold(args.delta_threshold).set_drift_handler(
-        partial_drift_fn
-    )
+    m_run.set_train_test_window(tt_win)\
+        .set_data_stream(data_stream)\
+        .set_max_samples(args.max_samples)\
+        .set_buffer(buffer)\
+        .set_threshold(args.delta_threshold)\
+        .set_drift_handler(partial_drift_fn)\
+        .set_model_retrained_handler(partial_retrain_fn)
 
     # Run the model
     for x, y_pred, y_true in m_run.run():
@@ -220,6 +231,7 @@ def main():
             f.write(f'{e}\n')
         if len(drift_arr) == 0:
             f.write('No Drifts Detected')
+        f.write(f'Model retrain count : {retrain_count["count"]}')
 
     print("Results files saved")
 
