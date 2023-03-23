@@ -1,5 +1,5 @@
 from fluire.models.regression import SckitLearnLinearRegressionModel
-
+from fluire.models.regression import AdaptiveRandomForestRegressionModel
 
 class ModelFactory():
 
@@ -8,10 +8,16 @@ class ModelFactory():
         ret_val = None
         if model_name == SckitLearnLinearRegressionModel.get_name():
             ret_val = ModelFactory.get_sklearn_linear_regression_model()
+        elif model_name == AdaptiveRandomForestRegressionModel.get_name():
+            ret_val = ModelFactory.get_river_adaptive_random_forest_regression_model()
         else:
             raise Exception('Model not available from factory')
 
         return ret_val
+
+    @staticmethod
+    def get_river_adaptive_random_forest_regression_model():
+        return AdaptiveRandomForestRegressionModel()
 
     @staticmethod
     def get_sklearn_linear_regression_model():
