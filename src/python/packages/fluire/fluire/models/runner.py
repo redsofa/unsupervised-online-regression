@@ -23,6 +23,11 @@ class ModelRunner:
         self._evaluation_fn = self._model.model_evaluation_fn
         self._threshold_calculation_fn = self._model.threshold_calculation_fn
         self._drift_handler = None
+        self._model_retrained_handler = None
+
+    def set_model_retrained_handler(self, fn):
+        self._model_retrained_handler = fn
+        return self
 
     @property
     def model_name(self):
@@ -134,11 +139,14 @@ class ModelRunner:
                 # input("Drift Detected. Press enter to continue")
                 # Call the drift event handler. This is a function that subscribes to
                 # "drift detected" events.
-                self._drift_handler(
-                    prediction_count=self._prediction_count, drift_indicator_value=d
-                )
-                # Fit new model on the buffer
+                if self._drift_handler:
+                    self._drift_handler(
+                        prediction_count=self._prediction_count, drift_indicator_value=d
+                    )
+                    # Fit new model on the buffer
                 self._model = self._train_model_on_buffer()
+                if self._model_retrained_handler:
+                    self._model_retrained_handler(model = self._model)
                 # Clear the buffer
                 self._buffer.clear_contents()
 
