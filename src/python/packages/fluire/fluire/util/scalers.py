@@ -12,6 +12,35 @@ from collections import (
 # The type of this new entry is given by the argument of defaultdict.
 from math import sqrt
 
+'''
+class RivStandardScaler():
+    def __init__(self, with_std=True):
+        self.with_std = with_std
+        self.counts = Counter()
+        self.means = defaultdict(float)
+        self.vars = defaultdict(float)
+
+    def learn_one(self, x):
+        for i, xi in x.items():
+            self.counts[i] += 1
+            old_mean = self.means[i]
+            self.means[i] += (xi - old_mean) / self.counts[i]
+            if self.with_std:
+                self.vars[i] += (
+                    (xi - old_mean) * (xi - self.means[i]) - self.vars[i]
+                ) / self.counts[i]
+            if i == 'f1':
+                print(f'means : {self.means[i]}')
+                print(f'var : {self.vars[i]}')
+        return self
+
+    def transform_one(self, x):
+        if self.with_std:
+            return {i: safe_div(xi - self.means[i], self.vars[i] ** 0.5) for i, xi in x.items()}
+        return {i: xi - self.means[i] for i, xi in x.items()}
+
+'''
+
 
 def safe_div(num, denum):
     if denum is None:
@@ -39,20 +68,17 @@ class StandardScaler:
         # The code is similar but not exactly the same.
         if type(x) is dict:
             for k, xt in x.items():
+                # Update counter for this feature
+                self._counters[k] += 1
+                # Calculate formula variables
                 previous_mean_estimate = self._mean_estimates[k]
                 previous_std_dev_estimate = self._std_dev_estimates[k]
                 t = self._counters[k]
                 n_ = safe_div(1, t)
-
-                # Update counter for this feature
-                self._counters[k] += 1
-
                 # Update mean estimates for this feature
                 self._mean_estimates[k] = n_ * xt + (1 - n_) * previous_mean_estimate
-
                 # Update the standard deviation
-                self._std_dev_estimates[k] = sqrt( n_ * (xt - self._mean_estimates[k]) ** 2 + (1 - n_) * previous_std_dev_estimate ** 2 )
-
+                self._std_dev_estimates[k] = sqrt(n_ * (xt - self._mean_estimates[k]) ** 2 + (1 - n_) * previous_std_dev_estimate ** 2 )
                 # Update standardized data
                 self._standardized_sample[k] = safe_div((xt - previous_mean_estimate), previous_std_dev_estimate)
         else:
