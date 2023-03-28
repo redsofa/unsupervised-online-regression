@@ -1,6 +1,8 @@
+from __future__ import annotations
 import time
 from fluire.util.transformers import XYTransformers
 from fluire.factories.model import ModelFactory
+from fluire.util.scalers import Scaler
 
 
 class ModelRunner:
@@ -24,6 +26,11 @@ class ModelRunner:
         self._threshold_calculation_fn = self._model.threshold_calculation_fn
         self._drift_handler = None
         self._model_retrained_handler = None
+        self._scaler = None
+
+    def set_scaler(self, obj: Scaler) -> ModelRunner:
+        self._scaler = obj
+        return self
 
     def set_model_retrained_handler(self, fn):
         self._model_retrained_handler = fn
@@ -144,9 +151,9 @@ class ModelRunner:
                         prediction_count=self._prediction_count, drift_indicator_value=d
                     )
                     # Fit new model on the buffer
-                self._model = self._train_model_on_buffer()
+                self._model = new_model # self._train_model_on_buffer()
                 if self._model_retrained_handler:
-                    self._model_retrained_handler(model = self._model)
+                    self._model_retrained_handler(model=self._model)
                 # Clear the buffer
                 self._buffer.clear_contents()
 
@@ -191,7 +198,9 @@ class ModelRunner:
                 # process from the stream.
                 if self._stop_run:
                     break
-
+                # Scale the data if scaler is set
+                if self._scaler:
+                    x = self._scaler.add_sample(x)
                 # Incoming data looks like :
                 #
                 # x : {'c1': 1.0, 'c2': 2.0}

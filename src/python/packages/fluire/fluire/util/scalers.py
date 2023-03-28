@@ -11,35 +11,8 @@ from collections import (
 # then instead of a KeyError being thrown, a new entry is created.
 # The type of this new entry is given by the argument of defaultdict.
 from math import sqrt
-
-'''
-class RivStandardScaler():
-    def __init__(self, with_std=True):
-        self.with_std = with_std
-        self.counts = Counter()
-        self.means = defaultdict(float)
-        self.vars = defaultdict(float)
-
-    def learn_one(self, x):
-        for i, xi in x.items():
-            self.counts[i] += 1
-            old_mean = self.means[i]
-            self.means[i] += (xi - old_mean) / self.counts[i]
-            if self.with_std:
-                self.vars[i] += (
-                    (xi - old_mean) * (xi - self.means[i]) - self.vars[i]
-                ) / self.counts[i]
-            if i == 'f1':
-                print(f'means : {self.means[i]}')
-                print(f'var : {self.vars[i]}')
-        return self
-
-    def transform_one(self, x):
-        if self.with_std:
-            return {i: safe_div(xi - self.means[i], self.vars[i] ** 0.5) for i, xi in x.items()}
-        return {i: xi - self.means[i] for i, xi in x.items()}
-
-'''
+from typing import Protocol
+from river.preprocessing.scale import StandardScaler as RStdScaler
 
 
 def safe_div(num, denum):
@@ -51,6 +24,19 @@ def safe_div(num, denum):
         return num / denum
 
 
+class Scaler(Protocol):
+    def add_sample(self, x: dict) -> dict:
+        ...
+
+
+class RiverStandardScalerWrapper():
+    def __init__(self, with_std=True):
+        self._scaler = RStdScaler(with_std)
+
+    def add_sample(self, x: dict) -> dict:
+        return self._scaler.learn_one(x).transform_one(x)
+
+
 class StandardScaler:
     def __init__(self):
         self._counters = Counter()
@@ -58,7 +44,7 @@ class StandardScaler:
         self._std_dev_estimates = defaultdict(float)
         self._standardized_sample = defaultdict(float)
 
-    def add_sample(self, x: dict) -> None:
+    def add_sample(self, x: dict) -> dict:
         # Note this algorithm is from :
         # Žliobaitė I, Hollmen J. Optimizing regression models for data streams with
         # missing values. Machine Learning. 2015 Apr;99:47-73.
@@ -85,10 +71,6 @@ class StandardScaler:
             raise Exception('add_sample() Expects a dictionary!')
 
         # Return standardized data
-        return dict(self._standardized_sample)
-
-    @property
-    def standardized_sample(self):
         return dict(self._standardized_sample)
 
 

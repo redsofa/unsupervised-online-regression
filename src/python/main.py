@@ -1,6 +1,7 @@
 import argparse
 from fluire.factories.stream import StreamFactory
 from fluire.models.runner import ModelRunner
+from fluire.util.scalers import RiverStandardScalerWrapper
 from fluire.settings.default_params import (
     DEFAULT_RAW_DATA_DIR,
     DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
@@ -196,6 +197,9 @@ def main():
     partial_drift_fn = partial(drift_handler, drift_arr)
     partial_retrain_fn = partial(model_retrained_handler, retrain_count)
 
+    # For online standardization
+    riv_scaler = RiverStandardScalerWrapper()
+
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
     m_run.set_train_test_window(tt_win)\
@@ -230,7 +234,7 @@ def main():
         for e in drift_arr:
             f.write(f'{e}\n')
         if len(drift_arr) == 0:
-            f.write('No Drifts Detected')
+            f.write('No Drifts Detected\n')
         f.write(f'Model retrain count : {retrain_count["count"]}')
 
     print("Results files saved")
