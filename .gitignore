@@ -8,6 +8,9 @@ datasets/small_predictions.csv
 datasets/small_stats.txt
 datasets/small_drifts.csv
 
+
+my_venv/
+
 # C extensions
 *.so
 

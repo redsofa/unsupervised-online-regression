@@ -209,6 +209,7 @@ def main():
         .set_threshold(args.delta_threshold)\
         .set_drift_handler(partial_drift_fn)\
         .set_model_retrained_handler(partial_retrain_fn)
+        #.set_scaler(riv_scaler)
 
     # Run the model
     for x, y_pred, y_true in m_run.run():

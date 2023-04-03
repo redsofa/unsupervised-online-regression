@@ -17,7 +17,7 @@ python ../../python/main.py \
     --train_samples 500 \
     --test_samples 100 \
     --buffer_size 100 \
-    --delta_threshold 4
+    --delta_threshold 0.2
     #--delta_threshold 1e-10
 
 echo '\n'

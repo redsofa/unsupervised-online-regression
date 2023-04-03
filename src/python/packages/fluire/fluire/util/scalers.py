@@ -29,7 +29,7 @@ class Scaler(Protocol):
         ...
 
 
-class RiverStandardScalerWrapper():
+class RiverStandardScalerWrapper:
     def __init__(self, with_std=True):
         self._scaler = RStdScaler(with_std)
 
