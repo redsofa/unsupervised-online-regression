@@ -1,5 +1,5 @@
 # Python Virtual Environment
-Note: These commands were tested on a Mac only. They may need some modifications in order to run on other platforms.
+Note: Python version 3.9.16. These commands were tested on a Mac only. They may need some modifications in order to run on other platforms.
 
 # Commands
 Make sure you are in the project's root directory
