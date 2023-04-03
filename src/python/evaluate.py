@@ -69,7 +69,7 @@ def pred_true_plot(pred_df, drift_df, file_name):
         "g:",
         pred_df["step"].values,
         pred_df["y_pred"].values,
-        "b--",
+        "b:",
     )
     # add drift markers to plot
     for e in drift_df.values:

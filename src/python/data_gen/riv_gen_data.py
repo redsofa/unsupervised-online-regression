@@ -10,8 +10,8 @@ def main():
     df = pd.DataFrame(columns = col_names)
     dataset = synth.FriedmanDrift(
             drift_type='gsg',
-            position=(1, 4),
-            transition_window=2,
+            position=(100, 400),
+            transition_window=0,
             seed=42
     )
 
