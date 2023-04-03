@@ -149,7 +149,5 @@ dependencies:
       - pathspec==0.11.0
       - pytz==2022.7.1
       - river==0.15.0
-      - scikit-multiflow==0.5.3
       - scipy==1.10.0
-      - sortedcontainers==2.4.0
       - versioneer==0.28

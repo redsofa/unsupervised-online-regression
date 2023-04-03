@@ -9,7 +9,7 @@ datasets/small_stats.txt
 datasets/small_drifts.csv
 
 
-my_venv/
+my_env/
 
 # C extensions
 *.so
