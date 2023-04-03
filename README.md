@@ -1,4 +1,4 @@
-# To setup a Python virtual environment (venv) for Development Purposes
+# To setup a Python Virtual Environment (venv) for Development Purposes
 * See the [./docs/pip.md](./docs/pip.md) file.
 
 
