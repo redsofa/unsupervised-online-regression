@@ -116,6 +116,10 @@ class TrainTestWindow():
     def register_on_window_filled_handler(self, function):
         self._on_filled_handler = function
 
+    def clear_contents(self):
+        self._train_win.clear_contents()
+        self._test_win.clear_contents()
+
 
 # Basically a queue first, in first out,
 class SlidingWindow():
@@ -142,8 +146,10 @@ class SlidingWindow():
         return list(self._data)
 
     def get_and_remove_oldest(self):
-        return self._data.popleft()
-
+        if self.len() > 0:
+            return self._data.popleft()
+        else:
+            return None
 
 if __name__ == '__main__':
     pass

@@ -15,9 +15,9 @@ python ../../python/main.py \
     --output_drifts_csv_file gt_2015_drifts.csv \
     --output_stats_file gt_2015_stats.txt \
     --train_samples 100 \
-    --test_samples 40 \
-    --buffer_size 40 \
-    --delta_threshold 0.2
+    --test_samples 20 \
+    --buffer_size 20 \
+    --delta_threshold 0.01
     #--delta_threshold 3
 
 echo '\n'

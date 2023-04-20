@@ -80,12 +80,13 @@ class ModelRunner:
 
         self._initial_training_done = True
 
-    def _swap_model(self, model):
-        self._model = model
-
     def _train_model_on_buffer(self):
-        train_samples = self._buffer.samples[0:1]
-        test_samples = self._buffer.samples[2:3]
+        train_samples = self._buffer.samples[0:80]
+        test_samples = self._buffer.samples[80:101]
+        print('****')
+        print(test_samples)
+        print(len(self._buffer.samples))
+        print('****')
         # Transform the training and testing data
         x_train, y_train = XYTransformers.arr_dict_to_xy(train_samples)
         x_test, y_test = XYTransformers.arr_dict_to_xy(test_samples)
@@ -120,6 +121,34 @@ class ModelRunner:
         return new_model, eval_metric
 
     def _process_prediction(self, x, y_pred):
+        new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
+        self._buffer.add_one_sample(new_sample)
+        # The oldest sample in the training will be removed
+        self._tt_win.get_and_remove_oldest_train_sample()
+        # The oldest sample in the testing window will be removed
+        # AND added to the training window
+        oldest_test_sample = self._tt_win.get_and_remove_oldest_test_sample()
+        self._tt_win.add_one_train_sample(oldest_test_sample)
+        self._tt_win.add_one_test_sample(new_sample)
+        if self._buffer.is_filled:
+            self._model, metrics = self._trigger_new_model_training()
+            print(self._model)
+            print(metrics)
+            if self._model_retrained_handler:
+                self._model_retrained_handler(model=self._model)
+
+            if self._drift_handler:
+                self._drift_handler(
+                    prediction_count=self._prediction_count, drift_indicator_value=0.0
+                )
+            print(f'Prediction Count :{self._prediction_count} \n')
+            print(f'Size of train_samples : {len(self._tt_win.train_samples)}\n')
+            print(f'Size of buffer : {len(self._buffer.samples)}')
+            # print(self._tt_win.train_samples)
+            # print(self._tt_win.test_samples)
+            self._buffer.clear_contents()
+
+        '''
         if not self._buffer.is_filled:
             new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
             self._buffer.add_one_sample(new_sample)
@@ -131,7 +160,7 @@ class ModelRunner:
             self._tt_win.add_one_train_sample(oldest_test_sample)
             self._tt_win.add_one_test_sample(new_sample)
         else:
-            new_model, Z2 = self._trigger_new_model_training()
+            new_model, Z2 = self.trigger_new_model_training()
 
             d = self._threshold_calculation_fn(
                 Z1=self._Z1, Z2=Z2, buffer_max_len=self._buffer.max_len
@@ -156,8 +185,25 @@ class ModelRunner:
                     self._model_retrained_handler(model=self._model)
                 # Clear the buffer
                 self._buffer.clear_contents()
+            print(self._sample_count)
+
+            if self._sample_count == 276:
+                if self._drift_handler:
+                    self._drift_handler(
+                        prediction_count=self._prediction_count, drift_indicator_value=d
+                    )
+                old_model = self._model
+                #self._model =  new_model #self._train_model_on_buffer()
+                self._model = self._train_model_on_buffer()
+                if self._model_retrained_handler:
+                    self._model_retrained_handler(model=self._model)
+                # Clear the buffer
+                self._buffer.clear_contents()
+            else:
+                self._buffer.remove_samples(80)
 
             self._Z1 = Z2
+            '''
 
     def _make_one_prediction(self, sample):
         self._prediction_count += 1
@@ -169,7 +215,6 @@ class ModelRunner:
         return x, y_pred
 
     def add_one_sample(self, sample):
-        self._sample_count += 1
         if self._max_samples is not None:
             if self._sample_count >= self._max_samples:
                 print("Maximum instance count reached. Stopping stream processing.")
@@ -191,6 +236,7 @@ class ModelRunner:
 
         try:
             for x, y in self._data_stream:
+                self._sample_count += 1
                 # Stop running the algorithm if we this flag has been set.
                 # This flag usually means that the maximum number of records to process from the
                 # stream has been reached. The add_one_sample() method figures out if we should
@@ -241,13 +287,13 @@ class ModelRunner:
                 f"Cannot run the algorithm {self._model_name}. "
                 "The TrainTestWindow instance has not been set."
             )
-
+        '''
         if self._buffer is None:
             raise Exception(
                 f"Cannot run the algorithm {self._model_name}. "
                 "The DataBuffer instance has not been set."
             )
-
+        '''
         if self._delta_threshold is None:
             raise Exception(
                 f"Cannot run the algorithm {self._model_name}. "

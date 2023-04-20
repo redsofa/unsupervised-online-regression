@@ -10,6 +10,7 @@ datasets/small_drifts.csv
 
 
 my_env/
+mf_env/
 
 # C extensions
 *.so

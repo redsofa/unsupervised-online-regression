@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fa17e3c9d28168ddde8c82ec2d42aee616e5d4ad36745062a155aedc0fd58184
-size 124
+{
+    "converters" : {
+        "f1" : "float",
+        "f2" : "float",
+        "y" : "float"
+    },
+    "target" : "y"
+}   

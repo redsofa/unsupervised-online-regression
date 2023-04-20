@@ -15,9 +15,9 @@ python ../../python/main.py \
     --output_drifts_csv_file synth_drifts.csv \
     --output_stats_file synth_stats.txt \
     --train_samples 100 \
-    --test_samples 40 \
-    --buffer_size 40 \
-    --delta_threshold 0.2
+    --test_samples 20 \
+    --buffer_size 100 \
+    --delta_threshold 0.001
     #--delta_threshold 3
 
 echo '\n'
