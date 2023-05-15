@@ -7,14 +7,38 @@ from fluire.util.files import mkdir_structure
 import os
 
 
+
 HOME_DIR = os.path.expanduser('~')
 IN_DIR = '/data/usup_reg/raw/uci/protein'
 IN_FILE = 'CASP.csv'
+
 OUT_DIR = '/data/usup_reg/work/uci/protein'
+PRED_FILE = 'CASP_predictions.csv'
 TRAIN_INSTANCES = 100
 TEST_INSTANCES = 20
 X_COL_INDICES = range(1, 10)
 Y_COL_INDEX = range(0, 1)
+
+
+
+
+
+'''
+python ../../python/main.py \
+    --raw_data_dir ~/data/usup_reg/raw/synth \
+    --output_dir ~/data/usup_reg/work/synth/$NOW \
+    --input_csv_file synth.csv \
+    --input_csv_param_file synth.params \
+    --output_predictions_file synth_predictions.csv \
+    --output_drifts_csv_file synth_drifts.csv \
+    --output_stats_file synth_stats.txt \
+    --train_samples 100 \
+    --test_samples 20 \
+    --buffer_size 100 \
+    --delta_threshold 0.001
+    #--delta_threshold 3
+'''
+
 
 
 def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
@@ -31,6 +55,7 @@ def main():
 
     dst_dir = f'{HOME_DIR}/{OUT_DIR}'
 
+    output_pred_csv_file = f"{dst_dir}/{PRED_FILE}"
     train_and_test_instances = TRAIN_INSTANCES + TEST_INSTANCES
 
     # Create the output directory if it does not exit.
@@ -79,27 +104,8 @@ def main():
     # The coefficient of determination: 1 is perfect prediction
     print("Coefficient of determination: %.2f" % r2_score(rest_y, pred_rest_y))
 
-    print(rest_X)
-    print(pred_rest_y)
-    print(rest_y)
-
-    print(len(rest_X))
-    print(len(rest_y))
-    print(len(pred_rest_y))
-    return
-
-    pred_pdf = arrs_to_df(rest_X, pred_rest_y, rest_y)
-    pred_pdf.to_csv('./tmp.csv', index=False)
-
-
-    # Plot outputs0
-    # plt.scatter(test_X, test_y, color="black")
-    # plt.plot(diabetes_X_test, diabetes_y_pred, color="blue", linewidth=3)
-
-    # plt.xticks(())
-    # plt.yticks(())
-
-    # plt.show()
+    pred_pdf = arrs_to_df(rest_X.tolist(), pred_rest_y.flatten().tolist(), rest_y.flatten().tolist())
+    pred_pdf.to_csv(output_pred_csv_file, index=False)
 
 
 if __name__ == '__main__':
