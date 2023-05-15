@@ -11,11 +11,10 @@ import argparse
 DEFAULT_RAW_DATA_DIR = '/Users/richardr/data/usup_reg/raw/uci/protein'
 DEFAULT_OUTPUT_DIR = '/Users/richardr/data/usup_reg/work/uci/protein'
 DEFAULT_INPUT_CSV_FILE = 'CASP.csv'
-DEFAULT_OUTPUT_PREDICTIONS_FILE = 'CASP_predictions.csv'
-DEFAULT_OUTPUT_STATS_FILE = 'CASP_stats.txt'
+DEFAULT_OUTPUT_PREDICTIONS_FILE = 'CASP_batch_predictions.csv'
+DEFAULT_OUTPUT_STATS_FILE = 'CASP_batch_stats.txt'
 DEFAULT_TRAIN_SAMPLES = 100
 DEFAULT_TEST_SAMPLES = 20
-
 DEFAULT_X_COL_INDICES = "1,2,3,4,5,6,7,8,9"
 DEFAULT_Y_COL_INDEX = "0"
 
