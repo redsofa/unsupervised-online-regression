@@ -48,7 +48,7 @@ def main():
 
     # Drift generation
     # Drift in y values
-    for i in range(300, 350):
+    for i in range(500, 550):
         y[i] = np.random.randint(600, high=650)
 
     # Drift in X[0] values
@@ -135,7 +135,7 @@ def main():
     df.to_csv("/tmp/synth.csv", index=False)
 
     # Save line plots
-    line_plot(df, 120, y_drifts,  'y', 300, 350, 670, '/tmp/y_plot.png')
+    line_plot(df, 120, y_drifts,  'y', 500, 550, 670, '/tmp/y_plot.png')
     line_plot(df, 120, x0_drifts, 'x0', 400, 450, 3.2, '/tmp/x0_plot.png')
     line_plot(df, 120, x1_drifts, 'x1', 500, 550, 3.2, '/tmp/x1_plot.png')
     line_plot(df, 120, x2_drifts, 'x2', 600, 650, 4.2, '/tmp/x2_plot.png')
