@@ -8,8 +8,10 @@ import os
 import argparse
 
 
-DEFAULT_RAW_DATA_DIR = '/Users/richardr/data/usup_reg/raw/uci/protein'
-DEFAULT_OUTPUT_DIR = '/Users/richardr/data/usup_reg/work/uci/protein'
+
+HOME_DIR = os.path.expanduser('~')
+DEFAULT_RAW_DATA_DIR = f'{HOME_DIR}/data/usup_reg/raw/uci/protein'
+DEFAULT_OUTPUT_DIR = f'{HOME_DIR}/data/usup_reg/work/uci/protein'
 DEFAULT_INPUT_CSV_FILE = 'CASP.csv'
 DEFAULT_OUTPUT_PREDICTIONS_FILE = 'CASP_batch_predictions.csv'
 DEFAULT_OUTPUT_STATS_FILE = 'CASP_batch_stats.txt'

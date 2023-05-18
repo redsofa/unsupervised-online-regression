@@ -46,6 +46,9 @@ class SckitLearnLinearRegressionModel():
     def get_name():
         return 'sklearn_linear_regression_model'
 
+    def get_model(self):
+        return self._model
+
 
 if __name__ == '__main__':
     pass

@@ -1,5 +1,6 @@
 import argparse
 import pandas as pd
+from distutils.util import strtobool
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
 from fluire.settings.default_params import (
@@ -7,7 +8,8 @@ from fluire.settings.default_params import (
     DEFAULT_OUTPUT_PREDICTIONS_FILE,
     DEFAULT_OUTPUT_STATS_FILE,
     DEFAULT_OUTPUT_PLOT_FILE,
-    DEFAULT_OUTPUT_DRIFTS_CSV_FILE
+    DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
+    DEFAULT_PLOT_DRIFTS
 )
 from fluire.util.files import mkdir_structure
 
@@ -56,11 +58,20 @@ def get_args():
         default=DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
         help="Detected drift location CSV file (indices are relative to predictions csv file.)",
     )
+    parser.add_argument(
+        "-6",
+        "--plot_drifts",
+        type=lambda b:bool(strtobool(b)),
+        nargs='?',
+        const=False,
+        default=DEFAULT_PLOT_DRIFTS,
+        help="To show drifts in plot or not"
+    )
     args = parser.parse_args()
     return args
 
 
-def pred_true_plot(pred_df, drift_df, file_name):
+def pred_true_plot(pred_df, drift_df, file_name, plot_drifts=False):
     pred_df.insert(0, "step", range(0, len(pred_df)))
     plt.figure(figsize=(10, 8))
     plt.plot(
@@ -71,10 +82,15 @@ def pred_true_plot(pred_df, drift_df, file_name):
         pred_df["y_pred"].values,
         "b:",
     )
-    # add drift markers to plot
-    for e in drift_df.values:
-        plt.axvline(e[0], color="red", linestyle="dashdot")
-    plt.legend(["y_true", "y_pred", "drift"])
+
+    if plot_drifts:
+        # add drift markers to plot
+        for e in drift_df.values:
+            plt.axvline(e[0], color="red", linestyle="dashdot")
+            plt.legend(["y_true", "y_pred", "drift"])
+    else:
+        plt.legend(["y_true", "y_pred"])
+
     plt.savefig(file_name)
 
 
@@ -115,7 +131,7 @@ def main():
 
     print("Results files updated")
 
-    pred_true_plot(pred_df, drift_df, plot_file)
+    pred_true_plot(pred_df, drift_df, plot_file, plot_drifts=args.plot_drifts)
 
 
 if __name__ == "__main__":

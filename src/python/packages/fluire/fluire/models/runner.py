@@ -3,6 +3,9 @@ import time
 from fluire.util.transformers import XYTransformers
 from fluire.factories.model import ModelFactory
 from fluire.util.scalers import Scaler
+from sklearn import linear_model
+import numpy as np
+from fluire.util.window import TrainTestWindow, DataBuffer
 
 
 class ModelRunner:
@@ -81,15 +84,12 @@ class ModelRunner:
         self._initial_training_done = True
 
     def _train_model_on_buffer(self):
-        train_samples = self._buffer.samples[0:80]
-        test_samples = self._buffer.samples[80:101]
-        print('****')
-        print(test_samples)
-        print(len(self._buffer.samples))
-        print('****')
+        train_samples = self._buffer.samples[0:self._buffer.max_len]
+        print(f'length of training samples in buffer : {len(train_samples)}')
+        # test_samples = self._buffer.samples[]
         # Transform the training and testing data
         x_train, y_train = XYTransformers.arr_dict_to_xy(train_samples)
-        x_test, y_test = XYTransformers.arr_dict_to_xy(test_samples)
+        #x_test, y_test = XYTransformers.arr_dict_to_xy(test_samples)
 
         new_model = ModelFactory.get_instance(self._model_name)
 
@@ -120,6 +120,32 @@ class ModelRunner:
 
         return new_model, eval_metric
 
+    def _log_model_info(self, new_model, old_model, Z1, Z2, delta, tt_win):
+        print()
+        print('---------')
+        print('Model info...')
+        print(f'Size of train_test_win : {tt_win.train_sample_count+tt_win.test_sample_count}')
+        print()
+        print(f'Old model address : {id(old_model)} - New model address : {id(new_model)}')
+        print()
+        print(f'Are coefficients equal ? : {np.allclose(old_model.get_model().coef_, new_model.get_model().coef_)}')
+        print()
+        print(f'Old model coefficients : {old_model.get_model().coef_}')
+        print()
+        print(f'New model coefficients : {new_model.get_model().coef_}')
+        print()
+        print(f"Z1 metric : {Z1}")
+        print()
+        print(f'Z2 metric : {Z2}')
+        print()
+        print(f'Delta : {delta}')
+        print()
+        print(f'Threshold : {self._delta_threshold}')
+        print()
+        print(f'Retrain on buffer required ? : { delta > self._delta_threshold}')
+        print('--------')
+        print()
+
     def _process_prediction(self, x, y_pred):
         new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
         self._buffer.add_one_sample(new_sample)
@@ -131,79 +157,31 @@ class ModelRunner:
         self._tt_win.add_one_train_sample(oldest_test_sample)
         self._tt_win.add_one_test_sample(new_sample)
         if self._buffer.is_filled:
-            self._model, metrics = self._trigger_new_model_training()
-            print(self._model)
-            print(metrics)
-            if self._model_retrained_handler:
-                self._model_retrained_handler(model=self._model)
-
-            if self._drift_handler:
-                self._drift_handler(
-                    prediction_count=self._prediction_count, drift_indicator_value=0.0
-                )
-            print(f'Prediction Count :{self._prediction_count} \n')
-            print(f'Size of train_samples : {len(self._tt_win.train_samples)}\n')
-            print(f'Size of buffer : {len(self._buffer.samples)}')
-            # print(self._tt_win.train_samples)
-            # print(self._tt_win.test_samples)
-            self._buffer.clear_contents()
-
-        '''
-        if not self._buffer.is_filled:
-            new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
-            self._buffer.add_one_sample(new_sample)
-            # The oldest sample in the training will be removed
-            self._tt_win.get_and_remove_oldest_train_sample()
-            # The oldest sample in the testing window will be removed
-            # AND added to the training window
-            oldest_test_sample = self._tt_win.get_and_remove_oldest_test_sample()
-            self._tt_win.add_one_train_sample(oldest_test_sample)
-            self._tt_win.add_one_test_sample(new_sample)
-        else:
-            new_model, Z2 = self.trigger_new_model_training()
-
+            new_model, Z2 = self._trigger_new_model_training()
             d = self._threshold_calculation_fn(
                 Z1=self._Z1, Z2=Z2, buffer_max_len=self._buffer.max_len
             )
 
-            # print(f'd is  {d}, threshold is : {self._delta_threshold}')
+            self._log_model_info(new_model, self._model, self._Z1, Z2, d, self._tt_win)
+
+            # Do we need to replace the model ?
 
             if d < self._delta_threshold:
+                # delta is smaller than threshold, don't replace the model
                 self._buffer.remove_samples(1)
             else:
-                # We have a drift
-                # input("Drift Detected. Press enter to continue")
-                # Call the drift event handler. This is a function that subscribes to
-                # "drift detected" events.
-                if self._drift_handler:
-                    self._drift_handler(
-                        prediction_count=self._prediction_count, drift_indicator_value=d
-                    )
-                    # Fit new model on the buffer
-                self._model = new_model # self._train_model_on_buffer()
-                if self._model_retrained_handler:
-                    self._model_retrained_handler(model=self._model)
-                # Clear the buffer
-                self._buffer.clear_contents()
-            print(self._sample_count)
-
-            if self._sample_count == 276:
-                if self._drift_handler:
-                    self._drift_handler(
-                        prediction_count=self._prediction_count, drift_indicator_value=d
-                    )
-                old_model = self._model
-                #self._model =  new_model #self._train_model_on_buffer()
+                # delta is larger than the threshold, we want to replace the model
+                # with a model trained on the buffer
                 self._model = self._train_model_on_buffer()
                 if self._model_retrained_handler:
                     self._model_retrained_handler(model=self._model)
-                # Clear the buffer
-                self._buffer.clear_contents()
-            else:
-                self._buffer.remove_samples(80)
 
-            self._Z1 = Z2
-            '''
+                if self._drift_handler:
+                    self._drift_handler(
+                        prediction_count=self._prediction_count, drift_indicator_value=d
+                    )
+                self._buffer.clear_contents()
+                self._Z1 = Z2
 
     def _make_one_prediction(self, sample):
         self._prediction_count += 1
@@ -260,7 +238,7 @@ class ModelRunner:
                     self.add_one_sample(sample)
                 else:
                     x, y_pred = self._make_one_prediction(sample)
-                    yield (x, y_pred, y)
+                    yield(x, y_pred, y)
                     self._process_prediction(x, y_pred)
 
             self._end_time = time.time()

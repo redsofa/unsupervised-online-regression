@@ -123,8 +123,8 @@ def main():
     for X_vals, y_val in zip(X, y):
         instance = {}
         for i, val in enumerate(X_vals):
-            instance[col_names[i]] = val
-        instance["y"] = y_val
+            instance[col_names[i]] = round(val, 7)
+        instance["y"] = round(y_val, 7)
         df_one_instance = pd.DataFrame(
             [list(instance.values())], columns=list(instance.keys())
         )
