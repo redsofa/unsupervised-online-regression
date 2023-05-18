@@ -16,9 +16,8 @@ python ../../python/main.py \
     --output_stats_file online_lr_synth_stats.txt \
     --train_samples 100 \
     --test_samples 20 \
-    --buffer_size 100 \
-    --delta_threshold 0.1e-06
-    #--delta_threshold 3
+    --buffer_size 200 \
+    --delta_threshold 1e-06
 
 echo '\n'
 
