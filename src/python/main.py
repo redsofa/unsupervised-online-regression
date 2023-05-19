@@ -15,6 +15,7 @@ from fluire.settings.default_params import (
     DEFAULT_BUFFER_SIZE,
     DEFAULT_MAX_SAMPLES,
     DEFAULT_DELTA_THRESHOLD,
+    DEFAULT_ALGORITHM
 )
 from fluire.util.stream import load_stream_params
 from fluire.util.window import TrainTestWindow, DataBuffer
@@ -141,6 +142,14 @@ def get_args():
         default=DEFAULT_OUTPUT_DRIFTS_CSV_FILE,
         help="Detected drift location CSV file (indices are relative to predictions csv file.)",
     )
+    parser.add_argument(
+        "-13",
+        "--algorithm",
+        type=str,
+        required=False,
+        default=DEFAULT_ALGORITHM, 
+        help="Algorithm to use in the online prediction.",
+    )
     args = parser.parse_args()
     return args
 
@@ -165,7 +174,7 @@ def main():
     mkdir_structure(args.output_dir)
 
     # Array of models to run.
-    model_name = "sklearn_linear_regression_model"
+    model_name = args.algorithm
 
     # Store fully qualified names of files that are used in this script
     stream_params_file = f"{args.raw_data_dir}/{args.input_csv_param_file}"
@@ -202,19 +211,21 @@ def main():
 
     # Configure the ModelRunner instance
     m_run = ModelRunner(model_name)
-    m_run.set_train_test_window(tt_win)\
+    m_run\
+        .set_train_test_window(tt_win)\
         .set_data_stream(data_stream)\
         .set_max_samples(args.max_samples)\
         .set_buffer(buffer)\
         .set_threshold(args.delta_threshold)\
         .set_drift_handler(partial_drift_fn)\
         .set_model_retrained_handler(partial_retrain_fn)
-        #.set_scaler(riv_scaler)
+        # .set_scaler(riv_scaler)
 
+    print(f'Running model : {m_run.model_name}')
     # Run the model
     for x, y_pred, y_true in m_run.run():
         x_arr.append(x[0].tolist())
-        y_pred_arr.append(y_pred[0][0])
+        y_pred_arr.append(y_pred.flatten('F')[0])
         y_true_arr.append(y_true)
 
     p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
