@@ -23,7 +23,13 @@ export SRC_ROOT="$(pwd)/../../../"
 #sh ./retrain_every/lr/uci_wine.sh
 
 #echo "Running experiments on UCI protein data"
-sh ./adwin/lr/uci_protein.sh
-sh ./kswin/lr/uci_protein.sh
-sh ./pagehinkley/lr/uci_protein.sh
-sh ./retrain_every/lr/uci_protein.sh
+#sh ./adwin/lr/uci_protein.sh
+#sh ./kswin/lr/uci_protein.sh
+#sh ./pagehinkley/lr/uci_protein.sh
+#sh ./retrain_every/lr/uci_protein.sh
+
+#echo "Running experiments on UCI std_turbine data"
+sh ./adwin/lr/uci_std_turbine.sh
+sh ./kswin/lr/uci_std_turbine.sh
+sh ./pagehinkley/lr/uci_std_turbine.sh
+sh ./retrain_every/lr/uci_std_turbine.sh
