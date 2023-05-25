@@ -12,16 +12,16 @@ from fluire.settings.default_params import (
     DEFAULT_OUTPUT_STATS_FILE,
     DEFAULT_TRAIN_SAMPLES,
     DEFAULT_TEST_SAMPLES,
-    DEFAULT_BUFFER_SIZE,
     DEFAULT_MAX_SAMPLES,
-    DEFAULT_DELTA_THRESHOLD,
+    DEFAULT_RETRAIN_AT_EVERY_SAMPLE_COUNT,
+    DEFAULT_DRIFT_DETECTOR,
     DEFAULT_ALGORITHM
 )
 from fluire.util.stream import load_stream_params
-from fluire.util.window import TrainTestWindow, DataBuffer
 import pandas as pd
 from fluire.util.files import mkdir_structure
 from functools import partial
+from fluire.util.window import TrainTestWindow
 
 
 def drift_to_df(drift_arr):
@@ -112,11 +112,11 @@ def get_args():
     )
     parser.add_argument(
         "-9",
-        "--buffer_size",
+        "--retrain_at_every_sample_count",
         type=int,
         required=False,
-        default=DEFAULT_BUFFER_SIZE,
-        help="Data buffer size to use.",
+        default=DEFAULT_RETRAIN_AT_EVERY_SAMPLE_COUNT,
+        help="Retrain model after predicting x number of records.",
     )
     parser.add_argument(
         "-10",
@@ -128,14 +128,6 @@ def get_args():
     )
     parser.add_argument(
         "-11",
-        "--delta_threshold",
-        type=float,
-        required=False,
-        default=DEFAULT_DELTA_THRESHOLD,
-        help="Evaluation metrics difference threshold.",
-    )
-    parser.add_argument(
-        "-12",
         "--output_drifts_csv_file",
         type=str,
         required=False,
@@ -143,12 +135,20 @@ def get_args():
         help="Detected drift location CSV file (indices are relative to predictions csv file.)",
     )
     parser.add_argument(
-        "-13",
+        "-12",
         "--algorithm",
         type=str,
         required=False,
-        default=DEFAULT_ALGORITHM, 
+        default=DEFAULT_ALGORITHM,
         help="Algorithm to use in the online prediction.",
+    )
+    parser.add_argument(
+        "-13",
+        "--drift_detector",
+        type=str,
+        required=False,
+        default=DEFAULT_DRIFT_DETECTOR,
+        help="Drift detection algorithm.",
     )
     args = parser.parse_args()
     return args
@@ -194,9 +194,6 @@ def main():
     # Configure a TrainTest_Window instance
     tt_win = TrainTestWindow(args.train_samples, args.test_samples)
 
-    # Configure the buffer
-    buffer = DataBuffer(args.buffer_size)
-
     x_arr = []
     y_pred_arr = []
     y_true_arr = []
@@ -215,10 +212,10 @@ def main():
         .set_train_test_window(tt_win)\
         .set_data_stream(data_stream)\
         .set_max_samples(args.max_samples)\
-        .set_buffer(buffer)\
-        .set_threshold(args.delta_threshold)\
         .set_drift_handler(partial_drift_fn)\
-        .set_model_retrained_handler(partial_retrain_fn)
+        .set_retrain_at_every_sample_count(args.retrain_at_every_sample_count)\
+        .set_model_retrained_handler(partial_retrain_fn)\
+        .set_drift_detector(args.drift_detector)
         # .set_scaler(riv_scaler)
 
     print(f'Running model : {m_run.model_name}')

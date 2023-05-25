@@ -3,12 +3,9 @@ import time
 from fluire.util.transformers import XYTransformers
 from fluire.factories.model import ModelFactory
 from fluire.util.scalers import Scaler
-from sklearn import linear_model
 import numpy as np
-from fluire.util.window import TrainTestWindow, DataBuffer
 from fluire.models.regression import SckitLearnLinearRegressionModel
-from fluire.models.regression import ScikitLearnRandomForestRegressor
-
+from river import drift
 
 
 class ModelRunner:
@@ -26,13 +23,26 @@ class ModelRunner:
         self._stop_run = False
         self._sample_count = 0
         self._prediction_count = 0
-        self._buffer = None
-        self._delta_threshold = None
         self._evaluation_fn = self._model.model_evaluation_fn
-        self._threshold_calculation_fn = self._model.threshold_calculation_fn
         self._drift_handler = None
         self._model_retrained_handler = None
         self._scaler = None
+        self._tt_win_updates = 0
+        self._retrain_at_every_sample_count = -1
+        self._drift_detector = None
+
+    def set_drift_detector(self, detector):
+        if detector is None:
+            self._drift_detector = None
+        elif detector == 'ADWIN':
+            self._drift_detector = drift.ADWIN()
+        elif detector == 'KSWIN':
+            self._drift_detector = drift.KSWIN(alpha=0.0001, seed=42)
+        elif detector == 'PAGEHINKLEY':
+            self._drift_detector = drift.PageHinkley()
+        else:
+            raise Exception('Invalid drift detector')
+        return self
 
     def set_scaler(self, obj: Scaler) -> ModelRunner:
         self._scaler = obj
@@ -40,6 +50,10 @@ class ModelRunner:
 
     def set_model_retrained_handler(self, fn):
         self._model_retrained_handler = fn
+        return self
+
+    def set_retrain_at_every_sample_count(self, count):
+        self._retrain_at_every_sample_count = count
         return self
 
     @property
@@ -85,20 +99,6 @@ class ModelRunner:
         self._Z1 = self._evaluation_fn(y_true=y_test, y_pred=y_preds)
 
         self._initial_training_done = True
-
-    def _train_model_on_buffer(self):
-        train_samples = self._buffer.samples[0:self._buffer.max_len]
-        print(f'length of training samples in buffer : {len(train_samples)}')
-        # test_samples = self._buffer.samples[]
-        # Transform the training and testing data
-        x_train, y_train = XYTransformers.arr_dict_to_xy(train_samples)
-        #x_test, y_test = XYTransformers.arr_dict_to_xy(test_samples)
-
-        new_model = ModelFactory.get_instance(self._model_name)
-
-        # Fit the model to the training data
-        new_model.fit(x_train, y_train)
-        return new_model
 
     def _trigger_new_model_training(self):
         # The data comes in as a dictionary
@@ -150,9 +150,23 @@ class ModelRunner:
             print('--------')
             print()
 
+    def _retrain_required(self, x, y_pred):
+        if self._retrain_at_every_sample_count is not None:
+            if self._tt_win_updates == self._retrain_at_every_sample_count:
+                return True
+            else:
+                return False
+
+        if self._drift_detector is not None:
+            self._drift_detector.update(y_pred[0][0])
+            if self._drift_detector.drift_detected:
+                return True
+            else:
+                return False
+
     def _process_prediction(self, x, y_pred):
         new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
-        self._buffer.add_one_sample(new_sample)
+        self._tt_win_updates += 1
         # The oldest sample in the training will be removed
         self._tt_win.get_and_remove_oldest_train_sample()
         # The oldest sample in the testing window will be removed
@@ -160,32 +174,18 @@ class ModelRunner:
         oldest_test_sample = self._tt_win.get_and_remove_oldest_test_sample()
         self._tt_win.add_one_train_sample(oldest_test_sample)
         self._tt_win.add_one_test_sample(new_sample)
-        if self._buffer.is_filled:
-            new_model, Z2 = self._trigger_new_model_training()
-            d = self._threshold_calculation_fn(
-                Z1=self._Z1, Z2=Z2, buffer_max_len=self._buffer.max_len
-            )
 
-            self._log_model_info(new_model, self._model, self._Z1, Z2, d, self._tt_win)
+        if self._retrain_required(x, y_pred):
+            print('Retrain required')
+            self._tt_win_updates = 0
+            self._model, _ = self._trigger_new_model_training()
+            if self._model_retrained_handler:
+                self._model_retrained_handler(model=self._model)
 
-            # Do we need to replace the model ?
-
-            if d < self._delta_threshold:
-                # delta is smaller than threshold, don't replace the model
-                self._buffer.remove_samples(1)
-            else:
-                # delta is larger than the threshold, we want to replace the model
-                # with a model trained on the buffer
-                self._model = self._train_model_on_buffer()
-                if self._model_retrained_handler:
-                    self._model_retrained_handler(model=self._model)
-
-                if self._drift_handler:
-                    self._drift_handler(
-                        prediction_count=self._prediction_count, drift_indicator_value=d
-                    )
-                self._buffer.clear_contents()
-                self._Z1 = Z2
+            if self._drift_handler:
+                self._drift_handler(
+                    prediction_count=self._prediction_count, drift_indicator_value=0
+                )
 
     def _make_one_prediction(self, sample):
         self._prediction_count += 1
@@ -269,22 +269,6 @@ class ModelRunner:
                 f"Cannot run the algorithm {self._model_name}. "
                 "The TrainTestWindow instance has not been set."
             )
-        '''
-        if self._buffer is None:
-            raise Exception(
-                f"Cannot run the algorithm {self._model_name}. "
-                "The DataBuffer instance has not been set."
-            )
-        '''
-        if self._delta_threshold is None:
-            raise Exception(
-                f"Cannot run the algorithm {self._model_name}. "
-                "The delta threshold is not set."
-            )
-
-    def set_threshold(self, delta):
-        self._delta_threshold = delta
-        return self
 
     def set_max_samples(self, max_samples):
         self._max_samples = max_samples
@@ -300,10 +284,6 @@ class ModelRunner:
 
     def set_data_stream(self, stream):
         self._data_stream = stream
-        return self
-
-    def set_buffer(self, buffer):
-        self._buffer = buffer
         return self
 
     def set_drift_handler(self, fn):

@@ -14,9 +14,6 @@ python ../../python/main.py \
     --output_stats_file small_stats.txt \
     --train_samples 8 \
     --test_samples 2 \
-    --buffer_size 2 \
-    --delta_threshold 5
-    #--delta_threshold 2
 
 echo '\n'
 
