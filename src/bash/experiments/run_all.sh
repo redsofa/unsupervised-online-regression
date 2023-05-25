@@ -24,6 +24,6 @@ export SRC_ROOT="$(pwd)/../../../"
 
 #echo "Running experiments on UCI protein data"
 sh ./adwin/lr/uci_protein.sh
-#sh ./kswin/lr/uci_protein.sh
-#sh ./pagehinkley/lr/uci_protein.sh
-#sh ./retrain_every/lr/uci_protein.sh
+sh ./kswin/lr/uci_protein.sh
+sh ./pagehinkley/lr/uci_protein.sh
+sh ./retrain_every/lr/uci_protein.sh
