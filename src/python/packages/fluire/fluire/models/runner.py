@@ -4,7 +4,6 @@ from fluire.util.transformers import XYTransformers
 from fluire.factories.model import ModelFactory
 from fluire.util.scalers import Scaler
 import numpy as np
-from fluire.models.regression import SckitLearnLinearRegressionModel
 from river import drift
 
 
@@ -35,6 +34,7 @@ class ModelRunner:
         if detector is None:
             self._drift_detector = None
         elif detector == 'ADWIN':
+            #self._drift_detector = drift.ADWIN(clock=16, max_buckets=20, min_window_length=50)
             self._drift_detector = drift.ADWIN()
         elif detector == 'KSWIN':
             self._drift_detector = drift.KSWIN(alpha=0.0001, seed=42)
@@ -89,7 +89,7 @@ class ModelRunner:
         x_test, y_test = XYTransformers.arr_dict_to_xy(self._tt_win.test_samples)
 
         # Fit the model to the training data
-        self._model.fit(x_train, y_train)
+        self._model.fit(x_train, np.ravel(y_train))
 
         # Make predictions on the test data
         y_preds = self._model.predict(x_test)
@@ -112,7 +112,7 @@ class ModelRunner:
         new_model = ModelFactory.get_instance(self._model_name)
 
         # Fit the model to the training data
-        new_model.fit(x_train, y_train)
+        new_model.fit(x_train, np.ravel(y_train))
 
         # Make predictions on the test data
         y_preds = new_model.predict(x_test)
@@ -123,33 +123,6 @@ class ModelRunner:
 
         return new_model, eval_metric
 
-    def _log_model_info(self, new_model, old_model, Z1, Z2, delta, tt_win):
-        if self._model.get_name() == SckitLearnLinearRegressionModel.get_name():
-            print()
-            print('---------')
-            print('Model info...')
-            print(f'Size of train_test_win : {tt_win.train_sample_count+tt_win.test_sample_count}')
-            print()
-            print(f'Old model address : {id(old_model)} - New model address : {id(new_model)}')
-            print()
-            print(f'Are coefficients equal ? : {np.allclose(old_model.get_model().coef_, new_model.get_model().coef_)}')
-            print()
-            print(f'Old model coefficients : {old_model.get_model().coef_}')
-            print()
-            print(f'New model coefficients : {new_model.get_model().coef_}')
-            print()
-            print(f"Z1 metric : {Z1}")
-            print()
-            print(f'Z2 metric : {Z2}')
-            print()
-            print(f'Delta : {delta}')
-            print()
-            print(f'Threshold : {self._delta_threshold}')
-            print()
-            print(f'Retrain on buffer required ? : { delta > self._delta_threshold}')
-            print('--------')
-            print()
-
     def _retrain_required(self, x, y_pred):
         if self._retrain_at_every_sample_count is not None:
             if self._tt_win_updates == self._retrain_at_every_sample_count:
@@ -158,7 +131,7 @@ class ModelRunner:
                 return False
 
         if self._drift_detector is not None:
-            self._drift_detector.update(y_pred[0][0])
+            self._drift_detector.update(y_pred[0])
             if self._drift_detector.drift_detected:
                 return True
             else:
