@@ -137,6 +137,8 @@ class ModelRunner:
             else:
                 return False
 
+        return False
+
     def _process_prediction(self, x, y_pred):
         new_sample = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
         self._tt_win_updates += 1

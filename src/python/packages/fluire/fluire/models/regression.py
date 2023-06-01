@@ -32,7 +32,7 @@ class ScikitLearnSVRRegressor():
 
     @staticmethod
     def get_name():
-        return 'sklearn_svr_regressor_model'
+        return 'sklearn_svr_regression_model'
 
     def get_model(self):
         return self._model
@@ -67,7 +67,7 @@ class ScikitLearnRandomForestRegressor():
 
     @staticmethod
     def get_name():
-        return 'sklearn_randomforest_regressor_model'
+        return 'sklearn_randomforest_regression_model'
 
     def get_model(self):
         return self._model

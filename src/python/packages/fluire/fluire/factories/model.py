@@ -15,7 +15,7 @@ class ModelFactory():
         elif model_name == ScikitLearnSVRRegressor.get_name():
             ret_val = ModelFactory.get_svr_regressor_model()
         else:
-            raise Exception('Model not available from factory')
+            raise Exception(f'Model not available from factory : {model_name}')
 
         return ret_val
 

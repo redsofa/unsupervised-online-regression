@@ -16,6 +16,7 @@ python main.py \
     --output_predictions_file online_CASP_predictions.csv \
     --output_drifts_csv_file online_CASP_drifts.csv \
     --output_stats_file online_CASP_stats.txt \
+    --algorithm sklearn_linear_regression_model \
     --train_samples 100 \
     --test_samples 20 \
     --retrain_at_every_sample_count 100

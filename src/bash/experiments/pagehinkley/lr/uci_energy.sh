@@ -16,6 +16,7 @@ python main.py \
     --output_predictions_file online_energydata_complete_predictions.csv \
     --output_drifts_csv_file online_energydata_complete_drifts.csv \
     --output_stats_file online_energydata_complete_stats.txt \
+    --algorithm sklearn_linear_regression_model \
     --train_samples 100 \
     --test_samples 20 \
     --drift_detector PAGEHINKLEY

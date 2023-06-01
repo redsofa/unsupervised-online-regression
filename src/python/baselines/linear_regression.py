@@ -130,6 +130,9 @@ def main():
     train_pdf = pdf.iloc[:args.train_samples]
     test_pdf = pdf.iloc[args.train_samples:train_and_test_instances]
 
+    print(train_pdf.shape)
+    print(test_pdf.shape)
+
     train_X = train_pdf.iloc[:, args.x_col_indices].values
     train_y = train_pdf.iloc[:, args.y_col_index].values
 
@@ -157,6 +160,8 @@ def main():
     non_train_or_test_pdf = pdf.iloc[train_and_test_instances:total_instances]
     rest_X = non_train_or_test_pdf.iloc[:, args.x_col_indices].values
     rest_y = non_train_or_test_pdf.iloc[:, args.y_col_index].values
+
+    print(non_train_or_test_pdf.shape)
 
     pred_rest_y = regr.predict(rest_X)
     print("Mean squared error: %.2f" % mean_squared_error(rest_y, pred_rest_y))
