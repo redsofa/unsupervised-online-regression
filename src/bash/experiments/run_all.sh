@@ -130,21 +130,42 @@ sh ./no_retrain/svr/uci_energy.sh
 
 
 
-echo "Running experiments on UCI parkinsons data"
-sh ./adwin/lr/uci_parkinsons.sh
-sh ./kswin/lr/uci_parkinsons.sh
-sh ./pagehinkley/lr/uci_parkinsons.sh
-sh ./retrain_every/lr/uci_parkinsons.sh
-sh ./no_retrain/lr/uci_parkinsons.sh
+echo "Running experiments on UCI seoul bike data"
+sh ./adwin/lr/uci_bike.sh
+sh ./kswin/lr/uci_bike.sh
+sh ./pagehinkley/lr/uci_bike.sh
+sh ./retrain_every/lr/uci_bike.sh
+sh ./no_retrain/lr/uci_bike.sh
 
-sh ./adwin/rf/uci_parkinsons.sh
-sh ./kswin/rf/uci_parkinsons.sh
-sh ./pagehinkley/rf/uci_parkinsons.sh
-sh ./retrain_every/rf/uci_parkinsons.sh
-sh ./no_retrain/rf/uci_parkinsons.sh
+sh ./adwin/rf/uci_bike.sh
+sh ./kswin/rf/uci_bike.sh
+sh ./pagehinkley/rf/uci_bike.sh
+sh ./retrain_every/rf/uci_bike.sh
+sh ./no_retrain/rf/uci_bike.sh
 
-sh ./adwin/svr/uci_parkinsons.sh
-sh ./kswin/svr/uci_parkinsons.sh
-sh ./pagehinkley/svr/uci_parkinsons.sh
-sh ./retrain_every/svr/uci_parkinsons.sh
+sh ./adwin/svr/uci_bike.sh
+sh ./kswin/svr/uci_bike.sh
+sh ./pagehinkley/svr/uci_bike.sh
+sh ./retrain_every/svr/uci_bike.sh
+sh ./no_retrain/svr/uci_bike.sh
+
+
+
+# echo "Running experiments on UCI parkinsons data"
+# sh ./adwin/lr/uci_parkinsons.sh
+# sh ./kswin/lr/uci_parkinsons.sh
+# sh ./pagehinkley/lr/uci_parkinsons.sh
+# sh ./retrain_every/lr/uci_parkinsons.sh
+# sh ./no_retrain/lr/uci_parkinsons.sh
+#
+# sh ./adwin/rf/uci_parkinsons.sh
+# sh ./kswin/rf/uci_parkinsons.sh
+# sh ./pagehinkley/rf/uci_parkinsons.sh
+# sh ./retrain_every/rf/uci_parkinsons.sh
+# sh ./no_retrain/rf/uci_parkinsons.sh
+#
+# sh ./adwin/svr/uci_parkinsons.sh
+# sh ./kswin/svr/uci_parkinsons.sh
+# sh ./pagehinkley/svr/uci_parkinsons.sh
+# sh ./retrain_every/svr/uci_parkinsons.sh
 sh ./no_retrain/svr/uci_parkinsons.sh

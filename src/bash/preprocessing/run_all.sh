@@ -10,3 +10,4 @@ sh ./uci_parkinsons.sh
 sh ./uci_protein.sh
 sh ./fred_aq.sh
 sh ./synth.sh
+sh ./uci_bike.sh
