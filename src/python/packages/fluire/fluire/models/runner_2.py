@@ -27,20 +27,15 @@ class ModelRunner:
         self._start_time = None
         self._end_time = None
         self._stop_run = False
-
         self._initial_training_done = False
         self._initial_working_datapoints_recieved = False
         self._prediction_count = 0
+
         self._drift_handler = None
         self._drift_detector = None
-        self._retrain_at_every_sample_count = None
         self._model_retrained_handler = None
-        logger.debug('ModelRunner Construction. Nothing initalized yet.')
-
-    def set_scaler(self, obj: Scaler) -> ModelRunner:
-        logger.debug('Scaler set.')
-        self._scaler = obj
-        return self
+        self._retrain_at_every_sample_count = None
+        logger.debug('ModelRunner construction done. Nothing initalized yet.')
 
     def validate_settings(self) -> None:
         logger.debug('Validating model runner settings.')
@@ -66,6 +61,11 @@ class ModelRunner:
                 f'Number of working data points must be at least {self._minimum_required_datapoints}'
             )
 
+    def set_scaler(self, obj: Scaler) -> ModelRunner:
+        logger.debug('Scaler set.')
+        self._scaler = obj
+        return self
+
     def set_data_stream(self, stream) -> ModelRunner:
         logger.debug('Setting data stream.')
         self._data_stream = stream
@@ -82,6 +82,11 @@ class ModelRunner:
         self._initialize_model_eval_fn()
         return self
 
+    def set_working_data_points(self, working_data_points: int) -> ModelRunner:
+        self._working_data_points = working_data_points
+        self._initialize_sliding_window_and_buffer()
+        return self
+
     def _initialize_model(self) -> None:
         logger.debug('Initializing model')
         self._model = ModelFactory.get_instance(self._model_name)
@@ -89,11 +94,6 @@ class ModelRunner:
     def _initialize_model_eval_fn(self) -> None:
         logger.debug('Initializing model evaluation function.')
         self._model_eval_fn = self._model.model_evaluation_fn
-
-    def set_working_data_points(self, working_data_points: int) -> ModelRunner:
-        self._working_data_points = working_data_points
-        self._initialize_sliding_window_and_buffer()
-        return self
 
     def _initialize_sliding_window_and_buffer(self) -> None:
         if self._working_data_points < self._minimum_required_working_datapoints:
@@ -168,7 +168,6 @@ class ModelRunner:
         # Evaluate the model's performance (compare truth values with predictions) and store
         # the evaluation metric
         self._Z1 = self._model_eval_fn(y_true=y_test, y_pred=y_preds)
-
         self._initial_training_done = True
         logger.debug(f'Z1 score : {self._Z1}')
         logger.debug('Initial model trained.')
