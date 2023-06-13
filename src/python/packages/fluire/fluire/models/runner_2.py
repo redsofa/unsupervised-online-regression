@@ -217,7 +217,7 @@ class ModelRunner:
                     x, y_pred = self._make_one_prediction(sample)
                     self._process_prediction(x, y_pred)
 
-                logger.debug('yielding prediction results.')
+                logger.debug('Yielding prediction results.')
                 yield (x, y_pred, y)
             self._end_time = time.time()
         except Exception as e:
@@ -237,9 +237,10 @@ class ModelRunner:
 
         if self._buffer.is_full:
             logger.debug('Buffer is full.')
+            logger.debug(f'Buffer contents : {self._buffer.get_as_list()}')
             if self._is_drift_detected():
                 logger.debug('Drift detected. Triggering model retraining.')
-            logger.info('Clearing buffer contents.')
+            logger.debug('Clearing buffer contents.')
             self._buffer.clear_contents()
 
             # TODO : Add model retrain callback
