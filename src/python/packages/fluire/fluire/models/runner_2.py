@@ -30,9 +30,8 @@ class ModelRunner:
         self._initial_training_done = False
         self._initial_working_datapoints_recieved = False
         self._prediction_count = 0
-
-        self._drift_handler = None
         self._drift_detector = None
+        self._drift_handler = None
         self._model_retrained_handler = None
         self._retrain_at_every_sample_count = None
         logger.debug('ModelRunner construction done. Nothing initalized yet.')
@@ -60,6 +59,36 @@ class ModelRunner:
             raise Exception(
                 f'Number of working data points must be at least {self._minimum_required_datapoints}'
             )
+
+    def set_model_retrained_handler(self, fn):
+        logger.debug('Setting model retrained handler.')
+        self._model_retrained_handler = fn
+        return self
+
+    def set_drift_handler(self, fn):
+        logger.debug('Setting drift detected handler.')
+        self._drift_handler = fn
+        return self
+
+    def set_drift_detector(self, **kwargs) -> ModelRunner:
+        self._drift_detector = kwargs
+        detector = kwargs['detector']
+        logger.debug(f'detector kwargs : {kwargs}')
+        logger.debug(f'Setting detector : {detector}')
+        if detector == 'NONE':
+            self._drift_detector = None
+        elif detector == 'ADWIN':
+            #self._drift_detector = drift.ADWIN(clock=16, max_buckets=20, min_window_length=50)
+            self._drift_detector = drift.ADWIN()
+        elif detector == 'KSWIN':
+            self._drift_detector = drift.KSWIN(alpha=0.0001, seed=42)
+        elif detector == 'PAGEHINKLEY':
+            self._drift_detector = drift.PageHinkley()
+        elif detector == 'PERIODIC':
+            self._retrain_at_every_sample_count = kwargs['retrain_every']
+        else:
+            raise Exception('Invalid drift detector')
+        return self
 
     def set_scaler(self, obj: Scaler) -> ModelRunner:
         logger.debug('Scaler set.')
@@ -114,6 +143,17 @@ class ModelRunner:
     @property
     def buffer(self):
         return self._buffer
+
+    @property
+    def model_name(self):
+        return self._model_name
+
+    @property
+    def run_time(self):
+        if self._start_time is not None and self._end_time is not None:
+            return self._end_time - self._start_time
+        else:
+            raise Exception("Start or End time has not been set yet.")
 
     def _make_one_prediction(self, sample):
         logger.debug('Making online prediction on single sample.')
@@ -227,6 +267,9 @@ class ModelRunner:
         logger.debug('Checking for drift.')
         return True
 
+    def _calculate_Z2(self):
+        pass
+
     def _process_prediction(self, x, y_pred):
         logger.debug('Processing new prediction.')
         xy_ins = XYTransformers.xy_pred_to_numpy_dictionary(x, y_pred)
@@ -238,7 +281,10 @@ class ModelRunner:
             logger.debug('Buffer is full.')
             logger.debug(f'Buffer contents : {self._buffer.get_as_list()}')
             if self._is_drift_detected():
-                logger.debug('Drift detected. Triggering model retraining.')
+                logger.debug(f'Drift detected using detector : {self._drift_detector}.')
+                self._calculate_Z2()
+                # if Z1 - Z2 is greater than threshold,
+                #
             logger.debug('Clearing buffer contents.')
             self._buffer.clear_contents()
 

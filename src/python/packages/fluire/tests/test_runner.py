@@ -10,13 +10,19 @@ class TestModelRunner(unittest.TestCase):
         logger.debug(f"Executing {TestModelRunner.test_simple_model_run.__name__} test")
         # Get the unit testing data stream
         data_stream = get_test_data_stream()
+        detector_info = {'detector': 'PERIODIC', 'retrain_every': 1}
 
         # Create the ModelRunner object
         m_run = ModelRunner()
         m_run\
             .set_model_name(SckitLearnLinearRegressionModel.get_name())\
             .set_working_data_points(10)\
-            .set_data_stream(data_stream)
+            .set_data_stream(data_stream)\
+            .set_scaler(None)\
+            .set_drift_detector(**detector_info)\
+            .set_drift_handler(None)\
+            .set_model_retrained_handler(None)\
+            .set_max_samples(None)
 
         m_run.validate_settings()
 
