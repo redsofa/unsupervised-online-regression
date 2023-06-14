@@ -15,7 +15,7 @@ class ModelRunner:
         self._model_name = None
         self._model = None
         self._working_data_points = None
-        self._minimum_required_working_datapoints = 10
+        self._minimum_required_working_datapoints = 10 #TODO : Set to 120
         self._sliding_window = None
         self._buffer = None
         self._Z1 = None
@@ -289,6 +289,7 @@ class ModelRunner:
                 )
         return drift_detected
 
+    #TODO : implement verification properly
     def _model_replacement_required(self, Z1, Z2, threshold):
         logger.debug('Determining if model replacement is required.')
         model_replacement_required = True
