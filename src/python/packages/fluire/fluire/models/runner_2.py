@@ -291,6 +291,7 @@ class ModelRunner:
 
     def _update_drift_detector(self, y_pred):
         if self._drift_detector_config['detector'] == 'ADWIN':
+            logger.debug('Drift detector is ADWIN. Updating.')
             self._drift_detector.update(y_pred)
 
     def _train_new_model(self) -> None:
@@ -341,7 +342,6 @@ class ModelRunner:
                     logger.debug(f'Drift detected using detector : {self._drift_detector}.')
                     new_model, Z2 = self._train_new_model()
                     if self._model_replacement_required(self._Z1, Z2, 0.01):
-                        logger.debug('Model replacement required.')
                         logger.debug('Replacing existing model with new model.')
                         self._model = new_model
                         self._Z1 = Z2
