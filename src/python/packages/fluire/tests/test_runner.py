@@ -10,7 +10,8 @@ class TestModelRunner(unittest.TestCase):
         logger.debug(f"Executing {TestModelRunner.test_simple_model_run.__name__} test")
         # Get the unit testing data stream
         data_stream = get_test_data_stream()
-        detector_info = {'detector': 'PERIODIC', 'retrain_every': 1}
+        detector_info = {'detector': 'ADWIN'}
+        #detector_info = {'detector': 'PERIODIC', 'retrain_every': 1}
 
         # Create the ModelRunner object
         m_run = ModelRunner()

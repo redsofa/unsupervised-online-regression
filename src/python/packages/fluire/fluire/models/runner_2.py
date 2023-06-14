@@ -250,9 +250,7 @@ class ModelRunner:
                 # add the incoming sample data to the appropriate collection.
                 if not self._initial_working_datapoints_recieved:
                     self._add_initial_train_sample(sample)
-                    x = None
                     y_pred = None
-                    y = None
                     if self._initial_working_datapoints_recieved:
                         logger.debug('All initial data points received. Triggering initial model training.')
                         self._trigger_initial_model_training()
@@ -299,7 +297,7 @@ class ModelRunner:
 
     def _update_drift_detector(self, y_pred):
         if self._drift_detector_config['detector'] == 'ADWIN':
-            logger.debug('Drift detector is ADWIN. Updating.')
+            logger.debug('Drift detector is ADWIN. Updating detector with a new datapoint.')
             self._drift_detector.update(y_pred)
 
     def _train_new_model(self) -> None:
