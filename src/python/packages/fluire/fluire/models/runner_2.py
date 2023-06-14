@@ -284,9 +284,9 @@ class ModelRunner:
         return drift_detected
 
     def _model_replacement_required(self, Z1, Z2, threshold):
-        logger.debug('Determining if retraining is required.')
+        logger.debug('Determining if model replacement is required.')
         model_replacement_required = True
-        logger.debug(f'Model replacement required : {model_replacement_required}')
+        logger.debug(f'Model replacement is required : {model_replacement_required}')
         return model_replacement_required
 
     def _update_drift_detector(self, y_pred):
@@ -341,7 +341,7 @@ class ModelRunner:
                 if self._is_drift_detected():
                     logger.debug(f'Drift detected using detector : {self._drift_detector}.')
                     new_model, Z2 = self._train_new_model()
-                    if self._model_replacement_required(self._Z1, Z2, 0.01):
+                    if self._model_replacement_required(self._Z1, Z2, self._delta_threshold):
                         logger.debug('Replacing existing model with new model.')
                         self._model = new_model
                         self._Z1 = Z2
@@ -366,9 +366,6 @@ class ModelRunner:
 
             logger.debug('Clearing buffer contents.')
             self._buffer.clear_contents()
-
-            # TODO : Add model retrain callback
-            # TODO : Add drift detection callback
 
 
 if __name__ == '__main__':
