@@ -22,7 +22,8 @@ class TestModelRunner(unittest.TestCase):
             .set_drift_detector(**detector_info)\
             .set_drift_handler(None)\
             .set_model_retrained_handler(None)\
-            .set_max_samples(None)
+            .set_max_samples(None)\
+            .set_delta_threshold(0.03)
 
         m_run.validate_settings()
 

@@ -35,32 +35,40 @@ class ModelRunner:
         self._drift_handler = None
         self._model_retrained_handler = None
         self._retrain_at_every_sample_count = None
-        self._delta_threshold = 0.01
+        self._delta_threshold = None
         logger.debug('ModelRunner construction done. Nothing initalized yet.')
 
     def validate_settings(self) -> None:
         logger.debug('Validating model runner settings.')
-        # Check that the model has been set
         if self._model is None:
-            raise Exception(
-                "The model instance has not been set."
-            )
-        # Check that the model evaluation function has been set
-        if self._model_eval_fn is None:
-            raise Exception(
-                "The model evaluation function has not been set."
-            )
+            msg = 'The model instance has not been set.'
+            logger.error(msg)
+            raise Exception(msg)
 
-        # Check that the stream has been set
+        if self._model_eval_fn is None:
+            msg = 'The model evaluation function has not been set.'
+            logger.error(msg)
+            raise Exception(msg)
+
         if self._data_stream is None:
-            raise Exception(
-                "The input data stream has not been set."
-            )
-        # Do we have the proper amount of datapoints
+            msg = 'The input data stream has not been set.'
+            logger.error(msg)
+            raise Exception(msg)
+
         if self._working_data_points < self._minimum_required_working_datapoints:
-            raise Exception(
-                f'Number of working data points must be at least {self._minimum_required_datapoints}'
-            )
+            msg = f'Number of working data points must be at least {self._minimum_required_datapoints}'
+            logger.error(msg)
+            raise Exception(msg)
+
+        if self._delta_threshold is None:
+            msg = 'Delta threshold is not set.'
+            logger.error(msg)
+            raise Exception(msg)
+
+    def set_delta_threshold(self, threshold):
+        logger.debug('Setting delta threshold')
+        self._delta_threshold = threshold
+        return self
 
     def set_model_retrained_handler(self, fn):
         logger.debug('Setting model retrained handler.')
