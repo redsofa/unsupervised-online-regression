@@ -1,5 +1,5 @@
 import unittest
-from fluire.models.runner_2 import ModelRunner
+from fluire.models.runner import ModelRunner
 from fluire.models.regression import SckitLearnLinearRegressionModel
 from common_test_utils import get_test_data_stream
 from fluire.settings.logging import logger
@@ -10,17 +10,19 @@ class TestModelRunner(unittest.TestCase):
         logger.debug(f"Executing {TestModelRunner.test_simple_model_run.__name__} test")
         # Get the unit testing data stream
         data_stream = get_test_data_stream()
-        detector_info = {'detector': 'ADWIN'}
-        #detector_info = {'detector': 'PERIODIC', 'retrain_every': 1}
+        detector_info = {"detector": "ADWIN", "required_feature_drifts": 1, "delta": 0.02}
+        # detector_info = {'detector': 'PERIODIC', 'retrain_every': 1}
 
         # Create the ModelRunner object
         m_run = ModelRunner()
+        # Set this private memeber variable just for the test.
+        m_run._minimum_required_working_datapoints = 10
         m_run\
             .set_model_name(SckitLearnLinearRegressionModel.get_name())\
             .set_working_data_points(10)\
             .set_data_stream(data_stream)\
             .set_scaler(None)\
-            .set_drift_detector(**detector_info)\
+            .set_drift_detector_config(**detector_info)\
             .set_drift_handler(None)\
             .set_model_retrained_handler(None)\
             .set_max_samples(None)\

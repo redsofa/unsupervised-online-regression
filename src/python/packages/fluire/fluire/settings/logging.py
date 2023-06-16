@@ -10,5 +10,6 @@ logging.basicConfig(stream=sys.stdout,
                     )
 logger.propagate = False
 
+
 if __name__ == '__main__':
     pass

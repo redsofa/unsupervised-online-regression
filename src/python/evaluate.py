@@ -111,7 +111,8 @@ def main():
     max_y_true = pred_df.y_true.max()
 
     with open(stats_file, "a") as f:
-        f.write("\n\nPrediction Metrics :\n")
+        f.write("\n\nPrediction Metrics \n")
+        f.write("----------------------\n")
         # Calculate MSE and RMSE values
         mse = mean_squared_error(pred_df.y_true.values, pred_df.y_pred.values)
         f.write(f"MSE : {mse}\n")
@@ -127,6 +128,8 @@ def main():
         f.write(f"R2 : {r2}\n")
         f.write('\n')
 
+        f.write("\n\nTarget Variable Range\n")
+        f.write("--------------------------\n")
         f.write(f'Min y_true : {min_y_true} - Max y_true : {max_y_true}\n')
 
     print("Results files updated")
