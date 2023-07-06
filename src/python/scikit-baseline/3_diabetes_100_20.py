@@ -20,14 +20,14 @@ print(f'Lenth of entire dataset : {len(diabetes_X)}')
 
 
 # Split the data into training/testing sets
-diabetes_X_train = diabetes_X[0:100]
+diabetes_X_train = diabetes_X[0:90]
 diabetes_X_test = diabetes_X[120:len(diabetes_X)]
 
 print(f'Lenth of training data : {len(diabetes_X_train)}')
 print(f'Lenth of testing data : {len(diabetes_X_test)}')
 
 # Split the targets into training/testing sets
-diabetes_y_train = diabetes_y[0:100]
+diabetes_y_train = diabetes_y[0:90]
 diabetes_y_test = diabetes_y[120:len(diabetes_y)]
 
 # Create linear regression object
