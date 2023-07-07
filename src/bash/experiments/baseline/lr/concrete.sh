@@ -10,8 +10,8 @@ echo 'Launching Adaptive Model ...'
 python main.py \
     --raw_data_dir ~/data/usup_reg/raw/uci/concrete \
     --output_dir ~/data/usup_reg/work/baseline/lr/concrete/$NOW \
-    --input_csv_file concrete_data.csv \
-    --input_csv_param_file concrete_data.params \
+    --input_csv_file std_concrete_data.csv \
+    --input_csv_param_file std_concrete_data.params \
     --output_predictions_file concrete_predictions.csv \
     --output_stats_file concrete_stats.txt \
     --working_data_points 120 \
@@ -33,4 +33,4 @@ python evaluate.py \
     --drift_file concrete_drifts.csv \
     --stats_file concrete_stats.txt \
     --plot_file concrete.png \
-    --plot_drifts True
+    --plot_drifts False

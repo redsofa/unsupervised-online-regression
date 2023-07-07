@@ -3,11 +3,14 @@
 set -e
 
 export SRC_ROOT="$(pwd)/../../../"
-sh ./wetlab.sh
-# sh ./uci_wine.sh
-# sh ./uci_energy.sh
-# sh ./uci_parkinsons.sh
+
+# Imputation
+#
+# sh uci_air_quality_impute.sh
+
+# Standardization 
+#
+# sh ./uci_turbine.sh
 # sh ./uci_protein.sh
-# sh ./fred_aq.sh
-# sh ./synth.sh
-# sh ./uci_bike.sh
+# sh ./uci_concrete.sh
+sh ./uci_air_quality_std.sh

@@ -6,7 +6,7 @@ tmux -2 new-session -d -s ${TMUX_SESSION}
 
 # First window (DEV))
 tmux rename-window "(DEV)"
-tmux send-keys "cd ${REPOSITORY_ROOT}/src/python; conda activate reg-env; vim" C-m
+tmux send-keys "cd ${REPOSITORY_ROOT}/src; conda activate reg-env; vim" C-m
 
 # Split panes
 tmux split-window -v

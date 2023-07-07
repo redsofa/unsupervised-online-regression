@@ -10,8 +10,8 @@ echo 'Launching Adaptive Model ...'
 python main.py \
     --raw_data_dir ~/data/usup_reg/raw/uci/protein \
     --output_dir ~/data/usup_reg/work/baseline/lr/protein/$NOW \
-    --input_csv_file CASP.csv \
-    --input_csv_param_file CASP.params \
+    --input_csv_file std_CASP.csv \
+    --input_csv_param_file std_CASP.params \
     --output_predictions_file protein_predictions.csv \
     --output_stats_file protein_stats.txt \
     --working_data_points 120 \
@@ -33,4 +33,4 @@ python evaluate.py \
     --drift_file protein_drifts.csv \
     --stats_file protein_stats.txt \
     --plot_file protein.png \
-    --plot_drifts True
+    --plot_drifts False
