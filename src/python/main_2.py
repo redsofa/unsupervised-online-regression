@@ -115,7 +115,7 @@ def main() -> None:
     model.partial_fit(i_X_train, i_y_train)
 
     # At this point we have a model that has been incrementally trained on
-    # 70 data points. We can use the model to make predictions and get
+    # 80 data points. We can use the model to make predictions and get
     # a RMSE value.
     y_preds = model.predict(i_X_test)
 
