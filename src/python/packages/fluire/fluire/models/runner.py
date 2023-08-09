@@ -269,14 +269,16 @@ class ModelRunner:
                             self._buffer.clear_contents()
                             self._process_prediction(x, y_pred)
                         logger.debug('Yielding prediction results.')
-                        yield (x, y_pred, y)
+                        yield (x, y_pred, y, False)
+                    else:
+                        yield ([sample["x"]], np.array([[None]]), sample["y"][0], True)
                 else:
                     x, y_pred = self._make_one_prediction(sample)
                     if not self._is_baseline_run:
                         logger.debug('Is not baseline run, processing prediction.')
                         self._process_prediction(x, y_pred)
                     logger.debug('Yielding prediction results.')
-                    yield (x, y_pred, y)
+                    yield (x, y_pred, y, False)
             self._end_time = time.time()
         except Exception as e:
             logger.error(str(e))
@@ -325,7 +327,7 @@ class ModelRunner:
             if self._drift_handler:
                 logger.debug('Calling drift handler.')
                 self._drift_handler(
-                    prediction_count=self._prediction_count
+                    sample_count=self._sample_count
                 )
         return drift_detected
 
@@ -350,11 +352,17 @@ class ModelRunner:
 
         # Transform the training and testing data
         x_train, y_train = XYTransformers.arr_dict_to_xy(self._sliding_window.get_as_list())
-        x_test, y_test = XYTransformers.arr_dict_to_xy(self._buffer.get_as_list())
-        logger.debug(f'x_train : {x_train}')
         logger.debug(f'y_train : {y_train}')
-        logger.debug(f'x_test : {x_test}')
+
+        x_train = x_train[:-self._buffer.len]
+        y_train = y_train[:-self._buffer.len]
+
+        x_test, y_test = XYTransformers.arr_dict_to_xy(self._buffer.get_as_list())
+        # logger.debug(f'x_train : {x_train}')
+        logger.debug(f'y_train : {y_train}')
+        # logger.debug(f'x_test : {x_test}')
         logger.debug(f'y_test : {y_test}')
+
         # Fit the model to the training data
         new_model.fit(x_train, np.ravel(y_train))
 
@@ -397,7 +405,7 @@ class ModelRunner:
                         self._Z1 = Z2
                         if self._model_retrained_handler:
                             logger.debug('Calling model retrain handler.')
-                            self._model_retrained_handler(model=self._model, prediction_count=self._prediction_count)
+                            self._model_retrained_handler(model=self._model, sample_count=self._sample_count)
                     else:
                         logger.debug('No model replacement required.')
                 else:
@@ -410,7 +418,7 @@ class ModelRunner:
                     if self._drift_handler:
                         logger.debug('Calling drift handler Z2-Z1 drift detected.')
                         self._drift_handler(
-                            prediction_count=self._prediction_count
+                            sample_count=self._sample_count
                         )
                     logger.debug('Model replacement required.')
                     logger.debug('Replacing existing model with new model.')
@@ -418,7 +426,7 @@ class ModelRunner:
                     self._Z1 = Z2
                     if self._model_retrained_handler:
                         logger.debug('Calling model retrain handler.')
-                        self._model_retrained_handler(model=self._model, prediction_count=self._prediction_count)
+                        self._model_retrained_handler(model=self._model, sample_count=self._sample_count)
                 else:
                     logger.debug('No model replacement required.')
 

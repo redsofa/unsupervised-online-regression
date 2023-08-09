@@ -37,10 +37,10 @@ def drift_to_df(drift_arr):
     return ret_val
 
 
-def arrs_to_df(x_arr, y_pred_arr, y_true_arr):
+def arrs_to_df(x_arr, y_pred_arr, y_true_arr, is_train_data_arr):
     ret_val = pd.DataFrame(
-        {"x": x_arr, "y_pred": y_pred_arr, "y_true": y_true_arr},
-        columns=["x", "y_pred", "y_true"],
+        {"x": x_arr, "y_pred": y_pred_arr, "y_true": y_true_arr, "is_train_data" : is_train_data_arr},
+        columns=["x", "y_pred", "y_true", "is_train_data"],
     )
     return ret_val
 
@@ -201,14 +201,14 @@ def model_retrained_handler(*args, **kwargs):
     # Make sure the model memory address changes
     # print(kwargs['model'])
     retrain_arr = args[1]
-    retrain_arr.append([kwargs['prediction_count']])
+    retrain_arr.append([kwargs['sample_count']])
 
 
 def drift_handler(*args, **kwargs):
     # The args arguments come from the utilization of a partial function definition
     drift_arr = args[0]
     # The kwargs come from the handler code call inside the model runner
-    drift_arr.append([kwargs['prediction_count']])
+    drift_arr.append([kwargs['sample_count']])
 
 
 def main():
@@ -240,6 +240,7 @@ def main():
     y_pred_arr = []
     y_true_arr = []
     drift_arr = []
+    is_train_data_arr = []
     retrain_count = {'count': 0}
     retrain_arr = []
 
@@ -266,12 +267,13 @@ def main():
 
     logger.debug(f'Running model : {m_run.model_name}')
     # Run the model
-    for x, y_pred, y_true in m_run.run():
+    for x, y_pred, y_true, is_train_data in m_run.run():
         x_arr.append(x[0].tolist())
         y_pred_arr.append(y_pred.flatten('F')[0])
         y_true_arr.append(y_true)
+        is_train_data_arr.append(is_train_data)
 
-    p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr)
+    p_df = arrs_to_df(x_arr, y_pred_arr, y_true_arr, is_train_data_arr)
     p_df.to_csv(output_pred_csv_file, index=False)
 
     p_df = drift_to_df(drift_arr)
@@ -286,12 +288,13 @@ def main():
         f.write("Execution Information\n")
         f.write('---------------------\n')
         f.write(f"Model run time : {m_run.run_time}\n")
-        f.write(f"Prediction count : {len(y_pred_arr)}\n")
+        f.write(f"Total record count : {len(y_pred_arr)}\n")
+        f.write(f"Prediction count : {len(y_pred_arr) - args.working_data_points}\n")
         f.write('\n\n')
         f.write("Drift Information\n")
         f.write('-----------------\n')
         f.write(f'Drift count : {len(drift_arr)}\n')
-        f.write('Detected Drifts at prediction index :\n')
+        f.write('Detected Drifts at sample index :\n')
         for e in drift_arr:
             f.write(f'{e}\n')
         if len(drift_arr) == 0:
@@ -300,7 +303,7 @@ def main():
         f.write("Model Update Information\n")
         f.write('------------------------\n')
         f.write(f'Model retrain count : {retrain_count["count"]}\n')
-        f.write('Model retraining at prediction index :\n')
+        f.write('Model retraining at sample index :\n')
         for e in retrain_arr:
             f.write(f'{e}\n')
         if len(retrain_arr) == 0:
