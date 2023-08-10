@@ -2,14 +2,16 @@
 # exit when any command fails
 set -e
 
-NOW=$( date "+%Y_%m_%d__%H_%M_%S" )
-cd ${SRC_ROOT}/src/python
+cd ${PROJ_ROOT}/src/python
+
+echo "Running baseline experiment ..."
 
 echo 'Launching Adaptive Model ...'
+
 # Command to start the model
 python main.py \
-    --raw_data_dir ~/data/usup_reg/raw/uci/concrete \
-    --output_dir ~/data/usup_reg/work/baseline/lr/concrete/$NOW \
+    --raw_data_dir ${DATA_ROOT} \
+    --output_dir ${WORK_ROOT}/baseline/lr/concrete/${NOW} \
     --input_csv_file std_concrete_data.csv \
     --input_csv_param_file std_concrete_data.params \
     --output_predictions_file concrete_predictions.csv \
@@ -25,12 +27,18 @@ python main.py \
 
 echo '\n'
 
-echo 'Adaptive Model Evaluation'
+echo 'Adaptive Model Evaluation ...'
 # Command to stat the model evaluation
-python evaluate.py \
-    --output_dir ~/data/usup_reg/work/baseline/lr/concrete/$NOW \
+python ./evaluation/evaluate.py \
+    --output_dir ${WORK_ROOT}/baseline/lr/concrete/${NOW} \
     --predictions_file concrete_predictions.csv \
-    --drift_file concrete_drifts.csv \
-    --stats_file concrete_stats.txt \
-    --plot_file concrete.png \
-    --plot_drifts False
+    --stats_file concrete_stats.txt
+
+echo '\n'
+
+echo  'Plotting results ...'
+python ./plotting/main.py \
+    --input_dir ${WORK_ROOT}/baseline/lr/concrete/${NOW} \
+    --output_dir ${WORK_ROOT}/baseline/lr/concrete/${NOW} \
+    --predictions_file concrete_predictions.csv \
+    --drift_file concrete_drifts.csv

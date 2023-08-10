@@ -4,7 +4,7 @@ set -e
 
 cd ${PROJ_ROOT}/src/python
 
-echo 'Running ADWIN with Z1 Z2 experiment ... '
+echo 'Running Z1 Z2 experiment ... '
 
 echo 'Launching Adaptive Model ...'
 # Command to start the model
