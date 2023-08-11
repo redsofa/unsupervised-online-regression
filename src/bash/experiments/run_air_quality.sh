@@ -13,11 +13,11 @@ echo "Running experiments on air_quality data COGT prediction"
 mkdir -p ${WORK_ROOT}/baseline/lr/air_quality_COGT/${NOW}
 sh ./baseline/lr/air_quality_COGT.sh &> ${WORK_ROOT}/baseline/lr/air_quality_COGT/${NOW}/air_quality_COGT_baseline.log
 
-# mkdir -p ${WORK_ROOT}/adwin_with_z1_z2lr/air_quality_COGT/${NOW}
-# sh ./adwin_with_z1_z2/lr/air_quality_COGT.sh &> ${WORK_ROOT}/adwin_with_z1_z2lr/air_quality_COGT/${NOW}/air_quality_COGT_adwin_with_z1_z2.log
+mkdir -p ${WORK_ROOT}/adwin_with_z1_z2/lr/air_quality_COGT/${NOW}
+sh ./adwin_with_z1_z2/lr/air_quality_COGT.sh &> ${WORK_ROOT}/adwin_with_z1_z2/lr/air_quality_COGT/${NOW}/air_quality_COGT_adwin_with_z1_z2.log
 
-# mkdir -p ${WORK_ROOT}/z1_z2_only/air_quality_COGT/${NOW}
-# sh ./z1_z2_only/lr/air_quality_COGT.sh &> ${WORK_ROOT}/z1_z2_only/air_quality_COGT/${NOW}/air_quality_COGT_z1_z2_only.log
+mkdir -p ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW}
+sh ./z1_z2_only/lr/air_quality_COGT.sh &> ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW}/air_quality_COGT_z1_z2_only.log
 
 
 

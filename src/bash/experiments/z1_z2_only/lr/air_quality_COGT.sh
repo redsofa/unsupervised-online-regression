@@ -2,14 +2,15 @@
 # exit when any command fails
 set -e
 
-NOW=$( date "+%Y_%m_%d__%H_%M_%S" )
-cd ${SRC_ROOT}/src/python
+cd ${PROJ_ROOT}/src/python
+
+echo "Running Z1 and Z2 only experiment ..."
 
 echo 'Launching Adaptive Model ...'
 # Command to start the model
 python main.py \
-    --raw_data_dir ~/data/usup_reg/raw/uci/air_quality \
-    --output_dir ~/data/usup_reg/work/z1_z2_only/lr/air_quality/$NOW \
+    --raw_data_dir ${DATA_ROOT} \
+    --output_dir ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW} \
     --input_csv_file std_AirQualityUCI.csv \
     --input_csv_param_file std_AirQualityUCI_COGT.params \
     --output_predictions_file std_AirQualityUCI_COGT_predictions.csv \
@@ -25,12 +26,19 @@ python main.py \
 
 echo '\n'
 
-echo 'Adaptive Model Evaluation'
+echo 'Adaptive Model Evaluation ...'
 # Command to stat the model evaluation
-python evaluate.py \
-    --output_dir ~/data/usup_reg/work/z1_z2_only/lr/air_quality/$NOW \
+python ./evaluation/evaluate.py \
+    --output_dir ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW} \
     --predictions_file std_AirQualityUCI_COGT_predictions.csv \
-    --drift_file std_AirQualityUCI_COGT_drifts.csv \
-    --stats_file std_AirQualityUCI_COGT_stats.txt \
-    --plot_file std_AirQualityUCI_COGT.png \
-    --plot_drifts True
+    --stats_file std_AirQualityUCI_COGT_stats.txt
+
+
+echo '\n'
+
+echo  'Plotting results ...'
+python ./plotting/main.py \
+    --input_dir ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW} \
+    --output_dir ${WORK_ROOT}/z1_z2_only/lr/air_quality_COGT/${NOW} \
+    --predictions_file std_AirQualityUCI_COGT_predictions.csv \
+    --drift_file std_AirQualityUCI_COGT_drifts.csv
