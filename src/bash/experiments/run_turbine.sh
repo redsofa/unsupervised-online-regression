@@ -8,16 +8,16 @@ export DATA_ROOT=~/data/usup_reg/raw/uci/turbine
 export WORK_ROOT=~/data/usup_reg/work
 
 
-# echo "Running experiments on turbine data TEY prediction"
+echo "Running experiments on turbine data TEY prediction"
 
-# mkdir -p ${WORK_ROOT}/baseline/lr/turbine_TEY/${NOW}
-# sh ./baseline/lr/turbine_TEY.sh &> ${WORK_ROOT}/baseline/lr/turbine_TEY/${NOW}/turbine_TEY.log
+mkdir -p ${WORK_ROOT}/baseline/lr/turbine_TEY/${NOW}
+sh ./baseline/lr/turbine_TEY.sh &> ${WORK_ROOT}/baseline/lr/turbine_TEY/${NOW}/turbine_TEY.log
 
-# mkdir -p ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_TEY/${NOW}
-# sh ./adwin_with_z1_z2/lr/turbine_TEY.sh &> ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_TEY/${NOW}/urbine_TEY_adwin_with_z1_z2.log
+mkdir -p ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_TEY/${NOW}
+sh ./adwin_with_z1_z2/lr/turbine_TEY.sh &> ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_TEY/${NOW}/urbine_TEY_adwin_with_z1_z2.log
 
-# mkdir -p ${WORK_ROOT}/z1_z2_only/lr/turbine_TEY/${NOW}
-# sh ./z1_z2_only/lr/turbine_TEY.sh &> ${WORK_ROOT}/z1_z2_only/lr/turbine_TEY/${NOW}/turbine_TEY_z1_z2_only.log
+mkdir -p ${WORK_ROOT}/z1_z2_only/lr/turbine_TEY/${NOW}
+sh ./z1_z2_only/lr/turbine_TEY.sh &> ${WORK_ROOT}/z1_z2_only/lr/turbine_TEY/${NOW}/turbine_TEY_z1_z2_only.log
 
 
 
@@ -33,8 +33,14 @@ mkdir -p ${WORK_ROOT}/z1_z2_only/lr/turbine_CO/${NOW}
 sh ./z1_z2_only/lr/turbine_CO.sh &> ${WORK_ROOT}/z1_z2_only/lr/turbine_CO/${NOW}/turbine_CO_z1_z2_only.log
 
 
-#
-#echo "Running experiments on turbine data NOX prediction"
-#sh ./baseline/lr/turbine_NOX.sh &> turbine_NOX_baseline.log
-#sh ./adwin_with_z1_z2/lr/turbine_NOX.sh &> turbine_NOX_adwin_with_z1_z2.log
-#sh ./z1_z2_only/lr/turbine_NOX.sh &> turbine_NOX_z1_z2_only.log
+
+echo "Running experiments on turbine data NOX prediction"
+
+mkdir -p ${WORK_ROOT}/baseline/lr/turbine_NOX/${NOW}
+sh ./baseline/lr/turbine_NOX.sh &> ${WORK_ROOT}/baseline/lr/turbine_NOX/${NOW}/turbine_NOX_baseline.log
+
+mkdir -p ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_NOX/${NOW}
+sh ./adwin_with_z1_z2/lr/turbine_NOX.sh &> ${WORK_ROOT}/adwin_with_z1_z2/lr/turbine_NOX/${NOW}/turbine_NOX_adwin_with_z1_z2.log
+
+mkdir -p ${WORK_ROOT}/z1_z2_only/lr/turbine_NOX/${NOW}
+sh ./z1_z2_only/lr/turbine_NOX.sh &> ${WORK_ROOT}/z1_z2_only/lr/turbine_NOX/${NOW}/turbine_NOX_z1_z2_only.log
