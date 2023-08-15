@@ -354,8 +354,12 @@ class ModelRunner:
         x_train, y_train = XYTransformers.arr_dict_to_xy(self._sliding_window.get_as_list())
         logger.debug(f'y_train : {y_train}')
 
-        x_train = x_train[:-self._buffer.len]
-        y_train = y_train[:-self._buffer.len]
+        # TODO : Re-introduce these two lines. If kept, train and test
+        # contain buffer elements. Training and testing have some data that is the same otherwise.
+        # Results produced with these lines commented out are repported in the paper and
+        # become worse when they are uncommented.
+        # x_train = x_train[:-self._buffer.len]
+        # y_train = y_train[:-self._buffer.len]
 
         x_test, y_test = XYTransformers.arr_dict_to_xy(self._buffer.get_as_list())
         # logger.debug(f'x_train : {x_train}')
