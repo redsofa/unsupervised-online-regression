@@ -37,7 +37,7 @@ class TestModelRunner(unittest.TestCase):
         logger.debug(f'Sliding window max_len : {m_run.sliding_window.max_len}')
         logger.debug(f'Buffer max_len : {m_run.buffer.max_len}')
 
-        for x, y_pred, y_true in m_run.run():
+        for x, y_pred, y_true, is_train_data in m_run.run():
             logger.debug(f'Yielded x : {x}, Yielded prediction : {y_pred}')
 
 
