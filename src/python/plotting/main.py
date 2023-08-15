@@ -60,13 +60,13 @@ def y_true_plot(pred_df, file_name, title):
         train_df["step"].values,
         train_df["y_true"].values,
         color='red',
-        s=1)
+        s=3)
     y_true_df = copy_df[copy_df['is_train_data'] == False]
     plt.scatter(
         y_true_df["step"].values,
         y_true_df["y_true"].values,
         color='green',
-        s=1
+        s=3
     )
     plt.axvline(train_df.shape[0], color="black", linestyle="dashdot")
     # plt.text(train_df.shape[0] - 10, 0, 'Initial train \n and test data', rotation=90)
@@ -85,13 +85,13 @@ def y_pred_plot(pred_df, drift_df, file_name, title):
         train_df["step"].values,
         train_df["y_true"].values,
         color='red',
-        s=1)
+        s=3)
     y_true_df = copy_df[copy_df['is_train_data'] == False]
     plt.scatter(
         y_true_df["step"].values,
         y_true_df["y_pred"].values,
         color='blue',
-        s=1
+        s=3
     )
     plt.axvline(train_df.shape[0], color="black", linestyle="dashdot")
     # plt.text(train_df.shape[0] - 10, 0, 'Initial train \n and test data', rotation=90)
@@ -114,19 +114,19 @@ def y_pred_y_true_plot(pred_df, drift_df, file_name, title):
             train_df["step"].values,
             train_df["y_true"].values,
             color='red',
-            s=1)
+            s=3)
     y_true_df = copy_df[copy_df['is_train_data'] == False]
     plt.scatter(
             y_true_df["step"].values,
             y_true_df["y_pred"].values,
             color='blue',
-            s=1
+            s=3
     )
     plt.scatter(
         y_true_df["step"].values,
         y_true_df["y_true"].values,
         color='green',
-        s=1
+        s=3
     )
     plt.axvline(train_df.shape[0], color="black", linestyle="dashdot")
 
