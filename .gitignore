@@ -7,8 +7,9 @@ datasets/small.png
 datasets/small_predictions.csv
 datasets/small_stats.txt
 datasets/small_drifts.csv
+.idea/
 
-
+my_venv/
 my_env/
 mf_env/
 
