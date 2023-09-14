@@ -8,6 +8,7 @@ datasets/small_predictions.csv
 datasets/small_stats.txt
 datasets/small_drifts.csv
 .idea/
+.run/
 
 my_venv/
 my_env/
