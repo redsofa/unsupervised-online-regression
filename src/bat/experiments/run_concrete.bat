@@ -13,3 +13,9 @@ echo "Running experiments on concrete data"
 
 mkdir "%WORK_ROOT%/baseline/lr/concrete/%NOW%"
 .\baseline\lr\concrete.bat > "%WORK_ROOT%/baseline/lr/concrete/%NOW%/concrete_baseline.log" 2>&1
+
+mkdir "%WORK_ROOT%/adwin_with_z1_z2/lr/concrete/%NOW%"
+.\adwin_with_z1_z2\lr\concrete.bat > "%WORK_ROOT%/adwin_with_z1_z2/lr/concrete/%NOW%/concrete_adwin_with_z1_z2.log" 2>&1
+
+mkdir "%WORK_ROOT%/z1_z2_only/lr/concrete/%NOW%"
+.\z1_z2_only\lr\concrete.bat > "%WORK_ROOT%/z1_z2_only/lr/concrete/%NOW%/concrete_z1_z2_only.log" 2>&1
