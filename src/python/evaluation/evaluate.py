@@ -7,6 +7,7 @@ from fluire.settings.default_params import (
     DEFAULT_OUTPUT_STATS_FILE
 )
 from fluire.util.files import mkdir_structure
+from pathlib import Path
 
 
 def get_args():
@@ -45,8 +46,8 @@ def main():
     args = get_args()
     mkdir_structure(args.output_dir)
 
-    stats_file = f"{args.output_dir}/{args.stats_file}"
-    pred_csv_file = f"{args.output_dir}/{args.predictions_file}"
+    stats_file = Path(f"{args.output_dir}/{args.stats_file}")
+    pred_csv_file = Path(f"{args.output_dir}/{args.predictions_file}")
 
     print(f"Reading input file : {pred_csv_file}")
     pred_df = pd.read_csv(pred_csv_file)

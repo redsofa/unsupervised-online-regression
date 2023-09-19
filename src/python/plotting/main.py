@@ -1,6 +1,7 @@
 import argparse
 import pandas as pd
 from distutils.util import strtobool
+from pathlib import Path
 import matplotlib.pyplot as plt
 from fluire.util.files import mkdir_structure
 
@@ -143,8 +144,8 @@ def main():
     args = get_args()
     mkdir_structure(args.output_dir)
 
-    pred_csv_file = f"{args.input_dir}/{args.predictions_file}"
-    drift_csv_file = f'{args.input_dir}/{args.drift_file}'
+    pred_csv_file = Path(f"{args.input_dir}/{args.predictions_file}")
+    drift_csv_file = Path(f'{args.input_dir}/{args.drift_file}')
 
     print(f"Reading input file : {pred_csv_file}")
     pred_df = pd.read_csv(pred_csv_file)

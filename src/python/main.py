@@ -3,6 +3,7 @@ import pprint
 import json
 from fluire.factories.stream import StreamFactory
 from fluire.models.runner import ModelRunner
+from pathlib import Path
 from fluire.util.scalers import RiverStandardScalerWrapper
 from fluire.settings.default_params import (
     DEFAULT_RAW_DATA_DIR,
@@ -222,11 +223,11 @@ def main():
     mkdir_structure(args.output_dir)
 
     # Store fully qualified names of files that are used in this script
-    stream_params_file = f"{args.raw_data_dir}/{args.input_csv_param_file}"
-    input_stream_file = f"{args.raw_data_dir}/{args.input_csv_file}"
-    output_pred_csv_file = f"{args.output_dir}/{args.output_predictions_file}"
-    output_drift_csv_file = f"{args.output_dir}/{args.output_drifts_csv_file}"
-    output_stats_file = f"{args.output_dir}/{args.output_stats_file}"
+    stream_params_file = Path(f"{args.raw_data_dir}/{args.input_csv_param_file}")
+    input_stream_file = Path(f"{args.raw_data_dir}/{args.input_csv_file}")
+    output_pred_csv_file = Path(f"{args.output_dir}/{args.output_predictions_file}")
+    output_drift_csv_file = Path(f"{args.output_dir}/{args.output_drifts_csv_file}")
+    output_stats_file = Path(f"{args.output_dir}/{args.output_stats_file}")
 
     # stream_params specifies how to transform the input data stream features and which column is
     # the target variable. These settings are stored in a JSON file. Load the parameters from
