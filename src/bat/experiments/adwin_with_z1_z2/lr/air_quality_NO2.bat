@@ -14,7 +14,7 @@ python main.py ^
     --max_samples None ^
     --output_drifts_csv_file std_AirQualityUCI_NO2_drifts.csv ^
     --algorithm sklearn_linear_regression_model ^
-    --drift_detector_config "{\"detector\": "ADWIN\", \"required_feature_drifts\": 1, \"delta\": 0.1e-15}" ^
+    --drift_detector_config "{\"detector\": \"ADWIN\", \"required_feature_drifts\": 1, \"delta\": 0.1e-15}" ^
     --delta_threshold 0.1e-4 ^
     --is_baseline_run False ^
     --loglevel DEBUG
