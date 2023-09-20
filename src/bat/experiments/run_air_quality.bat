@@ -27,19 +27,19 @@ call .\z1_z2_only\lr\air_quality_COGT.bat > "%WORK_ROOT%\z1_z2_only\lr\air_quali
 
 
 
-rem echo "Running experiments on air_quality data NO2 prediction"
+echo "Running experiments on air_quality data NO2 prediction"
 
-rem cd "%CWD%"
-rem mkdir "%WORK_ROOT%\baseline\lr\air_quality_NO2\%NOW%"
-rem call .\baseline\lr\air_quality_NO2.bat > "%WORK_ROOT%\baseline\lr\air_quality_NO2\%NOW%\air_quality_NO2_baseline.log" 2>&1
+cd "%CWD%"
+mkdir "%WORK_ROOT%\baseline\lr\air_quality_NO2\%NOW%"
+call .\baseline\lr\air_quality_NO2.bat > "%WORK_ROOT%\baseline\lr\air_quality_NO2\%NOW%\air_quality_NO2_baseline.log" 2>&1
 
-rem cd "%CWD%"
-rem mkdir "%WORK_ROOT%\adwin_with_z1_z2\lr\air_quality_NO2\%NOW%"
-rem call .\adwin_with_z1_z2\lr\air_quality_NO2.bat > "%WORK_ROOT%\adwin_with_z1_z2\lr\air_quality_NO2\%NOW%\air_quality_NO2_adwin_with_z1_z2.log" 2>&1
+cd "%CWD%"
+mkdir "%WORK_ROOT%\adwin_with_z1_z2\lr\air_quality_NO2\%NOW%"
+call .\adwin_with_z1_z2\lr\air_quality_NO2.bat > "%WORK_ROOT%\adwin_with_z1_z2\lr\air_quality_NO2\%NOW%\air_quality_NO2_adwin_with_z1_z2.log" 2>&1
 
-rem cd "%CWD%"
-rem mkdir "%WORK_ROOT%\z1_z2_only\lr\air_quality_NO2\%NOW%"
-rem call .\z1_z2_only\lr\air_quality_NO2.bat > "%WORK_ROOT%\z1_z2_only\lr\air_quality_NO2\%NOW%\air_quality_NO2_z1_z2_only.log" 2>&1
+cd "%CWD%"
+mkdir "%WORK_ROOT%\z1_z2_only\lr\air_quality_NO2\%NOW%"
+call .\z1_z2_only\lr\air_quality_NO2.bat > "%WORK_ROOT%\z1_z2_only\lr\air_quality_NO2\%NOW%\air_quality_NO2_z1_z2_only.log" 2>&1
 
 
 
