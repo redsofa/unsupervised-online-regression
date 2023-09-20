@@ -9,6 +9,7 @@ set "PROJ_ROOT=%~dp0\..\..\..\"
 set "DATA_ROOT=c:\dev\data\usup_reg\raw\uci\concrete"
 set "WORK_ROOT=c:\dev\data\usup_reg\work"
 set "CWD=%~dp0"
+
 echo "Running experiments on concrete data"
 
 cd "%CWD%"
