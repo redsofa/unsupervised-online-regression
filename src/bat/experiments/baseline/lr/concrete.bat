@@ -1,4 +1,4 @@
-cd %PROJ_ROOT%/src/python
+cd "%PROJ_ROOT%/src/python"
 
 echo "Running baseline experiment ..."
 
