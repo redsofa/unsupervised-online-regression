@@ -1,4 +1,4 @@
-cd "%PROJ_ROOT%/src/python"
+cd "%PROJ_ROOT%\src\python"
 
 echo "Running Z1 Z2 only experiment ..."
 
