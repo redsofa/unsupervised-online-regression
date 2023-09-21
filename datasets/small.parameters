@@ -1,8 +1,0 @@
-{
-    "converters" : {
-        "f1" : "float",
-        "f2" : "float",
-        "y" : "float"
-    },
-    "target" : "y"
-}   
