@@ -14,15 +14,15 @@ echo "Running experiments on turbine data TEY prediction"
 
 cd "%CWD%"
 mkdir "%WORK_ROOT%\baseline\lr\turbine_TEY\%NOW%"
-sh .\baseline\lr\turbine_TEY.sh > "%WORK_ROOT%\baseline\lr\turbine_TEY\%NOW%\turbine_TEY.log" 2>&1
+call .\baseline\lr\turbine_TEY.bat > "%WORK_ROOT%\baseline\lr\turbine_TEY\%NOW%\turbine_TEY.log" 2>&1
 
 cd "%CWD%"
 mkdir "%WORK_ROOT%\adwin_with_z1_z2\lr\turbine_TEY\%NOW%"
-sh .\adwin_with_z1_z2\lr\turbine_TEY.sh > "%WORK_ROOT%\adwin_with_z1_z2\lr\turbine_TEY\%NOW%\urbine_TEY_adwin_with_z1_z2.log" 2>&1
+call .\adwin_with_z1_z2\lr\turbine_TEY.bat > "%WORK_ROOT%\adwin_with_z1_z2\lr\turbine_TEY\%NOW%\urbine_TEY_adwin_with_z1_z2.log" 2>&1
 
 cd "%CWD%"
 mkdir "%WORK_ROOT%\z1_z2_only\lr\turbine_TEY\%NOW%"
-sh .\z1_z2_only\lr\turbine_TEY.sh > "%WORK_ROOT%\z1_z2_only\lr\turbine_TEY\%NOW%\turbine_TEY_z1_z2_only.log" 2>&1
+call .\z1_z2_only\lr\turbine_TEY.bat > "%WORK_ROOT%\z1_z2_only\lr\turbine_TEY\%NOW%\turbine_TEY_z1_z2_only.log" 2>&1
 
 
 
