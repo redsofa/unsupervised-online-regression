@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  fluire_experiments:
+    build:
+      context: ../
+      dockerfile: ./docker/fluire_experiments.Dockerfile
+    image: redsofa/fluire_experiments:latest
+    container_name: fluire_experiments
+    environment:
+      - TZ=America/Moncton
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
