@@ -54,7 +54,7 @@ def get_args():
 def y_true_plot(pred_df, file_name, title):
     copy_df = pred_df.copy(deep=True)
     copy_df.insert(0, "step", range(0, len(copy_df)))
-    plt.figure(figsize=(20, 12))
+    plt.figure(figsize=(25, 11))
     plt.ticklabel_format(style='plain')
     train_df = copy_df[copy_df['is_train_data'] == True]
     plt.scatter(
@@ -71,15 +71,19 @@ def y_true_plot(pred_df, file_name, title):
     )
     plt.axvline(train_df.shape[0], color="black", linestyle="dashdot")
     # plt.text(train_df.shape[0] - 10, 0, 'Initial train \n and test data', rotation=90)
-    plt.title(title)
-    plt.legend(["initial_data", "y_true", "Initial Data Mark"])
+    # plt.title(title)
+    plt.legend(["initial_data", "y_true", "Initial Data Mark"], fontsize="25", loc="upper right")
+    plt.tight_layout(pad=3)
+    plt.ylabel("y_true", fontsize="25")
+    plt.xlabel("step", fontsize="25")
     plt.savefig(file_name)
+    plt.close()
 
 
 def y_pred_plot(pred_df, drift_df, file_name, title):
     copy_df = pred_df.copy(deep=True)
     copy_df.insert(0, "step", range(0, len(copy_df)))
-    plt.figure(figsize=(20, 12))
+    plt.figure(figsize=(25, 11))
     plt.ticklabel_format(style='plain')
     train_df = copy_df[copy_df['is_train_data'] == True]
     plt.scatter(
@@ -99,15 +103,19 @@ def y_pred_plot(pred_df, drift_df, file_name, title):
     for e in drift_df.values:
         plt.axvline(e[0], color="orange", linestyle="dashdot", ymin=0, ymax=0.1)
 
-    plt.title(title)
-    plt.legend(["Initial Data", "y_pred", "Initial Data Mark" ,"Model Retrain Mark"])
+    # plt.title(title)
+    plt.legend(["Initial Data", "y_pred", "Initial Data Mark" ,"Model Retrain Mark"], fontsize="25", loc="upper right")
+    plt.tight_layout(pad=3)
+    plt.ylabel("y_pred", fontsize="25")
+    plt.xlabel("step", fontsize="25")
     plt.savefig(file_name)
+    plt.close()
 
 
 def y_pred_y_true_plot(pred_df, drift_df, file_name, title):
     copy_df = pred_df.copy(deep=True)
     copy_df.insert(0, "step", range(0, len(copy_df)))
-    plt.figure(figsize=(20, 12))
+    plt.figure(figsize=(25, 11))
 
     plt.ticklabel_format(style='plain')
     train_df = copy_df[copy_df['is_train_data'] == True]
@@ -135,9 +143,13 @@ def y_pred_y_true_plot(pred_df, drift_df, file_name, title):
     for e in drift_df.values:
         plt.axvline(e[0], color="orange", linestyle="dashdot", ymin=0, ymax=0.1)
 
-    plt.title(title)
-    plt.legend(["Initial Data", "y_pred", "y_true", "Initial Data Mark" ,"Model Retrain Mark"])
+    # plt.title(title)
+    plt.legend(["Initial Data", "y_pred", "y_true", "Initial Data Mark" ,"Model Retrain Mark"], fontsize="25", loc="upper right")
+    plt.tight_layout(pad=3)
+    plt.ylabel("y_values", fontsize="25")
+    plt.xlabel("step", fontsize="25")
     plt.savefig(file_name)
+    plt.close()
 
 
 def main():
@@ -151,6 +163,11 @@ def main():
     pred_df = pd.read_csv(pred_csv_file)
     drift_df = pd.read_csv(drift_csv_file)
 
+    y_pred_y_true_plot(pred_df,
+                       drift_df,
+                       f'{args.output_dir}/y_pred_y_true_plot.png',
+                       f'y_pred and y_true plot of : \n {pred_csv_file}\n')
+
     y_true_plot(pred_df,
                 f'{args.output_dir}/y_true_plot.png',
                 f'y_true plot of : \n {pred_csv_file}\n')
@@ -159,11 +176,6 @@ def main():
                 drift_df,
                 f'{args.output_dir}/y_pred_plot.png',
                 f'y_pred plot of : \n {pred_csv_file}\n')
-
-    y_pred_y_true_plot(pred_df,
-                       drift_df,
-                       f'{args.output_dir}/y_pred_y_true_plot.png',
-                       f'y_pred and y_true plot of : \n {pred_csv_file}\n')
 
 
 if __name__ == "__main__":
