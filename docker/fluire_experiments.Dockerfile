@@ -70,6 +70,5 @@ RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=down
 RUN unzip /home/$USER/data/work -d /home/$USER/data/usup_reg
 RUN rm -f /home/$USER/data/work.zip
 
-
 # -- Runtime
 CMD ["bash"]
