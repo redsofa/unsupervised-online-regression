@@ -1,8 +1,8 @@
-# To run the Experiments
+# To Run the Experiments
 * See the [./docs/build.md](./docker/README.md) file.
 
 
-# To setup a Python Virtual Environment (venv) for Development Purposes
+# To Setup a Python Virtual Environment (venv) for Development Purposes
 * See the [./docs/pip.md](./docs/pip.md) file.
 
 
