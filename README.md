@@ -23,7 +23,12 @@ If you use or reference this work in a scientific publication,
 we would appreciate that you use the following citations:
 
 ```
-@INPROCEEDINGS{
-... TODO
+@inproceedings{richard2024conditioned,
+  title={A Conditioned Unsupervised Regression Framework Attuned to the Dynamic Nature of Data Streams},
+  author={Richard, Ren{\'e} and Belacel, Nabil},
+  booktitle={Proceedings of the Future Technologies Conference},
+  pages={1--23},
+  year={2024},
+  organization={Springer}
 }
 ```
